@@ -1,0 +1,90 @@
+/* ManagePredefinedQuestions.module.css */
+
+.container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 3% auto;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px #0000001a;
+  }
+  
+  .h2 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .cont input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .cont input[type='text'] {
+    margin-bottom: 10px;
+  }
+  
+  .button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
+  .questionList {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .questionItem {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .questionItem span {
+    flex: 1;
+    font-size: 16px;
+  }
+  
+  .questionItem button {
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 10px;
+  }
+  
+  .questionItem button:hover {
+    color: #0056b3;
+  }
+  
+  .button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .input:focus, .button:focus {
+    outline: none;
+    border: 1px solid #007bff;
+  }
+  

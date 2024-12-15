@@ -1,0 +1,431 @@
+.cont {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures even spacing between elements */
+  height: 100%; /* Makes all cards the same height */
+  border: 1px solid #ddd; /* Optional: Add a border for clarity */
+  border-radius: 10px; /* Optional: Rounded corners for a clean look */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 20px; /* Adds padding inside the card */
+}
+
+.fc-timegrid {
+  background-color: #fff;
+}
+.fc-timegrid-slot-lane,
+.fc-col-header-cell-cushion,
+.fc-daygrid-day-number,
+.fc-col-header-cell,
+.fc-daygrid-day,
+.fc-scrollgrid-sync-inner {
+  border-bottom: 1px solid black !important;
+}
+.fc-timegrid-event,
+.fc-scrollgrid,
+.fc-timegrid-divider,
+.fc-timegrid-slot {
+  border: none !important; /* Remove all borders */
+  box-shadow: none !important; /* Remove any shadow effects */
+}
+  /* Remove Underline from Header Cell Cushion */
+.fc-col-header-cell-cushion {
+  font-weight: bold;
+  font-size: 18px;
+  color: #000;
+  text-align: center;
+  border: none !important; /* Remove any underline */
+  text-decoration: none !important;
+}
+.fc-col-header-cell-cushion::after {
+  content: attr(data-date);
+  display: block;
+  font-size: 12px;
+  color: #333;
+  margin-top: 3px;
+}
+.fc-header-toolbar {
+  margin-top: 2% !important;
+  margin-bottom: 1% !important;
+  display: flex !important;
+  justify-content: space-between !important; /* Centering toolbar content */
+  align-items: center !important;
+}
+.fc-toolbar-title {
+  font-size: 30px !important; /* Match previous design */
+  font-weight: bold !important;
+  color: #333 !important; /* Title color */
+}
+.fc-button {
+  background-color: #666 !important; /* Match previous black buttons */
+  color: white !important;
+  border: none !important;
+  border-radius: 5px !important;
+  padding: 5px 10px !important;
+  display: none; /* Hide all buttons */
+}
+.fc-button:hover {
+  background-color: #333 !important; /* Darker on hover */
+}
+.fc-timegrid-slot {
+  height: 40px !important; /* Reduced slot height */
+  padding: 2px 0 !important; /* Adjust padding to save space */
+}
+  .fc-daygrid-day {
+  min-height: 30px !important; /* Lower day grid height */
+}
+.fc-prev-button,
+.fc-next-button {
+  display: none; /* Hide left/right buttons */
+}
+.fc-today-button {
+  background-color: green !important; /* Persistent orange color from previous design */
+  color: #fff !important;
+  border-radius: 5px !important;
+  padding: 8px 12px !important;
+}
+.fc-today-button:hover {
+  background-color: #218838 !important; /* Darker orange on hover */
+}
+.fc-title {
+  font-size: 20px !important;
+  font-weight: bold !important;
+  color: #333 !important;
+}
+.fc-col-header-cell-cushion {
+  color: black !important; /* Change the text color of the column headers (weekdays) */
+  text-decoration: none;
+}
+.fc-toolbar-chunk {
+  display: flex;
+}
+.fc-toolbar-chunk div {
+  display: flex;
+  align-items: center; /* Align items vertically in the center */
+  justify-content: center; /* Align items horizontally in the center */
+  gap: 5px;
+}
+.fc .fc-daygrid-day-number {
+  text-decoration: none;
+  color: black; /* Maintain black color for day numbers */
+}
+.fc .fc-timegrid-col.fc-day-today {
+  background-color: #E9E9E9;
+}
+.fc .fc-daygrid-day.fc-day-today {
+  background-color: #E9E9E9;
+}
+.fc .fc-daygrid-event-harness {
+  background-color: rgba(10, 193, 28, 0.5);
+}
+
+.ReactModal__Content{
+  margin-top: 2%;
+  width: 60%;
+  justify-self:center;
+}
+
+.appDetails{
+  display: flex;
+  gap: 20px; 
+  margin-Bottom: 20px;
+}
+
+.lowDetails{
+  display: flex;
+  gap: 20px;
+  margin-Top: 20px;
+}
+
+.covidDetails{
+  display: flex;
+  align-Items: center;
+  margin-Bottom: 15px;
+}
+
+.topTitle{
+  justify-self: center;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1; /* Makes the content take up remaining space */
+}
+
+.card .btn {
+  margin-top: auto; /* Pushes the button to the bottom of the card */
+  align-self: center; /* Centers the button horizontally */
+  width: 100%; /* Ensures the button width is consistent across all cards */
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center; /* Centers the title text */
+}
+
+.card-subtitle {
+  font-size: 14px;
+  color: gray;
+  text-align: center; /* Centers the subtitle text */
+  margin-bottom: 15px; /* Adds spacing below the subtitle */
+}
+
+.schedule {
+  flex-grow: 1; /* Allows this section to grow and take up space */
+  text-align: center; /* Centers the schedule content */
+  margin-top: 15px;
+}
+
+.schedule-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.schedule-card {
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-card h5 {
+  margin: 0 0 10px 0;
+  font-weight: bold;
+}
+
+.schedule-card p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.closebtn{
+  float: right;
+  border-radius: 50%;
+}
+
+
+/* Responsive styling for the Schedule Modal and FullCalendar */
+.react-modal-content {
+  max-width: 80%; /* Set a reasonable max width for larger screens */
+  height: auto; /* Let the height adjust naturally */
+  margin: auto; /* Center the modal */
+  border-radius: 10px;
+  padding: 20px;
+  overflow: auto; /* Enable scrolling if content overflows */
+}
+
+.react-modal-overlay {
+  background-color: rgba(0, 0, 0, 0.75); /* Modal overlay color */
+}
+
+.fc {
+  max-width: 100%; /* Ensure calendar doesn't exceed container width */
+  overflow-x: auto; /* Enable horizontal scrolling if needed */
+}
+
+/* Adjustments for smaller screens */
+@media (max-width: 768px) {
+  .react-modal-content {
+    max-width: 90%; /* Increase width on smaller screens */
+    padding: 10px; /* Reduce padding */
+  }
+
+  .fc-toolbar {
+    flex-wrap: wrap; /* Allow toolbar elements to wrap */
+    text-align: center; /* Center toolbar elements */
+  }
+
+  .fc-view-container {
+    max-width: 100%; /* Ensure the calendar view container fits within modal */
+  }
+
+  .fc-daygrid-day-frame {
+    min-height: 50px; /* Adjust minimum height for calendar cells */
+  }
+
+  .fc .fc-daygrid-event {
+    font-size: 12px; /* Adjust font size for events */
+  }
+  .ReactModal__Content {
+    max-width: 95% !important; /* Ensure the modal fits the screen */
+    max-height: 85% !important;
+    overflow-y: auto !important; /* Enable scroll for overflowing content */
+    padding: 15px !important;
+  }
+
+  .ReactModal__Content h2 {
+    font-size: 20px !important; /* Adjust header font size */
+  }
+
+  .ReactModal__Content p {
+    font-size: 14px !important; /* Adjust paragraph font size */
+  }
+}
+
+@media (max-width: 576px) {
+  .container{
+    margin-top: 20%;
+  }
+  .calendar-view {
+    display: none; /* Hide calendar view */
+  }
+  .schedule-container {
+    display: flex; /* Display container layout */
+  }
+     /* Adjust modal layout */
+  .react-modal-content {
+    width: 100%; /* Full width of the screen */
+    margin: auto 9px;
+    height: auto; /* Auto height based on content */
+    max-height: 50%; /* Ensure the modal doesn't overflow vertically */
+    border-radius: 10px;
+    overflow-y: auto; /* Enable scrolling for overflow */
+  }
+  
+     /* Close button styling */
+  .closebtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    border: none;
+    background: transparent;
+    color: red;
+    cursor: pointer;
+  }
+
+  .fc-col-header-cell-cushion {
+    font-weight: bold;
+    font-size: 10px;
+    color: #000;
+    text-align: center;
+    border: none !important; /* Remove any underline */
+    text-decoration: none !important;
+  }
+  
+  /* Align prev/next buttons to the left and today button to the right */
+  .fc-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .fc-toolbar .fc-toolbar-chunk:first-child {
+    order: 1;
+  }
+
+  .fc-toolbar-title {
+    font-size: 16px;
+    order: 2;
+    text-align: center;
+    flex-grow: 1;
+  }
+
+  .fc-toolbar .fc-toolbar-chunk:last-child {
+    order: 3;
+  }
+
+  /* Ensure responsive modal content */
+  .fc {
+    font-size: 12px;
+    max-width: 100%;
+    height: auto;
+    overflow-x: auto;
+  }
+
+  .fc-toolbar-title {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .fc .fc-timegrid-slot {
+    font-size: 10px;
+  }
+
+  .fc .fc-daygrid-event {
+    font-size: 12px;
+  }
+
+  .fc-view-harness {
+    overflow-x: auto;
+    min-height: 200px;
+  }
+  
+  .ReactModal__Content {
+    margin-top: 10%;
+    width: 100%;
+    height: fit-content;
+    position:relative;
+  }
+
+  .ReactModal__Content h3 {
+    font-size: 18px !important;
+  }
+
+  .ReactModal__Content h2 {
+    font-size: 18px !important; /* Adjust header font size */
+    text-align: center; /* Center-align header text */
+  }
+
+  .ReactModal__Content p {
+    font-size: 10px !important; /* Reduce paragraph font size */
+    text-align: center; /* Center-align paragraph text */
+  }
+
+  .ReactModal__Content .modal-body {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    gap: 10px; /* Add spacing between elements */
+    align-items: center; /* Center-align elements */
+  }
+
+  .ReactModal__Content img {
+    width: 70%; /* Make images responsive */
+    max-width: 200px; /* Limit the maximum size */
+    height: auto; /* Maintain aspect ratio */
+    margin-bottom: 10px; /* Add spacing below the image */
+  }
+
+  .ReactModal__Content .form-group {
+    width: 100%; /* Full width for form fields */
+  }
+
+  .ReactModal__Content .form-group label {
+    font-size: 14px; /* Smaller labels for better fit */
+  }
+
+  .ReactModal__Content .form-group input,
+  .ReactModal__Content .form-group select,
+  .ReactModal__Content .form-group textarea {
+    font-size: 14px; /* Smaller font size for inputs */
+    padding: 8px; /* Adjust padding for inputs */
+    width: 100%; /* Full width for inputs */
+  }
+
+
+  .ReactModal__Content .flex-container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    gap: 10px; /* Add spacing between items */
+    align-items: center; /* Center-align content */
+  }
+
+  .appDetails{
+    display: none;
+  }
+
+  .lowDetails{
+    display:block;
+  }
+
+  .covidDetails{
+    display: block;
+  }
+}
+

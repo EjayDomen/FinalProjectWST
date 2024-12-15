@@ -1,0 +1,153 @@
+.apptcont{
+  margin-top: 5%;
+  background-color: #fff;
+  padding: 30px 20px;
+  border-Radius: 8px;
+}
+
+.searchbar{
+  width: 90%;
+}
+
+.custom-dropdown .dropdown-menu {
+  position: absolute !important;
+  z-index: 1050 !important; /* Ensure it's above the table */
+  transform: translateY(-10px) !important; /* Adjust dropdown placement */
+}
+
+.MuiMenu-paper {
+  border: 1px solid black !important; /* Black border */
+  border-radius: 4px !important; /* Rounded corners */
+  box-shadow: none !important; /* Remove shadow if desired */
+  background-color: white !important; /* Ensure consistent background */
+}
+
+.MuiMenu-list {
+  padding: 0 !important; /* Adjust padding if necessary */
+}
+
+.MuiMenuItem-root {
+  color: black !important; /* Ensure text is black */
+  padding: 10px 15px !important; /* Adjust padding for better spacing */
+  background-color: white !important; /* Ensure white background */
+}
+
+.MuiMenuItem-root:hover {
+  background-color: #e9ecef !important; /* Highlight effect on hover */
+}
+
+
+.data-grid-container {
+  overflow: visible !important; /* Ensure the dropdown isn't hidden */
+}
+
+.modal-body {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.modal-body h5 {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.modal-body p {
+  margin-bottom: 10px;
+}
+
+.modal-footer button {
+  min-width: 100px;
+}
+
+
+.bg-success {
+  background-color: #aaf7be !important;
+  color: #006400 !important;
+}
+
+.bg-info {
+  background-color: #b0d4ff !important;
+  color: #0044cc !important;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+  color: #000 !important;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Scrollable area for the queue list */
+.queue-list {
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.queue-list div {
+  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+}
+
+.queue-list div:hover {
+  background-color: #e9ecef;
+}
+
+.queue-modal-body h5 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.queue-modal-body p {
+  margin-bottom: 8px;
+}
+
+.queue-number-box {
+  background-color: #aaf7be;
+  color: #006400;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+.current-queue-box {
+  background-color: #b0d4ff;
+  color: #0044cc;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+
+
+.text-success {
+  color: #006400; /* Dark green for success messages */
+}
+
+.text-primary {
+  color: #0044cc; /* Dark blue for doctor queue */
+}
+
+
+@media (max-width: 576px) {
+  .container{
+    margin-top: 20%;
+  }
+  .searchbar{
+    width: 65%;
+  }
+}
+
+@media (max-width: 1400px){
+  .searchbar{
+    max-width: 100%;
+  }
+}

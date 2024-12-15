@@ -1,0 +1,109 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('./images/AceBldg.png') no-repeat center center fixed;
+    background-size: cover;
+    padding: 20px;
+  }
+  
+  .verificationBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(255, 255, 255);
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    max-width: 600px;
+    width: 100%;
+    padding: 30px 20px;
+    text-align: center;
+  }
+  
+  .logo {
+    width: 150px;
+    margin-bottom: 20px;
+  }
+  
+  .title {
+    font-size: 30px;
+    color: #28561f;
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  .highlight {
+    margin-top: -30px;
+    background: linear-gradient(to right, #f70301, #8b2f11, #28561f); /* Define your gradient colors */
+    -webkit-background-clip: text; /* For Chrome, Safari */
+    background-clip: text; /* For other browsers */
+    color: transparent; /* Make text color transparent to show the gradient */
+  }
+  
+  .otpImage {
+    width: 150px;
+    height: 150px;
+    margin: 20px 0;
+  }
+
+  .otpVer{
+    font-weight: bold;
+    color:#555;
+  }
+  
+  .otpInput {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    width: 80%;
+  }
+  
+  .otpDigit {
+    font-size: 1.5em;
+    width: 50px;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 0 5px;
+  }
+  
+  .resendLink {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 0.9em;
+  }
+  
+  .resendLink:hover {
+    text-decoration: underline;
+  }
+  
+  .verifyButton {
+    background-color: #3d9d3b;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    width: 100%;
+    max-width: 450px;
+  }
+  
+  .verifyButton:hover {
+    background-color: #1b5e20;
+  }
+  
+.back{
+  color: #6c757d;
+  border-Color: #6c757d;
+  height: 50px;
+  width: 45%;
+}
+
+.back:hover{
+  background-color: #f0f0f0;
+}

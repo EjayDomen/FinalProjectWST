@@ -1,0 +1,95 @@
+.cont{
+    background-color: #f9fafb;
+    /* margin-top: -1%; */
+}
+.container {
+    display: flex;
+    max-width: 1200px;
+    background-color: white;
+    border-radius: 8px;
+    border: solid gray 2px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-left: 22%;
+    margin-top: 2%;
+  }
+  
+  .leftSection {
+    flex: 1;
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    text-align: center;
+  }
+  
+  
+  .label {
+    font-weight: bold;
+  }
+  
+  .detailsSection {
+    text-align: left;
+    padding: 0 20px;
+  }
+  
+  .rightSection {
+    flex: 2;
+    padding: 20px;
+  }
+  
+  .sectionTitle {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 1%;
+  }
+  
+  .row {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .formGroup {
+    flex: 1;
+  }
+  
+  .fullWidth {
+    width: 100%;
+  }
+  
+  .formGroup label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  .formGroup input,
+  .formGroup select,
+  .formGroup textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .phoneInput {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .phoneInput select {
+    width: 80px;
+  }
+  
+  .editButton {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 2%;
+    float: right;
+  }
+  
+  .editButton:hover {
+    background-color: #45a049;
+  }
+  

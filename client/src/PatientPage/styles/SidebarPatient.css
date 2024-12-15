@@ -1,0 +1,152 @@
+body{
+  overflow-y: scroll;
+  background-Color:#f5f7fa;
+}
+
+.dropdown-menu-custom {
+  position: absolute;
+  top: 75%; /* Position below the button */
+  left: 1%;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0; /* Remove padding around the menu */
+  width: 200px; /* Set consistent width */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  overflow: hidden; /* Ensure corners are rounded */
+  z-index: 1050;
+}
+
+.dropdown-item-custom {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px; /* Proper spacing */
+  font-size: 16px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s, padding-left 0.4s;
+}
+
+.dropdown-item-custom svg {
+  margin-right: 10px;
+  font-size: 18px; /* Adjust icon size */
+}
+
+
+.dropdown-item-custom.text-danger {
+  color: #dc3545; /* Red for logout */
+  border: none;
+  background-color: #fff;
+  width: 100%;
+}
+
+.dropdown-item-custom.text-danger:hover {
+  background-color: #f8d7da; /* Light red for logout hover */
+}
+
+.dropdown-item-custom:not(:last-child) {
+  border-bottom: 1px solid #f0f0f0; /* Divider between items */
+}
+
+
+.dropdown-item-custom:hover {
+  background-color: #f1f9f5; /* Light green background */
+  color: #0ac11c;           /* Green text on hover */
+  padding-left: 40px;       /* Indent on hover */
+}
+
+/* Active state styling */
+.menuItem.active {
+  background-color: #e0ffe0; /* Light green for active state */
+  color: #006400;           /* Darker green text */
+}
+
+.menuItem.active:hover{
+  padding-left: 20px;
+}
+
+
+.dropdown-item-custom.active svg{
+  margin-left: 20px; /* Additional indentation for active items */
+}
+
+.icon-button {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: gray;
+}
+
+.icon-button:hover {
+  color: black;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 8px 12px;
+  border-radius: 50px;
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.user-info:hover {
+  text-decoration: none;
+  background-color: #eaeaea;
+}
+
+.notification-dropdown {
+  position: absolute;
+  top: 100%;
+  left: -450%;
+  font-size: 16px;
+  max-height: 400px;
+  width: 300px;
+  overflow-y: scroll;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 10px;
+}
+
+.icon-button svg, /* Applies to icons inside buttons */
+.user-info svg {  /* Applies to the user profile icon */
+  font-size: 35px; /* Adjust size here */
+}
+
+.menu-btn {
+  border: none; /* Remove border */
+  cursor: pointer; /* Add pointer cursor for better UX */
+  outline: none; /* Remove the focus outline */
+}
+
+
+@media (max-width: 576px) {
+  .h5, h5 {
+    font-size: 0.9rem !important; /* Override any existing font size, including rfs.scss */
+  }
+  .text{
+    margin-left: -15px;
+  }
+  .name{
+    display: none;
+  }
+  .icon-button svg, .user-info svg {  /* Applies to the user profile icon */
+    font-size: 30px; /* Adjust size here */
+    margin-left: -15px;
+  }
+  .user-info{
+    background-Color:#f5f7fa;
+  }
+  .notification-dropdown {
+    left: -650%;
+  }
+}

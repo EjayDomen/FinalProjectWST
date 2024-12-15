@@ -1,0 +1,253 @@
+.signupContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  min-height: 100vh;
+}
+
+
+.formSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 255, 255);
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+  max-width: 800px;
+  width: 100%;
+  margin: 20px;
+}
+
+
+.formContent {
+  width: 100%;
+  max-width: 700px;
+  text-align: center;
+}
+
+
+.logoImage {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+
+.title {
+  margin-top: 0px;
+  color: #28561f;
+  font-size: 40px; /* Adjust the size as needed */
+  font-weight: bold;
+  font-family: system-ui;
+}
+
+
+.gradientText {
+  margin-top: -30px;
+  background: linear-gradient(to right, #f70301, #8b2f11, #28561f); /* Define your gradient colors */
+  -webkit-background-clip: text; /* For Chrome, Safari */
+  background-clip: text; /* For other browsers */
+  color: transparent; /* Make text color transparent to show the gradient */
+}
+
+
+.text {
+  color: #555;
+  margin: 10px 0 20px;
+  font-size: 20px;
+}
+
+
+.inputGroup {
+  margin-top: 50px;
+  display: flex;
+  gap: 15px;
+  margin-bottom: -20px;
+}
+
+
+.inputField {
+  flex: 1;
+}
+
+
+.passwordCriteria {
+  text-align: left;
+  font-size: 0.9em;
+  color: #555;
+  margin-top: 50px;
+  line-height: 1.4;
+}
+
+
+.termsLink,
+.privacyLink {
+  color: #57a6ff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.checkbox {
+  font-size: 17px;
+  text-align: left;
+  color: #555;
+  margin-top: 25px;
+}
+
+
+.box1,
+.box2{
+  margin-top: -10px;
+}
+
+
+.signupButton {
+  margin: 30px;
+  font-size: 1.2em;
+  padding: 12px 0;
+  border-radius: 8px;
+}
+
+
+.errorText {
+  color: white;
+  background-color: red;
+  padding: 5px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7); /* Darker overlay for better contrast */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px; /* Ensures space around modal on small screens */
+}
+
+
+.modalContent {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%; 
+  max-width: 50%; 
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow-y: auto;
+  max-height: 85vh;
+}
+
+
+.closeButton {
+  position: fixed; /* Set to fixed for positioning relative to modal */
+  top: 9%;
+  right: 27%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+  font-size: 1.2rem;
+  z-index: 1000; /* Ensure it stays above other content */
+}
+
+
+.modalContent h2 {
+  font-size: 28px;
+  margin-top: 0;
+  color: #333;
+  font-weight: bold;
+}
+
+.modalContent p {
+  font-size: 18px;
+  color: #555;
+  line-height: 1.6;
+}
+
+.termsLink:hover, .privacyLink:hover {
+  color: #0056b3;
+}
+
+
+.termsContainer {
+  padding: 20px;
+  line-height: 1.6;
+  color: #333;
+}
+
+
+.termsContainer strong {
+  font-size: 22px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+
+.termsContainer p {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+
+.termsContainer p strong {
+  font-size: 18px;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modalContent {
+    width: 100%;
+    max-width: 90%; /* Reduce max-width for smaller screens */
+    padding: 15px;
+  }
+
+
+  .modalContent h2 {
+    font-size: 20px; /* Reduce heading size on smaller screens */
+  }
+
+
+  .closeButton {
+    font-size: 14px; /* Smaller button on mobile */
+    padding: 8px 16px;
+  }}
+
+
+  .emailLink {
+    color: #007bff; /* Gmail red color or any color you prefer */
+    font-weight: bold;
+    text-decoration: underline;
+    padding: 2px 4px;
+    border-radius: 3px;
+    transition: background-color 0.3s, color 0.3s;
+  }
+ 
+  .emailLink:hover {
+    color: #0056b3; /* Darker color on hover */
+  }
+
+
+  @media (max-width: 576px) {
+    .inputGroup{
+      display: contents;
+    }
+    .inputField{
+      margin-top: 10px;
+    }
+    .button{
+      font-size: 8px;
+    }
+  }
+ 

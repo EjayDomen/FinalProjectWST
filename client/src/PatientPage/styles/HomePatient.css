@@ -1,0 +1,235 @@
+.container{
+  margin-top: 5%;
+}
+
+.row {
+  margin-bottom: 20px;
+}
+
+.banner {
+  margin-top: 25px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #6aa483;
+  display: flex;
+  border-radius: 8px;
+  width: 100%;
+  flex-wrap: wrap; /* Allows wrapping for smaller screens */
+}
+
+.seeMoreBtn{
+  padding: 8px 16px;
+  border: none;
+  background-color: #3f9f6d;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.seeMoreBtn:hover{
+  background-color: #218838;
+}
+
+.bannerContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Full width for responsive layout */
+  flex-wrap: wrap; /* Wrap content for smaller screens */
+}
+
+.bannerImage {
+  margin-left: 0;
+  margin-right: 0;
+  margin-bottom: 20px; /* Add spacing between elements on smaller screens */
+  width: 100%;
+  max-width: 300px; /* Set a maximum width */
+  height: auto; /* Maintain aspect ratio */
+  flex-shrink: 0; /* Prevent shrinking of the image */
+}
+
+.bannerText {
+  text-align: center; /* Center-align text for smaller screens */
+  max-width: 100%; /* Allow full width for responsiveness */
+}
+
+.bannerText p {
+  margin: 0 auto;
+  font-size: 1.5em; /* Adjust font size for smaller screens */
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.findDoctorButton {
+  background-color: rgb(76, 175, 80);
+  color: white;
+  border: none;
+  padding: 15px 20px;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+}
+
+.findDoctorButton:hover {
+  background-color: #218838;
+}
+
+/* Ensure Flexbox Layout for Cards */
+.row.g-4 > .col-lg-8, 
+.row.g-4 > .col-lg-4 {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main Cards */
+.col-lg-8 .bg-white, 
+.col-lg-4 .bg-white {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Push content to the top */
+}
+
+/* Appointments Table and Other Content */
+.table, .queue-list {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.table th, 
+.queue-list th {
+  background-color: #f8f9fa;
+  text-align: center;
+}
+
+.table td, 
+.table th, 
+.queue-list td, 
+.queue-list th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Push Free Space to Bottom */
+.bg-white {
+  padding: 20px; /* Add padding inside the cards */
+  display: flex;
+  flex-direction: column;
+}
+
+.bg-white > h2, 
+.bg-white > h3, 
+.bg-white > p, 
+.bg-white > table {
+  margin-bottom: 20px; /* Consistent spacing between elements */
+}
+
+.bg-white:last-child {
+  margin-bottom: 0; /* Remove last element's margin */
+}
+
+/* Ensure Free Space at the Bottom */
+.bg-white::after {
+  content: '';
+  flex-grow: 1; /* Fill remaining space at the bottom */
+}
+
+/* Date & Time Section */
+.display-1 {
+  font-size: 4rem;
+  font-weight: bold;
+  color: #343a40;
+}
+
+.fs-4 {
+  font-size: 1.5rem;
+  color: #555;
+}
+
+.notification-badge {
+  position: relative;
+  top: -10px;
+  right: -10px;
+  background-color: red;
+  border-radius: 50%;
+  font-size: 0.8rem;
+  padding: 5px;
+  color: white;
+}
+
+.h2, .h3 {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Queue List */
+.queue-list th, 
+.queue-list td {
+  text-align: center;
+}
+
+/* Match Heights for Cards (Grid Sections) */
+.row.g-4 > div {
+  min-height: 350px; /* Ensure equal height for all sections */
+}
+
+.row.g-4.mt-4 .col-lg-4, 
+.row.g-4.mt-4 .col-lg-8 {
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* Extra Small Screens (up to 576px) */
+@media (max-width: 576px) {
+  .container{
+    margin-top: 20%;
+  }
+  .banner {
+    flex-direction: column; /* Stack the content vertically */
+    padding: 15px;
+    text-align: center;
+  }
+
+  .bannerImage {
+    margin: 0 auto 15px auto; /* Center the image */
+    max-width: 200px; /* Reduce the size of the image */
+  }
+
+  .bannerText p {
+    font-size: 1.2em; /* Adjust font size for small screens */
+    line-height: 1.5; /* Improve readability */
+  }
+
+  .findDoctorButton {
+    font-size: 1em; /* Adjust button size for smaller screens */
+    padding: 10px 15px;
+  }
+}
+
+/* Medium Screens (up to 768px) */
+@media (max-width: 768px) {
+  .bannerContent {
+    flex-direction: column; /* Stack the content vertically */
+  }
+
+  .bannerImage {
+    margin: 0 auto 20px auto; /* Center the image */
+    max-width: 250px;
+  }
+
+  .bannerText p {
+    font-size: 1.6em;
+  }
+
+  .findDoctorButton {
+    font-size: 1.1em;
+    padding: 12px 20px;
+  }
+}

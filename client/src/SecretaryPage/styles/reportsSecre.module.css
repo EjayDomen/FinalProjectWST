@@ -1,0 +1,259 @@
+/* General Layout */
+.doctorsSection {
+  padding: 20px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-left: 18%;
+  height: 100%;
+}
+
+.doctorDetailsContainer {
+  background-color: #f9fafb;
+  padding: 10px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 45%;
+  border: 2px solid #ccc;
+}
+
+/* Doctors Header */
+.doctorsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.doctorsHeader h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bolder;
+}
+
+.doctorsHeader p {
+  color: gray;
+  font-size: 14px;
+}
+
+
+/* Search and Filter Section */
+.searchAppointment {
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.searchAppointment input {
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 80%;
+}
+
+/* Table Header */
+.tableHeader {
+  margin-top: 20px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #f0f0f0;
+  padding: 15px;
+  border-bottom: 2px solid #eaeaea;
+  font-weight: bold;
+  color: black;
+  font-size: 16px;
+  text-align: left;
+}
+
+.tableHeader span {
+  flex: 1;
+  text-align: center;
+}
+
+
+/* Table Row */
+.tableRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  color: #757373;
+  font-weight: 600;
+  text-align: center;
+  background-color: #ffffff;
+  /* Default background color */
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+  /* Remove border for the last row */
+}
+
+.tableRow:hover {
+  background-color: #f0f8ff;
+  ;
+  /* Highlight row on hover */
+}
+
+.tableRow span {
+  flex: 1;
+  text-align: center;
+}
+
+.tableRow:nth-child(odd) {
+  background-color: #f7f7f7;
+  /* Light gray for zebra pattern */
+}
+
+.tableRow:nth-child(even) {
+  background-color: #ffffff;
+  /* White for zebra pattern */
+}
+
+
+.header {
+  margin-left: -10px;
+  width: 102%;
+  height: 80px;
+  margin-top: -20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ddd;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.greeting {
+  display: flex;
+  flex-direction: column;
+}
+
+.greeting h1 {
+  margin: 0;
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #000;
+}
+
+.greeting p {
+  margin: 0;
+  font-size: 0.85em;
+  color: #666;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.searchIcon {
+  color: #666;
+  margin-right: 15px;
+  cursor: pointer;
+  font-size: 1.5em;
+}
+
+.headerIcon,
+.profileIcon {
+  color: #666;
+  margin-right: 15px;
+  cursor: pointer;
+  font-size: 1.5em;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  font-size: 0.9em;
+  color: #333;
+}
+
+.userName {
+  font-weight: 500;
+  font-style: italic;
+  font-size: 25px;
+  margin-right: 20px;
+}
+
+
+/* .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #dcdcdc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 16px;
+  font-weight: bold;
+} */
+
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  background-color: #dcdcdc;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.downloadBtn {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.downloadBtn:hover {
+  background-color: #218838;
+}

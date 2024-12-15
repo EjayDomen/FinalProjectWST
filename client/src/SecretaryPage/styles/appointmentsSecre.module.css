@@ -1,0 +1,319 @@
+/* DoctorsSection.module.css */
+
+/* General Layout */
+.doctorsSection {
+  padding: 20px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-left: 18%;
+  height: 100%;
+}
+
+/* Doctors Header */
+.doctorsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.doctorsHeader h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bolder;
+}
+
+.doctorsHeader p {
+  color: gray;
+  font-size: 14px;
+}
+
+/* Search and Filter Section */
+.searchAppointment {
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.searchAppointment input {
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 80%;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.filterBtn, .saveBtn, .srchBtn {
+  padding: 11px 13px;
+  background-color: white; /* Button background color */
+  border: none; /* Remove default button border */
+  border-radius: 8px; /* Rounded edges */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Light shadow for 3D effect */
+  cursor: pointer; /* Pointer on hover */
+}
+
+
+.dropdownContainer {
+  margin-top: 20px;
+}
+
+/* Dropdown Menu */
+.dropdown {
+  position: absolute;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  width: 150px; /* Adjust width as necessary */
+  z-index: 10;
+  overflow: hidden; /* Ensure rounded corners */
+  margin-top: 5px; /* Small space between button and dropdown */
+}
+
+.dropdownHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  margin-top: -21px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dropdownIcon {
+  font-size: 24px;
+  color: gray;
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  width: 150px;
+  z-index: 10;
+}
+
+.dropdown:hover .dropdownMenu {
+  display: block;
+}
+
+/* Dropdown Toggle Button */
+.dropdownToggle {
+  background-color: white; /* White background */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 50%; /* Circular shape */
+  width: 40px; /* Button dimensions */
+  height: 40px;
+  cursor: pointer;
+  transition: background-color 0.3s; /* Smooth hover transition */
+}
+
+/* Hover effect for dropdown toggle */
+.dropdownToggle:hover {
+  background-color: #f0f0f0; /* Slight gray background on hover */
+}
+
+
+/* Dropdown Item */
+.dropdownItem {
+  padding: 10px 15px;
+  cursor: pointer;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+  font-weight: bold; /* Make the text bold */
+}
+
+.dropdownItem:hover {
+  background-color: #f0f0f0;
+}
+
+/* Last item in dropdown (removes border) */
+.dropdownItem:last-child {
+  border-bottom: none;
+}
+
+
+
+
+
+
+.modalContainer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 30px; /* Increased padding for a spacious feel */
+  border-radius: 12px; /* Slightly larger border radius */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Softer shadow */
+  max-width: 600px; /* Maximum width for better layout */
+  width: 90%; /* Responsive width */
+}
+
+.modalDetails {
+  margin-bottom: 20px; /* Space between details and date input */
+}
+
+.modalLabel {
+  display: block; /* Ensure label is on a new line */
+  margin-bottom: 5px; /* Space below the label */
+  font-weight: bold; /* Emphasize the label */
+}
+
+.modalInput {
+  width: 100%; /* Full width for input */
+  padding: 10px; /* Padding inside input */
+  border: 1px solid #ccc; /* Border for input */
+  border-radius: 6px; /* Rounded corners for input */
+  margin-bottom: 20px; /* Space below the input */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow for input */
+}
+
+.modalButtons {
+  display: flex;
+  margin: 20px 50px;
+  justify-content: space-between; /* Space buttons apart */
+}
+
+.cancelButton,
+.submitButton{
+  padding: 14px 45px;
+  margin-top: 2%;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cancelButton {
+  background-color: white;
+  color: black;
+  border-style: solid;
+  border-color: gray;
+}
+
+.submitButton {
+  background-color: gray;
+  color: white;
+  border-style: solid;
+  border-color: black;
+  margin-left: 10px;
+}
+
+
+.cancelButton:hover,
+.submitButton:hover {
+  opacity: 0.8;
+}
+
+
+.tableHeader {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}
+
+/* Custom padding for each cell */
+.tableCell, .MuiDataGrid-cell {
+  padding: 100px 100px; /* Adjust values to create more space between columns */
+}
+
+
+/* Style for column headers */
+.MuiDataGrid-columnHeaders {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}
+
+
+.actionsContainer {
+  display: flex;
+  gap: 10px; /* Space between buttons */
+}
+
+.actionButton {
+  margin-top: 3px;
+  padding: 0px 5px;
+  margin-right: 10px; /* Adds spacing to the right of each button */
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  height: 45px;
+}
+
+.actionButton:hover {
+  background-color: #1565c0;
+}
+
+/* Zebra striping for rows */
+.evenRow {
+  background-color: #f9f9f9;
+}
+
+.oddRow {
+  background-color: white;
+}
+
+.searchAppointment {
+  gap: 10px; /* Space between buttons */
+}
+
+/* data grid table design */
+.dataGrid {
+  border: none;
+  font-family: Arial, sans-serif;
+}
+
+.dataGrid .MuiDataGrid-columnHeaders {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.dataGrid .MuiDataGrid-columnHeaderTitle {
+  font-size: 15px;
+}
+
+.dataGrid .MuiDataGrid-cell {
+  border-bottom: none;
+  padding: 8px;
+  font-size: 14px;
+}
+
+.dataGrid .MuiDataGrid-row {
+  background-color: #ffffff;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.dataGrid .MuiDataGrid-row:hover {
+  background-color: #f0f0f0;
+}
+
+.iconButton {
+  background-color: #4a4a4a;
+  color: #ffffff;
+  border: none;
+  padding: 8px 10px;
+  line-height: normal;
+  font-size: 14px;
+  text-transform: none;
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  background-color: #333333;
+}

@@ -1,0 +1,161 @@
+.patientListContainer {
+  padding: 20px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-left: 18%;
+  height: 100%;
+}
+
+.patientListHeader {
+  display: flex;
+    align-items: center;
+    text-align: center;
+    justify-self: center;
+    justify-content: space-between;
+}
+
+.patientListHeader h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.patientListHeader span {
+  font-size: 18px;
+  color: gray;
+  margin-left: 10px;
+}
+
+.patientListHeader p {
+  font-size: 14px;
+  color: gray;
+  margin-top: 5px;
+}
+
+.addDoctorBtn {
+  padding: 16px 44px;
+  background-color: #28a745;
+  color: rgb(239, 239, 239);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* Search and Filter Section */
+.searchAppointment {
+  align-items: center;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.searchAppointment input {
+  padding: 15px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.addDoctorBtn:hover {
+  background-color: #218838;
+  color: rgb(239, 239, 239);
+}
+
+.patientTable {
+  margin-top: 20px;
+  width: 100%; /* Ensure the table takes the full width */
+  border-collapse: collapse; /* Merge borders */
+}
+
+.tableHeader {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  color: black;
+  font-size: 16px;
+}
+
+.tableHeader th {
+  padding: 15px; /* Add padding for header cells */
+  text-align: center;
+  border-bottom: 2px solid #eaeaea; /* Add border to the bottom */
+}
+
+.tableRow {
+  color: #757373;
+  font-weight: 600;
+  text-align: center;
+  background-color: #ffffff; /* Default background color */
+}
+
+.tableRow:nth-child(even) {
+  background-color: #ffffff; /* Zebra striping */
+}
+
+.tableRow:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+.tableRow td {
+  padding: 10px; /* Consistent padding */
+}
+
+.tableRow:hover {
+  background-color: #f0f8ff; /* Hover effect */
+}
+
+/* Dropdown Toggle Button */
+.dropdownToggle {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  position: relative;
+}
+
+/* Dropdown Menu */
+.dropdown {
+  position: absolute;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  width: 150px; /* Adjust width as necessary */
+  z-index: 10;
+  overflow: hidden; /* Ensure rounded corners */
+  margin-top: 5px; /* Small space between button and dropdown */
+}
+
+.dropdownItem {
+  padding: 10px 15px;
+  cursor: pointer;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.dropdownItem:hover {
+  background-color: #f0f0f0;
+}
+
+.noPatientsRow {
+  text-align: center;
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  color: #555;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.labelField {
+  margin-top: 5px;
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
