@@ -23,14 +23,13 @@ const Home = () => {
   // Fetch user info
   useEffect(() => {
     axios
-      .get(`${process.env.REACT_APP_API_URL}/signup/patient/me`, {
+      .get(`${process.env.REACT_APP_API_URL}/api/patient/me/`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       })
       .then((response) => {
         setUserId(response.data.id);
         if (response.data.isNewlyRegistered) navigate('/patient/profile');
       })
-      .catch(() => navigate('/'));
   }, []);
 
   useEffect(() => {
@@ -197,9 +196,6 @@ const Home = () => {
   </div>
 </div>
 
-
-      {/* Chat Component */}
-      {userId && <PatientChat userId={userId} />}
 
       {/* Appointment Modal */}
       <Modal open={openAppointmentModal} onClose={handleCloseAppointmentModal}>

@@ -86,7 +86,6 @@ const DoctorList = () => {
       })
       .catch((error) => {
         console.error("Error fetching patient data:", error);
-        navigate('/'); // Redirect to login if API call fails
       });
   }, []);
   

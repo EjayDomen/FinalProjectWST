@@ -1,7 +1,13 @@
 # models.py
 from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+def upload_to(instance, filename):
+    return 'profile_pictures/{filename}'.format(filename=filename)
+
 
 class Patient(models.Model):
+    student_or_employee_no = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100)
@@ -19,8 +25,10 @@ class Patient(models.Model):
     sex = models.CharField(max_length=10)
     password = models.CharField(max_length=255)
     address = models.TextField()
+    profilePicture = models.ImageField(_("Image"),upload_to=upload_to , default='profile_pictures/default.jpg')
     user_level_id = models.ForeignKey(
         "clinic_python.Role", on_delete=models.CASCADE, null=True, blank=True
     )
+    is_deleted = models.BooleanField(default=False)  # Default is False
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

@@ -40,14 +40,14 @@
 
 .title {
     margin-top: 10px;
-    color: #28561f;
+    color: #1D3461;
     font-size: 36px; /* Responsive font size */
     font-weight: bold;
     font-family: system-ui;
 }
 
 .gradientText {
-    background: linear-gradient(to right, #f70301, #8b2f11, #28561f);
+    background: #1D3461;
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -92,11 +92,11 @@
     font-size: 1em;
     padding: 10px 0;
     height: 50px;
-    background-color: #3d9d3b;
+    background-color: #6290C8;
 }
 
 .loginButton:hover {
-    background-color: #1b5e20;
+    background-color: #2e5585;
 }
 
 .signupLink {

@@ -10,30 +10,10 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 576); // Track screen size
-  const [showNotifications, setShowNotifications] = useState(false);
-  const notificationsPerPage = 5;
   const [openFeedbackModal, setOpenFeedbackModal] = useState(false);
   const [user, setUser] = useState(null);
-  const [notifications, setNotifications] = useState([]);
-  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-  const [currentNotificationPage, setCurrentNotificationPage] = useState(0);
-  const notificationRef = useRef(null);
 
-  // Notification styles based on type
-  const getNotificationStyle = (type) => {
-    switch (type) {
-      case "SUCCESS":
-        return { backgroundColor: "#d4edda", color: "#155724", border: "1px solid #c3e6cb" };
-      case "INFO":
-        return { backgroundColor: "#d1ecf1", color: "#0c5460", border: "1px solid #bee5eb" };
-      case "WARNING":
-        return { backgroundColor: "#fff3cd", color: "#856404", border: "1px solid #ffeeba" };
-      case "CRITICAL":
-        return { backgroundColor: "#f8d7da", color: "#721c24", border: "1px solid #f5c6cb" };
-      default:
-        return { backgroundColor: "#f8f9fa", color: "#6c757d", border: "1px solid #d6d8db" };
-    }
-  };
+
 
   // Update `isMobile` on window resize
   useEffect(() => {
@@ -48,64 +28,32 @@ const Sidebar = () => {
   useEffect(() => {
     const fetchPatientDetails = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/signup/patient/me`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patient/me/`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        setUser(response.data);
+        setUser({
+          first_name: response.data.first_name,
+          last_name: response.data.last_name,
+          profile_picture: response.data.profile_picture, // Add profile picture
+        });
       } catch (error) {
         console.error("Error fetching user details:", error);
-        navigate("/");
+        if (error.response && error.response.status === 401) {
+          navigate("/login");
+        }
       }
     };
-
+  
     fetchPatientDetails();
-    fetchNotifications();
   }, [navigate]);
-
-  // Fetch notifications
-  const fetchNotifications = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/patient/notification/notifications`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      const sortedNotifications = response.data.sort((a, b) => (a.STATUS === "unread" ? -1 : 1));
-      setNotifications(sortedNotifications);
-
-      const unreadCount = sortedNotifications.filter((notification) => notification.STATUS === "unread").length;
-      setUnreadNotificationCount(unreadCount);
-    } catch (error) {
-      console.error("Error fetching notifications:", error);
-    }
-  };
-
-  const getDisplayedNotifications = () => {
-    const startIndex = currentNotificationPage * notificationsPerPage;
-    return notifications.slice(startIndex, startIndex + notificationsPerPage);
-  };
-
-  const handleNextPage = () => {
-    if ((currentNotificationPage + 1) * notificationsPerPage < notifications.length) {
-      setCurrentNotificationPage((prevPage) => prevPage + 1);
-    }
-  };
-
-  const handlePreviousPage = () => {
-    if (currentNotificationPage > 0) {
-      setCurrentNotificationPage((prevPage) => prevPage - 1);
-    }
-  };
-
+  
   const toggleMenu = () => {
     if (isMobile) {
       setIsOpen((prev) => !prev); // Toggle menu on mobile
     }
   };
-  const toggleNotifications = () => setShowNotifications((prev) => !prev);
 
   const handleMouseEnter = () => {
     if (!isMobile) {
@@ -181,32 +129,8 @@ const Sidebar = () => {
             </button>
             <FeedbackModal open={openFeedbackModal} handleClose={() => setOpenFeedbackModal(false)} />
 
-            <div className="position-relative">
-              <button className="icon-button" onClick={toggleNotifications}>
-                <Notifications />
-                {unreadNotificationCount > 0 && (
-                  <span className="badge bg-danger position-absolute top-5 start-100 translate-middle">
-                    {unreadNotificationCount}
-                  </span>
-                )}
-              </button>
-              {showNotifications && (
-                <div className="dropdown-menu-custom notification-dropdown" ref={notificationRef}>
-                  {getDisplayedNotifications().map((notification, index) => (
-                    <div
-                      key={index}
-                      className="p-3 mb-2 rounded"
-                      style={getNotificationStyle(notification.TYPE)}
-                    >
-                      <p className="mb-0">{notification.MESSAGE}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
             <NavLink to="/patient/profile" className="user-info ms-3 d-flex align-items-center">
-              <AccountCircle className="me-2" /> <span className="name">{user?.FIRST_NAME} {user?.LAST_NAME}</span>
+              <AccountCircle className="me-2" /> <span className="name">{user?.first_name} {user?.last_name}</span>
             </NavLink>
           </div>
 

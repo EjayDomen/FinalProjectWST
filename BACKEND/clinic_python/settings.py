@@ -8,6 +8,8 @@ import os
 
 load_dotenv()
 
+JWT_SECRET = os.getenv('JWT_SECRET', '11ba8162413be7aab2393f4a6939e869f5a414354e28f6d50fd7fc66a9fceda430bd0e5346f8f18640d05c8cc28a5095916447b1eff542221c7fcdce8537a1a8')
+
 # Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,8 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES":[
-        "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.AllowAny",
+        # "rest_framework.permissions.IsAuthenticated",
     ],
 }
 
@@ -38,6 +41,7 @@ SIMPLE_JWT = {
 # settings.py
 INSTALLED_APPS = [
     # Other default Django apps
+    'clinic_python',  # Make sure this is included
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,11 +51,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'api',
     "corsheaders",
-    
-    
+    'widget_tweaks',
     # Your app
-    'clinic_python',  # Make sure this is included
+    
 ]
+
 
 
 # Middleware
@@ -65,6 +69,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+MIDDLEWARE.insert(0, 'corsheaders.middleware.CorsMiddleware')
 
 # Root URL configuration
 ROOT_URLCONF = 'clinic_python.urls'
@@ -127,3 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS =  True
+
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'

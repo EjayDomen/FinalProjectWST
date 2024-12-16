@@ -14,7 +14,7 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/welcome/login`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/login/`, {
         EMAIL: email,
         PASSWORD: password
       });
@@ -26,9 +26,11 @@ const LoginPage = () => {
         // Redirect based on user role
         if (data.role === 'Patient') {
           navigate('/patient/home'); // Navigate to patient dashboard
-        } else if (data.role === 'Secretary') {
+        } else if (data.role === 'Staff') {
           navigate('/secretary/dashboard'); // Navigate to admin dashboard
-        } else {
+        } else if (data.role === 'Admin') {
+          navigate('/secretary/dashboard'); // Navigate to admin dashboard
+        }else {
           setError('Unauthorized user role'); // Set error if role is not recognized
         }
       } else {
@@ -52,8 +54,8 @@ const LoginPage = () => {
         <div className={styles.formContent}>
           <img src={logoImage} alt="logo" className={styles.logoImage} />
           
-          <h2 className={styles.title}>WELCOME TO <span className={styles.gradientText}>ACE QUEUE</span></h2>
-          <p className={styles.phrase}>"In Ace Queue, we queue for you"</p>
+          <h2 className={styles.title}>WELCOME TO <span className={styles.gradientText}>QUEUE CARE</span></h2>
+          <p className={styles.phrase}>"In Queue care, we queue for you"</p>
           
           <div className={styles.content}>
             <TextField

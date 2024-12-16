@@ -1,6 +1,6 @@
 from django.db import models
 
-class User(models.Model):
+class Staff(models.Model):
 
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True)

@@ -11,3 +11,5 @@ def manage_schedule(request):
     return JsonResponse(data)
 
 
+def dashboard(request):
+    return render(request, 'admin/dashboard.html')

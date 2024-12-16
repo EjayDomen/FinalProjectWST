@@ -97,7 +97,6 @@ const Appointment = () => {
         setUserId(response.data.id);
       } catch (error) {
         console.error('Error fetching user info:', error);
-        navigate('/');
       }
     };
 

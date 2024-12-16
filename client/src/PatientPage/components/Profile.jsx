@@ -35,6 +35,16 @@ const ChangePasswordModal = ({ isOpen, onClose, formData, handleChange, handleSa
               />
             </div>
             <div className="mb-3">
+              <label htmlFor="password" className="form-label">Enter Old Password:</label>
+              <input
+                type="password"
+                className="form-control"
+                name="oldPassword"
+                value={formData.oldPassword}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="mb-3">
               <label htmlFor="password" className="form-label">New Password:</label>
               <input
                 type="password"
@@ -68,24 +78,24 @@ const ChangePasswordModal = ({ isOpen, onClose, formData, handleChange, handleSa
 const Profile = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    student_or_employee_no: "",
     lastName: "",
     firstName: "",
     suffix: "",
     middleName: "",
     email: "",
     password: "",
-    dateOfBirth: "",
+    campus: "",
     age: "",
-    gender: "",
-    contactNumber: "",
-    civilStatus: "",
+    sex: "",
+    emergency_contact_number: "",
+    emergency_contact_relation: "",
     address: "",
-    firstDoseBrand: "",
-    firstDoseDate: "",
-    secondDoseBrand: "",
-    secondDoseDate: "",
-    boosterBrand: "",
-    boosterDate: "",
+    bloodtype: "",
+    allergies: "",
+    college_office: "",
+    course_designation: "",
+    year: "",
   });
 
   const [isReadOnly, setIsReadOnly] = useState(true);
@@ -98,7 +108,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/signup/patient/me`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patient/me/  `, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
@@ -107,23 +117,23 @@ const Profile = () => {
 
         // Populate formData
         setFormData({
-          lastName: patientData.LAST_NAME || "",
-          firstName: patientData.FIRST_NAME || "",
-          suffix: patientData.SUFFIX || "",
-          middleName: patientData.MIDDLE_NAME || "",
-          email: patientData.EMAIL || "",
-          dateOfBirth: patientData.BIRTHDAY || "",
-          age: patientData.AGE || "",
-          gender: patientData.SEX || "",
-          contactNumber: patientData.CONTACT_NUMBER || "",
-          civilStatus: patientData.CIVIL_STATUS || "",
-          address: patientData.ADDRESS || "",
-          firstDoseBrand: patientData.FIRST_DOSE_BRAND || "",
-          firstDoseDate: patientData.FIRST_DOSE_DATE || "",
-          secondDoseBrand: patientData.SECOND_DOSE_BRAND || "",
-          secondDoseDate: patientData.SECOND_DOSE_DATE || "",
-          boosterBrand: patientData.BOOSTER_BRAND || "",
-          boosterDate: patientData.BOOSTER_DATE || "",
+          student_or_employee_no: patientData.student_or_employee_no ||"",
+          lastName: patientData.last_name || "",
+          firstName: patientData.first_name || "",
+          suffix: patientData.suffix || "",
+          middleName: patientData.middle_name || "",
+          email: patientData.email || "",
+          campus: patientData.campus || "",
+          age: patientData.age || "",
+          sex: patientData.sex || "",
+          emergency_contact_number: patientData.emergency_contact_number || "",
+          emergency_contact_relation: patientData.emergency_contact_relation || "",
+          address: patientData.address || "",
+          bloodtype: patientData.bloodtype || "",
+          allergies: patientData.allergies || "",
+          college_office: patientData.college_office || "",
+          course_designation: patientData.course_designation || "",
+          year: patientData.year || "",
         });
 
         // If the patient is newly registered, activate the edit button
@@ -132,7 +142,6 @@ const Profile = () => {
         }
       } catch (error) {
         console.error('Error fetching patient data:', error);
-        navigate('/');
       }
     };
 
@@ -169,7 +178,7 @@ const Profile = () => {
       setIsReadOnly(false);
     } else {
       // Manual validation check for required fields
-      if (!formData.firstName || !formData.lastName || !formData.email || !formData.dateOfBirth || !formData.age || !formData.gender || !formData.contactNumber || !formData.address) {
+      if (!formData.firstName || !formData.lastName || !formData.email || !formData.campus || !formData.age || !formData.sex || !formData.emergency_contact_number || !formData.address) {
         setErrorMessage('Please fill out all required fields.');
         setShowErrorModal(true);
         return; // Stop the function if validation fails
@@ -177,7 +186,7 @@ const Profile = () => {
   
       // If validation passes, continue saving
       try {
-        await axios.put(`${process.env.REACT_APP_API_URL}/signup/patient/update`, formData, {
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/patient/updateProfile/`, formData, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
@@ -212,14 +221,20 @@ const Profile = () => {
       alert('Passwords do not match. Please try again.');
       return;
     }
+    const token = localStorage.getItem('token');
+      if (!token) {
+        alert('You need to log in first.');
+        navigate('/login'); // Redirect to login page if token is not found
+        return;
+      }
 
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/patient/forgotPassword/reset-password`, {
+      const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/patient/update-password/`, {
         email: formData.email,
         newPassword: formData.password,
       }, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
       setShowSuccessModal(true);
@@ -231,6 +246,32 @@ const Profile = () => {
       setShowErrorModal(true);
     }
   };
+
+  const handleDelete = async () => {
+    const confirmation = window.confirm("Are you sure you want to delete your profile?");
+    if (confirmation) {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert('You need to log in first.');
+        navigate('/login'); // Redirect to login page if token is not found
+        return;
+      }
+      try {
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/patient/deleteAcc/`, {}, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        alert("Your profile has been deleted successfully.");
+        navigate('/'); // Redirect to home or login page after deletion
+      } catch (error) {
+        console.error('Error deleting profile:', error);
+        alert('Failed to delete profile. Please try again later.');
+      }
+    }
+  };
+  
+  
 
   return (
     <div className="container" style={{marginTop:'5%', backgroundColor:'#fff', padding:'30px 20px', borderRadius:'8px'}}>
@@ -252,19 +293,19 @@ const Profile = () => {
           >
             <ArrowBack /> Back
           </button>
+          
           <h3 className="text-center">{`${formData.firstName} ${formData.middleName.charAt(0)}. ${formData.lastName} ${formData.suffix}`}</h3>
           <div style={{padding: '20px 0'}}>
             <p><strong>Age:</strong> {formData.age}</p>
-            <p><strong>Birthday:</strong> {new Date(formData.dateOfBirth).toLocaleDateString()}</p>
-            <p><strong>Gender:</strong> {formData.gender}</p>
-            <p><strong>Contact No.:</strong> {formData.contactNumber}</p>
+            <p><strong>Campus:</strong> {new Date(formData.campus).toLocaleDateString()}</p>
+            <p><strong>Sex:</strong> {formData.sex}</p>
+            <p><strong>Emergency Cont. No.:</strong> {formData.emergency_contact_number}</p>
             <p><strong>Address:</strong> {formData.address}</p>
           </div>
           <hr />
           <h4 style={{padding:'20px 0'}}>Medical Information:</h4>
-          <p><strong>1st Dose:</strong> {formData.firstDoseBrand} on {formData.firstDoseDate || "N/A"}</p>
-          <p><strong>2nd Dose:</strong> {formData.secondDoseBrand} on {formData.secondDoseDate || "N/A"}</p>
-          <p><strong>Booster:</strong> {formData.boosterBrand} on {formData.boosterDate || "N/A"}</p>
+          <p><strong>Blood Type :</strong> {formData.bloodtype}</p>
+          <p><strong>Allergies :</strong> {formData.allergies} </p>
         </div>
 
         {/* Right Section */}
@@ -300,6 +341,21 @@ const Profile = () => {
       </div>
 
   {/* Fields */}
+  <div className="row">
+    <div className="col-md-4 mb-3">
+      <label><span style={{ color: 'red' }}>*</span>Student or Employee Number:</label>
+      <input
+        type="text"
+        className="form-control"
+        name="student_or_employee_no"
+        readOnly={isReadOnly}
+        value={formData.student_or_employee_no}
+        onChange={handleChange}
+        required
+      />
+    </div>
+  </div>
+
   <div className="row">
     <div className="col-md-4 mb-3">
       <label><span style={{ color: 'red' }}>*</span>Last Name:</label>
@@ -351,16 +407,22 @@ const Profile = () => {
       />
     </div>
     <div className="col-md-4 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Date of Birth:</label>
-      <input
-        type="date"
-        className="form-control"
-        name="dateOfBirth"
+      <label><span style={{ color: 'red' }}>*</span>Sex:</label>
+      <select
+        className="form-select"
+        name="sex"
         readOnly={isReadOnly}
-        value={formData.dateOfBirth}
+        value={formData.sex}
         onChange={handleChange}
         required
-      />
+      >
+        <option value="" disabled>
+          Select
+        </option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Others">Others</option>
+      </select>
     </div>
     <div className="col-md-4 mb-3">
       <label><span style={{ color: 'red' }}>*</span>Age:</label>
@@ -377,42 +439,7 @@ const Profile = () => {
   </div>
 
   <div className="row">
-    <div className="col-md-6 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Gender:</label>
-      <select
-        className="form-select"
-        name="gender"
-        readOnly={isReadOnly}
-        value={formData.gender}
-        onChange={handleChange}
-        required
-      >
-        <option value="" disabled>
-          Select
-        </option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-        <option value="Others">Others</option>
-      </select>
-    </div>
-    <div className="col-md-6 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Contact Number:</label>
-      <div className="input-group">
-        <input
-          type="text"
-          className="form-control"
-          name="contactNumber"
-          readOnly={isReadOnly}
-          value={formData.contactNumber}
-          onChange={handleChange}
-          required
-        />
-      </div>
-    </div>
-  </div>
-
-  <div className="row">
-    <div className="col-md-6 mb-3">
+    <div className="col-md-3 mb-3">
       <label><span style={{ color: 'red' }}>*</span>Address:</label>
       <input
         type="text"
@@ -424,107 +451,125 @@ const Profile = () => {
         required
       />
     </div>
-    <div className="col-md-6 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Civil Status:</label>
-      <select
-        className="form-select"
-        name="civilStatus"
+    <div className="col-md-4 mb-3">
+      <label><span style={{ color: 'red' }}>*</span>College or Office:</label>
+      <input
+        type="text"
+        className="form-control"
+        name="college_office"
         readOnly={isReadOnly}
-        value={formData.civilStatus}
+        value={formData.college_office}
         onChange={handleChange}
         required
-      >
-        <option value="" disabled>
-          Select
-        </option>
-        <option value="Single">Single</option>
-        <option value="Married">Married</option>
-        <option value="Divorced">Divorced</option>
-        <option value="Widowed">Widowed</option>
-      </select>
+      />
+      </div>
+      <div className="col-md-3 mb-3">
+      <label><span style={{ color: 'red' }}>*</span>Course or Designation:</label>
+      <input
+        type="text"
+        className="form-control"
+        name="course_designation"
+        readOnly={isReadOnly}
+        value={formData.course_designation}
+        onChange={handleChange}
+        required
+      />
+      </div>
+      <div className="col-md-2 mb-3">
+      <label><span style={{ color: 'red' }}>*</span>Year :</label>
+      <input
+        type="text"
+        className="form-control"
+        name="year"
+        readOnly={isReadOnly}
+        value={formData.year}
+        onChange={handleChange}
+        required
+      />
+      </div>
+  </div>
+
+
+
+  <div className="row">
+  <div className="col-md-6 mb-3">
+      <label><span style={{ color: 'red' }}>*</span>Emergency Contact Number:</label>
+      <div className="input-group">
+        <input
+          type="text"
+          className="form-control"
+          name="emergency_contact_number"
+          readOnly={isReadOnly}
+          value={formData.emergency_contact_number}
+          onChange={handleChange}
+          required
+        />
+      </div>
+    </div>
+    <div className="col-md-4 mb-3">
+      <label><span style={{ color: 'red' }}>*</span>Campus:</label>
+      <input
+        type="text"
+        className="form-control"
+        name="campus"
+        readOnly={isReadOnly}
+        value={formData.campus}
+        onChange={handleChange}
+        required
+      />
+    </div>
+    <div className="col-md-6 mb-3">
+      <label><span style={{ color: 'red' }}>*</span>Emergency Contact Relation:</label>
+      <div className="input-group">
+        <input
+          type="text"
+          className="form-control"
+          name="emergency_contact_relation"
+          readOnly={isReadOnly}
+          value={formData.emergency_contact_relation}
+          onChange={handleChange}
+          required
+        />
+      </div>
     </div>
   </div>
+
 
   <h5 className="mb-4"><span style={{ color: 'red' }}>*</span>Medical Information</h5> 
   <p style={{color:'red'}}>*N/A if none.</p>
   <div className="row">
     <div className="col-md-6 mb-3">
-      <label>1st Dose Brand:</label>
+      <label>Blood Type:</label>
       <input
         type="text"
         className="form-control"
-        name="firstDoseBrand"
+        name="bloodtype"
         readOnly={isReadOnly}
-        value={formData.firstDoseBrand}
+        value={formData.bloodtype}
         onChange={handleChange}
         required
       />
     </div>
     <div className="col-md-6 mb-3">
-      <label>Date:</label>
-      <input
-        type="date"
-        className="form-control"
-        name="firstDoseDate"
-        readOnly={isReadOnly}
-        value={formData.firstDoseDate}
-        onChange={handleChange}
-        required
-      />
-    </div>
-  </div>
-
-  <div className="row">
-    <div className="col-md-6 mb-3">
-      <label>2nd Dose Brand:</label>
+      <label>Allergies:</label>
       <input
         type="text"
         className="form-control"
-        name="secondDoseBrand"
+        name="allergies"
         readOnly={isReadOnly}
-        value={formData.secondDoseBrand}
-        onChange={handleChange}
-      />
-    </div>
-    <div className="col-md-6 mb-3">
-      <label>Date:</label>
-      <input
-        type="date"
-        className="form-control"
-        name="secondDoseDate"
-        readOnly={isReadOnly}
-        value={formData.secondDoseDate}
-        onChange={handleChange}
-      />
-    </div>
-  </div>
-
-  <div className="row">
-    <div className="col-md-6 mb-3">
-      <label>Booster Brand:</label>
-      <input
-        type="text"
-        className="form-control"
-        name="boosterBrand"
-        readOnly={isReadOnly}
-        value={formData.boosterBrand}
-        onChange={handleChange}
-      />
-    </div>
-    <div className="col-md-6 mb-3">
-      <label>Date:</label>
-      <input
-        type="date"
-        className="form-control"
-        name="boosterDate"
-        readOnly={isReadOnly}
-        value={formData.boosterDate}
+        value={formData.allergies}
         onChange={handleChange}
       />
     </div>
   </div>
 
   <div className="mt-4 d-flex justify-content-end">
+    <button
+    className="btn btn-danger mt-3"
+    onClick={handleDelete}
+    >
+      Delete Profile
+    </button>
     <button className="btn btn-secondary me-2" onClick={() => setIsModalOpen(true)}>
       Change Password
     </button>

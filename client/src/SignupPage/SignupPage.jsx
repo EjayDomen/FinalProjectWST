@@ -10,6 +10,7 @@ import PrivacyPolicyModal from './PrivacyPolicyModal';
 const SignupPage = () => {
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
+    student_or_employee_no: '',
     firstName: '',
     middleName: '',
     lastName: '',
@@ -18,6 +19,17 @@ const SignupPage = () => {
     phoneNumber: '',
     password: '',
     confirmPassword: '',
+    campus: '',
+    college_office: '',
+    course_designation: '',
+    year: '',
+    emergency_contact_number: '',
+    emergency_contact_relation: '',
+    bloodtype: '',
+    allergies: '',
+    age: '',
+    sex: '',
+    address: '',
   });
 
   const [errors, setErrors] = useState({
@@ -93,17 +105,17 @@ const SignupPage = () => {
       valid = false;
     }
   
-    // Check required fields
-    for (const key in fieldsToCheck) {
-      if (fieldsToCheck[key].trim() === '') {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          requiredFields: 'All fields are required except Suffix and Middle Name.',
-        }));
-        valid = false;
-        break;
-      }
-    }
+    // // Check required fields
+    // for (const key in fieldsToCheck) {
+    //   if (fieldsToCheck[key].trim() === '') {
+    //     setErrors((prevErrors) => ({
+    //       ...prevErrors,
+    //       requiredFields: 'All fields are required except Suffix and Middle Name.',
+    //     }));
+    //     valid = false;
+    //     break;
+    //   }
+    // }
   
     // Validate terms and conditions
     if (!isTermsChecked) {
@@ -124,31 +136,43 @@ const SignupPage = () => {
         // Pass form values to the next page via the navigate function
         const { email, middleName, firstName, lastName } = formValues;
 
-        const checkResponse = await axios.post(`${process.env.REACT_APP_API_URL}/signup/check-patient`, { FIRST_NAME: firstName, MIDDLE_NAME: middleName, LAST_NAME: lastName, EMAIL: email });
-
-        // If the patient does not exist, proceed to send the OTP
-        if (checkResponse.status === 200) {
-          // Send the OTP to the provided email
-          const response = await axios.post(`${process.env.REACT_APP_API_URL}/signup/verification/send-otp`, { email });
-          if (response.status === 200) {
-            console.log(response.data.message); // Log success message
-
-            const generatedotp = response.data.otp;
-            console.log('Generated OTP:', generatedotp); // Log the OTP for testing
-
-            // Pass form values to the next page via the navigate function
-            navigate(`/verification`, { state: { formValues, generatedotp } });
-          } else {
-            alert("Failed to send OTP. Please try again.");
-          }
+  
+        // Register the patient account
+        const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/api/register/`, {
+          student_or_employee_no : formValues.student_or_employee_no,
+          first_name: formValues.firstName,
+          middle_name: formValues.middleName,
+          last_name: formValues.lastName,
+          suffix: formValues.suffix,
+          email: formValues.email,
+          contact_number: formValues.phoneNumber,
+          password: formValues.password,
+          campus: formValues.campus,
+          college_office: formValues.college_office,
+          course_designation: formValues.course_designation,
+          year: formValues.year,
+          emergency_contact_number: formValues.emergency_contact_number,
+          emergency_contact_relation: formValues.emergency_contact_relation,
+          bloodtype: formValues.bloodtype,
+          allergies: formValues.allergies,
+          age: formValues.age,
+          sex: formValues.sex,
+          address: formValues.address,
+        });
+  
+        // Check if registration was successful
+        if (registerResponse.status === 201) {
+          console.log('Registration successful, navigating to account success page');
+          navigate('/accountSuccess'); // Navigate to the success page
+        } else {
+          console.error('Failed to register the patient:', registerResponse);
+          alert('Failed to register. Please try again.');
         }
-
-
       } catch (err) {
         if (err.response && err.response.status === 409) {
           setErrors((prevErrors) => ({
             ...prevErrors,
-            server: 'A patient with this name or email  already exists.',
+            server: 'A patient with this name or email already exists.',
           }));
         } else {
           console.error('Signup error:', err);
@@ -160,6 +184,7 @@ const SignupPage = () => {
       }
     }
   };
+  
 
   const inlineBodyStyle = {
     margin: '0',
@@ -178,7 +203,7 @@ const SignupPage = () => {
           <div className={styles.formContent}>
             <img src={logoImage} alt="logo" className={styles.logoImage} />
             <h2 className={styles.title}>
-              GET STARTED WITH <span className={styles.gradientText}>ACE QUEUE</span>
+              GET STARTED WITH <span className={styles.gradientText}>Queue Care</span>
             </h2>
             <p className={styles.text}>Create an account now!</p>
 
@@ -189,6 +214,18 @@ const SignupPage = () => {
               </p>
             )}
 
+            <div className={styles.inputGroup}>
+              <TextField
+                label="Student or Employee Number: "
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="student_or_employee_no"
+                value={formValues.student_or_employee_no}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
             <div className={styles.inputGroup}>
               <TextField
                 label="First Name"
@@ -281,6 +318,130 @@ const SignupPage = () => {
                 onChange={handleInputChange}
                 required
 
+              />
+              
+
+            </div>
+
+            <div className={styles.inputGroup}>
+            <TextField
+                label="Campus"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="campus"
+                value={formValues.campus}
+                onChange={handleInputChange}
+                required
+              />
+              <TextField
+                label="College or Office"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="college_office"
+                value={formValues.college_office}
+                onChange={handleInputChange}
+                required
+              />
+              <TextField
+                label="Course or Designation"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="course_designation"
+                value={formValues.course_designation}
+                onChange={handleInputChange}
+                required
+              />
+              <TextField
+                label="Year"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="year"
+                value={formValues.year}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+            <TextField
+                label="Emergency Contact Number"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="emergency_contact_number"
+                value={formValues.emergency_contact_number}
+                onChange={handleInputChange}
+                required
+              />
+              <TextField
+                label="Emergency Contact Relation"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="emergency_contact_relation"
+                value={formValues.emergency_contact_relation}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+            <div className={styles.inputGroup}>
+            <TextField
+                label="Blood Type"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="bloodtype"
+                value={formValues.bloodtype}
+                onChange={handleInputChange}
+                required
+              />
+              <TextField
+                label="Allergies"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="allergies"
+                value={formValues.allergies}
+                onChange={handleInputChange}
+                required
+              />
+              <TextField
+                label="Sex"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="sex"
+                value={formValues.sex}
+                onChange={handleInputChange}
+                required
+              />
+              <TextField
+                label="Age"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="age"
+                value={formValues.age}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+
+
+            <div className={styles.inputGroup}>
+              <TextField
+                label="Address"
+                variant="outlined"
+                fullWidth
+                className={styles.inputField}
+                name="address"
+                value={formValues.address}
+                onChange={handleInputChange}
+                required
               />
             </div>
 
