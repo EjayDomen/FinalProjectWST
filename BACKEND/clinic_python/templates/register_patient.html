@@ -1,0 +1,142 @@
+{% load widget_tweaks %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Registration</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card shadow-sm border-light">
+                    <div class="card-header bg-primary text-white text-center py-3">
+                        <h3>Patient Registration</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                {{ form.first_name|add_class:"form-control" }}
+                                {% if form.first_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.first_name.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="middle_name" class="form-label">Middle Name</label>
+                                {{ form.middle_name|add_class:"form-control" }}
+                                {% if form.middle_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.middle_name.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                {{ form.last_name|add_class:"form-control" }}
+                                {% if form.last_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.last_name.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="suffix" class="form-label">Suffix</label>
+                                {{ form.suffix|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="campus" class="form-label">Campus</label>
+                                {{ form.campus|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="college_office" class="form-label">College Office</label>
+                                {{ form.college_office|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="course_designation" class="form-label">Course Designation</label>
+                                {{ form.course_designation|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="year" class="form-label">Year</label>
+                                {{ form.year|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="emergency_contact_number" class="form-label">Emergency Contact Number</label>
+                                {{ form.emergency_contact_number|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="emergency_contact_relation" class="form-label">Emergency Contact Relation</label>
+                                {{ form.emergency_contact_relation|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="bloodtype" class="form-label">Blood Type</label>
+                                {{ form.bloodtype|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="allergies" class="form-label">Allergies</label>
+                                {{ form.allergies|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                {{ form.email|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="age" class="form-label">Age</label>
+                                {{ form.age|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="sex" class="form-label">Sex</label>
+                                {{ form.sex|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Address</label>
+                                {{ form.address|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                {{ form.password|add_class:"form-control" }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">Confirm Password</label>
+                                {{ form.confirm_password|add_class:"form-control" }}
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-2">Register</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
