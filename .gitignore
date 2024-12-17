@@ -1,0 +1,43 @@
+# Virtual environment
+.venv/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Django logs
+*.log
+
+# Database (optional for dev purposes)
+db.sqlite3
+
+# Secret keys and environment files
+*.env
+.env
+*.key
+
+# Compiled code
+*.pyc
+*.pyo
+
+# Media and uploads (optional)
+media/
+
+# Node modules (if frontend dependencies exist)
+node_modules/
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.iml
+
+# Python dependencies
+pip-log.txt
+packages.txt.lock
+
+# System files
+.DS_Store
+Thumbs.db
