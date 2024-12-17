@@ -31,7 +31,7 @@ class Appointment(models.Model):
     purpose = models.TextField()
     status = models.CharField(max_length=50, choices=APPOINTMENT_STATUS_CHOICES, default="Pending")  # e.g., pending, confirmed, completed
     type = models.CharField(max_length=50, choices=TYPE_CHOICES, default='none')
-    staff = models.ForeignKey('clinic_python.User', on_delete=models.CASCADE)  # Use string notation
+    staff = models.ForeignKey('clinic_python.Staff', on_delete=models.CASCADE)  # Use string notation
     createdAt = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
