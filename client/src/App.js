@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import './App.css';
 import LoginPage from './LoginPage/LoginPage'; // Adjust path if needed
 import ResetPasswordPage from './LoginPage/ResetPassword';
 import OTPVerification from './LoginPage/OTPVerification';
@@ -9,13 +10,11 @@ import SignupPage from './SignupPage/SignupPage'; // Adjust path if needed
 import VerificationPage from './SignupPage/VerificationPage';
 import AccountSuccessPage from './SignupPage/AccountSuccessPage';
 
-
 // Patient components
 import SidebarPatient from './PatientPage/components/Sidebar';
 import HomePatient from './PatientPage/components/Home';
 import DoctorsPatient from './PatientPage/components/Doctors';
 import AppointmentPatient from './PatientPage/components/appointment';
-
 import ProfilePatient from './PatientPage/components/Profile';
 
 // Secretary components
@@ -23,7 +22,7 @@ import SidebarSecre from './SecretaryPage/components/sidebarSecre';
 import DashboardSecre from './SecretaryPage/components/dashboard';
 import DoctorSecre from './SecretaryPage/components/doctors';
 import PatientSecre from './SecretaryPage/components/patient';
-import PatientListSecre from './SecretaryPage/components/patientlist'
+import PatientListSecre from './SecretaryPage/components/patientlist';
 import AppointmentSecre from './SecretaryPage/components/appointments';
 import QueueSecre from './SecretaryPage/components/queue';
 import QueueListSecre from './SecretaryPage/components/queuelist.jsx';
@@ -34,17 +33,17 @@ import ReportFeedbackSecre from './SecretaryPage/components/feedback.jsx';
 import ServicesSecre from './SecretaryPage/components/services.jsx';
 import QRReaderSecre from './SecretaryPage/components/QRCodeReader.jsx';
 import PredefinedQuestion from './SecretaryPage/components/ManagePredefinedQuestions.jsx';
-
 import ProfileSecre from './SecretaryPage/components/profile';
 
-// Layout components for Patient and Secretary
+// Super Admin components
+import DashboardHeader from './SuperAdminPage/components/DashboardHeader';
+
+// Layout components for Patient, Secretary, and Super Admin
 function PatientLayout({ children }) {
   return (
     <div>
       <SidebarPatient />
-      <div className="patient-content">
-        {children}
-      </div>
+      <div className="patient-content">{children}</div>
     </div>
   );
 }
@@ -53,8 +52,16 @@ function SecretaryLayout({ children }) {
   return (
     <div>
       <SidebarSecre />
-      <div className="secre-content">
-        {children}
+      <div className="secre-content">{children}</div>
+    </div>
+  );
+}
+
+function SuperAdminLayout({ children }) {
+  return (
+    <div className="app">
+      <div className="main-content">
+        <DashboardHeader />
       </div>
     </div>
   );
@@ -83,7 +90,6 @@ function App() {
                 <Route path="home" element={<HomePatient />} />
                 <Route path="doctors" element={<DoctorsPatient />} />
                 <Route path="appointment" element={<AppointmentPatient />} />
-
                 <Route path="profile" element={<ProfilePatient />} />
               </Routes>
             </PatientLayout>
@@ -115,8 +121,21 @@ function App() {
             </SecretaryLayout>
           }
         />
+
+        {/* Super Admin routes with Sidebar layout */}
+        <Route
+          path="/superadmin/*"
+          element={
+            <SuperAdminLayout>
+              <Routes>
+                <Route path="dashboard" element={<DashboardHeader />} />
+              </Routes>
+            </SuperAdminLayout>
+          }
+        />
       </Routes>
     </Router>
+    
   );
 }
 

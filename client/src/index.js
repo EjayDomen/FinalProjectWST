@@ -3,6 +3,28 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {
+  Chart as ChartJS,
+  ArcElement, // For pie/doughnut charts
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+} from 'chart.js';
+
+// Register the required components
+ChartJS.register(
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement
+);
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
