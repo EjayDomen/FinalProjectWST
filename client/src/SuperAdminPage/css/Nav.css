@@ -1,0 +1,127 @@
+/* Existing base styles */
+body {
+    margin: 0;
+    font-family: 'Inter';
+    color: #333;
+}
+.main-container {
+    display: flex;
+    min-height: 100vh; /* Full height */
+  }
+
+.dashboard {
+    display: flex;
+    height: 100vh;
+    background-color: #E4E4E4;
+}
+.content {
+    flex: 1; /* Make the content area take up the remaining space */
+    overflow-x: auto; /* Allow horizontal scrolling if the content overflows */
+  }
+.sidebar {
+    width: 18%; /* Fixed width for desktop */
+    background-color: #1D3461; /* Navy blue */
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* Ensure vertical alignment of elements */
+    align-items: center; /* Center content horizontally */
+    top: 0;
+    height: 100vh; /* Full height of the viewport */
+    overflow-y: auto; /* Allow scrolling if content overflows */
+}
+
+.sidebar .logo {
+    font-size: 34px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.sidebar img {
+    width: 160px;
+    margin-bottom: 20px; /* Space below the logo image */
+}
+
+.icon {
+    width: 20px; /* Set a fixed width */
+    text-align: center; /* Center-align the icons within the width */
+    display: inline-block; /* Ensure the width is applied */
+}
+
+.sidebar nav {
+    list-style: none;
+    width: 100%; /* Full width for links */
+    padding: 0;
+    margin-top: 20px; /* Add some space between the logo and the nav links */
+}
+
+.sidebar nav a {
+    display: flex; /* Flex layout for aligning text and icons */
+    align-items: center; /* Center vertically */
+    gap: 10px; /* Space between icon and text */
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 4px;
+    text-decoration: none; /* Remove underline from links */
+    color: white; /* Text color */
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect */
+.sidebar nav a:hover {
+    background-color: #2563EB; /* Lighter blue */
+    color: white; /* Ensure text remains white on hover */
+}
+
+/* Active link */
+.sidebar nav a.active {
+    background-color: #2563EB; /* Highlight active link */
+    color: white;
+}
+
+/* Icon size */
+.sidebar nav a .icon {
+    font-size: 20px; /* Icon size */
+}
+
+/* Responsive Sidebar */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60%; /* Adjust width for smaller screens */
+        position: fixed; /* Make sidebar fixed */
+        height: 100%; /* Full height for vertical scrolling */
+        z-index: 1000; /* Ensure it is on top of other content */
+        transform: translateX(-100%); /* Initially hidden off-screen */
+        transition: transform 0.3s ease; /* Smooth transition for opening/closing */
+    }
+
+    .sidebar.open {
+        transform: translateX(0); /* Slide in when open */
+    }
+
+    .sidebar img {
+        width: 120px; /* Reduce logo size for smaller screens */
+    }
+}
+
+/* Toggle button for mobile */
+.sidebar-toggle {
+    display: none; /* Hide toggle button on desktop */
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1100; /* Above sidebar */
+    background-color: #1D3461;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        display: block; /* Show toggle button on mobile */
+    }
+}

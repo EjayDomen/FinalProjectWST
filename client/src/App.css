@@ -36,3 +36,23 @@
     transform: rotate(360deg);
   }
 }
+
+/* CSS for main layout */
+.main-container {
+  display: flex;
+  height: 100vh; /* Ensure the container takes up full height */
+}
+
+.sidebar {
+  width: 250px; /* Adjust width as needed */
+  color: white;
+  padding: 20px;
+}
+
+.content {
+  flex-grow: 1; /* Make sure content takes the remaining space */
+}
+
+/* Add other styles as necessary */
+
+

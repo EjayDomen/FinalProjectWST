@@ -37,6 +37,10 @@ import ProfileSecre from './SecretaryPage/components/profile';
 
 // Super Admin components
 import DashboardHeader from './SuperAdminPage/components/DashboardHeader';
+import QueueManagement from './SuperAdminPage/components/QueueManagement.jsx';
+import PatientManagement from './SuperAdminPage/components/PatientManagement';
+import StaffManagement from './SuperAdminPage/components/StaffManagement';
+import { SuperAdminNav } from './SuperAdminPage/components/SuperAdminNav';
 
 // Layout components for Patient, Secretary, and Super Admin
 function PatientLayout({ children }) {
@@ -59,9 +63,11 @@ function SecretaryLayout({ children }) {
 
 function SuperAdminLayout({ children }) {
   return (
-    <div className="app">
-      <div className="main-content">
-        <DashboardHeader />
+    <div className="main-container">
+      {/* Always display Super Admin navigation */}
+      <SuperAdminNav />
+      <div className="content">
+        {children}
       </div>
     </div>
   );
@@ -122,20 +128,22 @@ function App() {
           }
         />
 
-        {/* Super Admin routes with Sidebar layout */}
+        {/* Super Admin routes with SuperAdminLayout */}
         <Route
-          path="/superadmin/*"
+          path="/dashboard/*"
           element={
             <SuperAdminLayout>
               <Routes>
-                <Route path="dashboard" element={<DashboardHeader />} />
+                <Route path="/" element={<DashboardHeader />} />
+                <Route path="/queuemanage" element={<QueueManagement />} />
+                <Route path="/patientmanage" element={<PatientManagement />} />
+                <Route path="/staffmanage" element={<StaffManagement />} />
               </Routes>
             </SuperAdminLayout>
           }
         />
       </Routes>
     </Router>
-    
   );
 }
 

@@ -1,9 +1,10 @@
 import React from 'react';
 import '../css/Dashboard.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGauge, faUsers, faUser, faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
-import logoImage from '../../LoginPage/images/logo.png';
 import { Doughnut, Line } from 'react-chartjs-2';
+import { faMagnifyingGlass, faBell } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import profileImage from '../images/pookie.jpeg';
+
 
 const Dashboard = () => {
   // Data for Line Chart
@@ -35,55 +36,52 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <aside className="sidebar">
-        <img src={logoImage} alt="logo" className="logo-image" />
-        <div className="logo">Queue Care</div>
-        <ul>
-          <li><FontAwesomeIcon icon={faGauge} style={{ width: '20px'}} /> Dashboard</li>
-          <li><FontAwesomeIcon icon={faUsers} style={{ width: '20px'}} /> Queue Management</li>
-          <li><FontAwesomeIcon icon={faUser} style={{ width: '20px'}} /> Patient Management</li>
-          <li><FontAwesomeIcon icon={faPeopleRoof} style={{ width: '20px'}} /> Staff Management</li>
-        </ul>
-      </aside>
 
       <main className="dashboard-content">
-          <div className="dashboard-header">
-            <h1 className="dashboard-title">Dashboard</h1>
-          </div>
-          
-        
-          {/* Stats */}
-           <div className="stats-container">
-             <div className="stats-card" id="stat1" style={{color: 'white'}}>
-               <h3>Students</h3>
-               <h1>21</h1>
-             </div>
-             <div className="stats-card" id="stat2" style={{color: 'white'}}>
-               <h3>Employees</h3>
-               <h1>22</h1>
-             </div>
-             <div className="stats-card" id="stat3">
-               <h3>Employees</h3>
-               <h1>23</h1>
-             </div>
-             <div className="stats-card" id="stat4">
-               <h3>Employees</h3>
-               <h1>24</h1>
-             </div>
-           </div>
-
-           {/* Charts */}
-           <div className="charts-container">
-            <div className="chart-card">
-              <Line data={lineData} />
+        <div className="dashboard-header">
+          <h1 className="dashboard-title">Dashboard</h1>
+          <div className="header-right">
+            <div className="search-container">
+              <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
+              <input type="text" placeholder="Search" className="search-input" />
             </div>
-            <div className="chart-card">
-              <Doughnut data={doughnutData} />
+            <div className="profile-container">
+              <FontAwesomeIcon icon={faBell} className="notification-icon" />
+              <img src={profileImage} alt="Profile" className="profile-image" />
+              <div className="user-avatar">Nick Gerblack</div>
             </div>
           </div>
+        </div>
         
+        {/* Stats */}
+        <div className="stats-container">
+          <div className="stats-card" id="stat1" style={{color: 'white'}}>
+            <h3>Students</h3>
+            <h1>21</h1>
+          </div>
+          <div className="stats-card" id="stat2" style={{color: 'white'}}>
+            <h3>Employees</h3>
+            <h1>22</h1>
+          </div>
+          <div className="stats-card" id="stat3">
+            <h3>Employees</h3>
+            <h1>23</h1>
+          </div>
+          <div className="stats-card" id="stat4">
+            <h3>Employees</h3>
+            <h1>24</h1>
+          </div>
+        </div>
 
-        
+        {/* Charts */}
+        <div className="charts-container">
+          <div className="chart-card">
+            <Line data={lineData} />
+          </div>
+          <div className="chart-card">
+            <Doughnut data={doughnutData} />
+          </div>
+        </div>
       </main>
     </div>
   );

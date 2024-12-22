@@ -1,0 +1,244 @@
+/* Header styles */
+.patient-header {
+    position: sticky; /* Make the header sticky */
+    top: 0; /* Stick to the top of the viewport */
+    z-index: 10; /* Ensure it appears above other elements */
+    background-color: white;
+    width: 100%; /* Full width */
+    padding: 10px 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-left{
+    padding: 12px;
+  }
+  
+  .header-left p {
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between search and profile container */
+  }
+  
+  .search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the content horizontally */
+    margin: 0; /* Remove default margin */
+  }
+
+  .profile-container {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between notification icon and user avatar */
+    margin-left: 200px;
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    color: #aaa;
+  }
+  
+  .search-input {
+    padding: 8px 8px 8px 30px; /* Add padding to leave space for the icon */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 600px;
+    background-color: #EEEEEE;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: #007bff;
+  }
+  
+  .notification-icon {
+    font-size: 18px;
+    color: #555;
+  }
+
+  .profile-image {
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image fits within the circle */
+    border: 2px solid #ccc; /* Optional: border around the image */
+  }
+  
+  .user-avatar {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  /* Queue List styles */
+  .queue-section {
+    padding: 20px;
+    background-color: #E4E4E4;
+  }
+  
+  .queue-title {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .queue-subtitle {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .queue-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .search-appointment-input {
+    position: relative;
+    padding: 8px 8px 8px 30px; /* Space for the icon */
+    border: 1px solid black;
+    border-radius: 4px;
+    font-size: 14px;
+    flex: 1; /* Make it responsive */
+  }
+
+  .search-appointment-input2 {
+    position: relative;
+    padding: 8px 8px 8px 30px; /* Space for the icon */
+    border: 1px solid black;
+    border-radius: 4px;
+    font-size: 14px;
+    flex: 1; /* Make it responsive */
+    width: 900px;
+  }
+
+  .staff-button{
+    background-color: #6290C8;
+    color: white;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    width: 150px;
+    margin-left: 40px;
+  }
+  
+  .queue-search .search-icon {
+    position: absolute;
+    left: 10px;
+    color: #aaa;
+    z-index: 1; /* Ensure the icon appears above the input */
+  }
+  
+  .filter-button {
+    background-color: white;
+    color: black;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for separation */
+  }
+  
+  .filter-button:hover {
+    background-color: #E4E4E4;
+  }
+  
+  /* Position the search icon inside the search input */
+  .queue-search-container {
+    position: relative;
+    flex: 1;
+  }
+  
+  .queue-search-container .search-appointment-input {
+    width: 100%;
+  }
+  
+  .queue-search-container .search-icon {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  /* Table styles */
+  .queue-table {
+    background-color: white;
+    padding: 20px;
+  }
+  
+  .queue-table table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0 10px; /* Adds vertical space between rows */
+  }
+  
+  .queue-table th,
+  .queue-table td {
+    padding: 10px;
+    text-align: left;
+    word-wrap: break-word; /* Handle long content in cells */
+    background-color: white; /* Background for both header and data cells */
+    width: 200px;
+  }
+  
+  .queue-table th {
+    font-weight: bold; /* Bold text for headers */
+    padding: 10px; /* Padding for spacing */
+    text-align: left; /* Align text to the left */
+    border-bottom: 2px solid #ddd; /* Add a bottom border to separate headers */
+  }
+  
+  .queue-table tbody{
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .queue-content{
+   background-color: white;
+   padding: 20px;
+   border-radius: 8px;
+  }
+
+  .status-bar {
+    margin: 0; /* Remove default margin */
+    padding: 5px 10px; /* Add some padding for visual consistency */
+    text-align: center; /* Center the text */
+    display: inline-block; /* Make it behave like a button for alignment */
+    background-color: #C2F1C2; /* Optional: add a background color */
+    border-radius: 8px; /* Optional: rounded corners */
+    font-size: 14px; /* Match font size with the button */
+    line-height: normal; /* Ensure the text is vertically aligned */
+    color: #369A40;
+    width: 100px;
+    font-weight: bold;
+}
+
+.view-button {
+    padding: 5px 10px; /* Match padding with .status-bar for alignment */
+    font-size: 14px; /* Match font size */
+    display: inline-block;
+    vertical-align: middle; /* Align with the status bar */
+    background-color: black; /* Button background */
+    color: white; /* Button text color */
+    border: none; /* Remove borders */
+    border-radius: 4px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    width: auto; /* Optional: adjust width */
+}
+
+td {
+    vertical-align: middle; /* Align all table cells vertically to the middle */
+}
