@@ -41,6 +41,7 @@ import QueueManagement from './SuperAdminPage/components/QueueManagement.jsx';
 import PatientManagement from './SuperAdminPage/components/PatientManagement';
 import StaffManagement from './SuperAdminPage/components/StaffManagement';
 import { SuperAdminNav } from './SuperAdminPage/components/SuperAdminNav';
+import UserProfile from './SuperAdminPage/components/UserProfile.jsx';
 
 // Layout components for Patient, Secretary, and Super Admin
 function PatientLayout({ children }) {
@@ -138,6 +139,7 @@ function App() {
                 <Route path="/queuemanage" element={<QueueManagement />} />
                 <Route path="/patientmanage" element={<PatientManagement />} />
                 <Route path="/staffmanage" element={<StaffManagement />} />
+                <Route path="/userprofile" element={<UserProfile />} />
               </Routes>
             </SuperAdminLayout>
           }

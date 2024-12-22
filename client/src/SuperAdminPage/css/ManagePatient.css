@@ -35,11 +35,17 @@
     margin: 0; /* Remove default margin */
   }
 
-  .profile-container {
+  .profile-icon-container {
     display: flex;
     align-items: center;
     gap: 10px; /* Space between notification icon and user avatar */
     margin-left: 200px;
+  }
+
+  .profile-nav{
+    display: flex;
+    gap: 4px;
+    text-decoration: none;
   }
   
   .search-icon {
@@ -79,6 +85,7 @@
     font-size: 14px;
     font-weight: bold;
     color: #333;
+    margin-top: 10px;
   }
   
   /* Queue List styles */
@@ -241,4 +248,15 @@
 
 td {
     vertical-align: middle; /* Align all table cells vertically to the middle */
+}
+
+.profile-link {
+  text-decoration: none; /* Remove underline */
+  cursor: pointer;
+  transition: transform 0.2s, color 0.3s; /* Smooth animation */
+}
+
+.profile-link:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+  color: #007bff; /* Change text color on hover */
 }

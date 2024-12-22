@@ -3,6 +3,7 @@ import '../css/ManagePatient.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
 import profileImage from '../images/pookie.jpeg';
+import { NavLink } from 'react-router-dom';
 
 
 const PatientManagement = () => {
@@ -22,10 +23,12 @@ const PatientManagement = () => {
               <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
               <input type="text" placeholder="Search" className="search-input" />
             </div>
-            <div className="profile-container">
+            <div className="profile-icon-container">
               <FontAwesomeIcon icon={faBell} className="notification-icon" />
-              <img src={profileImage} alt="Profile" className="profile-image" />
-              <div className="user-avatar">Nick Gerblack</div>
+              <NavLink to="/dashboard/userprofile" className="profile-nav">
+                <img src={profileImage} alt="Profile" className="profile-image" />
+                <div className="user-avatar">Nick Gerblack</div>
+              </NavLink>
             </div>
           </div>
         </div>

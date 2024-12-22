@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/Dashboard.css';
+import { NavLink } from 'react-router-dom';
 import { Doughnut, Line } from 'react-chartjs-2';
 import { faMagnifyingGlass, faBell } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -45,11 +46,13 @@ const Dashboard = () => {
               <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
               <input type="text" placeholder="Search" className="search-input" />
             </div>
-            <div className="profile-container">
+            <div className="profile-icon-container">
               <FontAwesomeIcon icon={faBell} className="notification-icon" />
+              <NavLink to="/dashboard/userprofile" className="profile-nav">
               <img src={profileImage} alt="Profile" className="profile-image" />
               <div className="user-avatar">Nick Gerblack</div>
-            </div>
+              </NavLink>
+              </div>
           </div>
         </div>
         
