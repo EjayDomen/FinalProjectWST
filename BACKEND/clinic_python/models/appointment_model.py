@@ -26,7 +26,6 @@ class Appointment(models.Model):
     address = models.CharField(max_length=50)
     sex = models.CharField(max_length=50)
     contact_number = models.CharField(max_length=50)
-    appointment_time = models.DateTimeField()
     appointment_date = models.DateField()
     purpose = models.TextField()
     status = models.CharField(max_length=50, choices=APPOINTMENT_STATUS_CHOICES, default="Pending")  # e.g., pending, confirmed, completed

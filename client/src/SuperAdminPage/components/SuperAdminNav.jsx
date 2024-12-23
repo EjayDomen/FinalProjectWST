@@ -11,28 +11,28 @@ export const SuperAdminNav = () => {
             <div className="logo">Queue Care</div>
             <nav>
                 <NavLink 
-                    to="/dashboard" 
+                    to="/superadmin/dashboard" 
                     className={({ isActive }) => (isActive ? 'active' : '')}
                     end
                 >
                     <FontAwesomeIcon icon={faGauge} className="icon" /> Dashboard
                 </NavLink>
                 <NavLink 
-                    to="/dashboard/queuemanage" 
+                    to="/superadmin/dashboard/queuemanage" 
                     className={({ isActive }) => (isActive ? 'active' : '')}
                     end
                 >
                     <FontAwesomeIcon icon={faUsers} className="icon" /> Queue Management
                 </NavLink>
                 <NavLink 
-                    to="/dashboard/patientmanage" 
+                    to="/superadmin/dashboard/patientmanage" 
                     className={({ isActive }) => (isActive ? 'active' : '')}
                     end
                 >
                     <FontAwesomeIcon icon={faUser} className="icon" /> Patient Management
                 </NavLink>
                 <NavLink 
-                    to="/dashboard/staffmanage" 
+                    to="/superadmin/dashboard/staffmanage" 
                     className={({ isActive }) => (isActive ? 'active' : '')}
                     end
                 >

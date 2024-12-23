@@ -3,7 +3,7 @@ import os
 import jwt
 from django.http import JsonResponse
 from functools import wraps
-from clinic_python.models import Secretary, Patient, Doctor, UserLevel
+from clinic_python.models import Staff, Patient, SuperAdmin, Role
 
 JWT_SECRET = os.getenv('JWT_SECRET', 'your_default_secret')
 
@@ -26,11 +26,11 @@ def role_required(required_role=None):
                 # Fetch the user based on role
                 user = None
                 if decoded.get('role') == 'Staff':
-                    user = Secretary.objects.filter(id=decoded.get('id')).first()
+                    user = Staff.objects.filter(id=decoded.get('id')).first()
                 elif decoded.get('role') == 'Patient':
                     user = Patient.objects.filter(id=decoded.get('id')).first()
                 elif decoded.get('role') == 'Admin':
-                    user = Doctor.objects.filter(id=decoded.get('id')).first()
+                    user = SuperAdmin.objects.filter(id=decoded.get('id')).first()
                 else:
                     return JsonResponse({'error': 'Invalid role'}, status=401)
 

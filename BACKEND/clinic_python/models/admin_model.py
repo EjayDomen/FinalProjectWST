@@ -12,6 +12,7 @@ class Staff(models.Model):
     user_level_id = models.ForeignKey(
         "clinic_python.Role", on_delete=models.CASCADE, null=True, blank=True
     )
+    is_deleted = models.BooleanField(default=False)  # Default is False
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

@@ -30,5 +30,6 @@ class Patient(models.Model):
         "clinic_python.Role", on_delete=models.CASCADE, null=True, blank=True
     )
     is_deleted = models.BooleanField(default=False)  # Default is False
+    createdAt = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return f'{self.first_name} {self.last_name}'

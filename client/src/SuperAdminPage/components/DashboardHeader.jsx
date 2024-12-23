@@ -48,7 +48,7 @@ const Dashboard = () => {
             </div>
             <div className="profile-icon-container">
               <FontAwesomeIcon icon={faBell} className="notification-icon" />
-              <NavLink to="/dashboard/userprofile" className="profile-nav">
+              <NavLink to="/superadmin/dashboard/userprofile" className="profile-nav">
               <img src={profileImage} alt="Profile" className="profile-image" />
               <div className="user-avatar">Nick Gerblack</div>
               </NavLink>

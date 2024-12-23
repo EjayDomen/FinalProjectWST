@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 import CancelConfirmationModal from '../../LoginPage/cancelConfirmationModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../styles/AppointmentPatient.css"; // Assuming you have a custom CSS file
-import PatientChat from './PatientChat';
 import SuccessModal from '../../SecretaryPage/components/successModal';
 
 
@@ -477,8 +476,6 @@ const Appointment = () => {
         onRequestClose={() => setCancelConfirmationOpen(false)}
         onConfirm={handleCancelAppointment}
       />
-      {/* Chat Component */}
-      {userId && <PatientChat userId={userId} />}
     </Container>
   );
 };
