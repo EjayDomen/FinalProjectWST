@@ -5,6 +5,34 @@ from clinic_python.models import Staff, Role
 import bcrypt
 import json
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+from clinic_python.models import Staff
+
+def get_all_staff(request):
+    if request.method == 'GET':
+        try:
+            # Query all staff members
+            staff_members = Staff.objects.all().values(
+                'id', 
+                'first_name', 
+                'middle_name', 
+                'last_name', 
+                'suffix', 
+                'specialization', 
+                'email'
+            )
+
+            # Create a list of staff members
+            staff_list = list(staff_members)
+
+            # Return success response
+            return JsonResponse({'staff': staff_list}, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': f'Error fetching staff members: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 def is_admin(user):
     return user.groups.filter(name='admin').exists()

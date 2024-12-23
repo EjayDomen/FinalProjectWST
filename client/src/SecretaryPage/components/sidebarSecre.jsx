@@ -52,7 +52,7 @@ const Sidebar = () => {
       setUserName(`${firstName} ${lastName}`.trim()); // Use trim() to remove any extra spaces
     } catch (error) {
       console.error('Error fetching profile:', error);
-      navigate('/');
+      // navigate('/');
     }
   };
 
@@ -161,10 +161,7 @@ const Sidebar = () => {
             <Home />
             <span>Dashboard</span>
           </NavLink>
-          <NavLink to="/secretary/doctors" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
-            <Person />
-            <span>Doctors</span>
-          </NavLink>
+          
           <NavLink to="/secretary/patients" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
             <Groups2 />
             <span>Patients</span>
@@ -177,10 +174,7 @@ const Sidebar = () => {
             <Queue />
             <span>Queue</span>
           </NavLink>
-          <NavLink to="/secretary/messages" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
-            <Message />
-            <span>Messages</span>
-          </NavLink>
+          
           <div>
             <NavLink
               to="/secretary/report"
@@ -208,13 +202,7 @@ const Sidebar = () => {
           </div>
 
           <div>
-            <NavLink
-              to="/secretary/services"
-              className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}
-            >
-              <Build />
-              <span>Services</span>
-            </NavLink>
+            
             <div style={{ display: window.location.pathname.includes('/secretary/services') || window.location.pathname.includes('/secretary/PredefinedQuestion') ? 'block' : 'none', marginLeft: '15%' }}>
               <NavLink
                 to="/secretary/PredefinedQuestion"

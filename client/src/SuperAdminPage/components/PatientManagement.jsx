@@ -19,9 +19,9 @@ const PatientManagement = () => {
   const [updateMessage, setUpdateMessage] = useState(null);
 
   const columns = [
-    { field: 'patientId', headerName: 'Patient ID', width: 250 },
-    { field: 'name', headerName: 'Patient Name', width: 500 },
-    { field: 'createdAt', headerName: 'Account Created', width: 400 },
+    { field: 'patientId', headerName: 'Patient ID', width: 150 },
+    { field: 'name', headerName: 'Patient Name', width: 350 },
+    { field: 'createdAt', headerName: 'Account Created', width: 300 },
     {
       field: 'actions',
       headerName: 'Action',

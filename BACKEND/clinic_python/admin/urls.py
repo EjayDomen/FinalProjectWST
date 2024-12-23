@@ -22,5 +22,6 @@ urlpatterns = [
     path('showallappointment/', appointment.get_all_appointments, name='get_all_appointments'),
     path('createmedicalrecord/', medicalrecord.create_medical_record , name='create_medical_record'),
     path('medical-records/<int:patient_id>/', medicalrecord.get_medical_records_by_patient, name='get_medical_records_by_patient'),
+    path('show-allstaff/', views.get_all_staff , name='get_all_staff'),
     # Add other paths for superadmin-related views here
 ]

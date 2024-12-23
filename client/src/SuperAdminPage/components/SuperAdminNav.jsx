@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGauge, faUsers, faUser, faPeopleRoof } from '@fortawesome/free-solid-svg-icons';
+import { faGauge, faUsers, faUser, faPeopleRoof, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import logoImage from '../../LoginPage/images/logo.png';
 import '../css/Nav.css';
 
@@ -37,6 +37,13 @@ export const SuperAdminNav = () => {
                     end
                 >
                     <FontAwesomeIcon icon={faPeopleRoof} className="icon" /> Staff Management
+                </NavLink>
+                <NavLink 
+                    to="/" 
+                    className={({ isActive }) => (isActive ? 'active' : '')}
+                    end
+                >
+                    <FontAwesomeIcon icon={faRightFromBracket} className="icon" /> Log Out
                 </NavLink>
             </nav>
         </aside>
