@@ -21,7 +21,7 @@ const LoginPage = () => {
 
       if (response.status === 200) {
         const data = response.data;
-        localStorage.setItem('token', data.token); // Store the token in localStorage
+        localStorage.setItem('token', data.access); // Store the token in localStorage
 
         // Redirect based on user role
         if (data.role === 'Patient') {

@@ -151,3 +151,30 @@
     max-width: 100%;
   }
 }
+
+
+#appointmentModal .modal-dialog {
+  max-width: 500px; /* Adjust the width as needed */
+  margin: auto; /* Center the modal horizontally */
+}
+
+#appointmentModal .modal-content {
+  padding: 20px; /* Add consistent padding */
+  border-radius: 10px; /* Rounded corners for better aesthetics */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+#appointmentModal .modal-header {
+  display: flex;
+  justify-content: center; /* Center-align the modal title */
+  border-bottom: 1px solid #ddd; /* Add a subtle divider */
+}
+
+#appointmentModal .modal-title {
+  font-weight: bold;
+}
+
+#appointmentModal .modal-footer {
+  display: flex;
+  justify-content: space-between; /* Spread buttons evenly */
+}

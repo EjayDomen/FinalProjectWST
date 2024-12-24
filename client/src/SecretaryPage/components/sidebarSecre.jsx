@@ -40,7 +40,7 @@ const Sidebar = () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/profile`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`  // Assuming token-based authentication
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`  // Assuming token-based authentication
         }
       });
       const secretary = response.data;
