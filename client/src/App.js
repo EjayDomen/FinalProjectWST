@@ -131,7 +131,7 @@ function App() {
 
         {/* Super Admin routes with SuperAdminLayout */}
         <Route
-          path="/dashboard/*"
+          path="/superadmin/dashboard/*"
           element={
             <SuperAdminLayout>
               <Routes>

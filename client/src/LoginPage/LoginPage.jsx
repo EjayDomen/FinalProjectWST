@@ -21,7 +21,7 @@ const LoginPage = () => {
 
       if (response.status === 200) {
         const data = response.data;
-        localStorage.setItem('token', data.token); // Store the token in localStorage
+        localStorage.setItem('token', data.access); // Store the token in localStorage
 
         // Redirect based on user role
         if (data.role === 'Patient') {
@@ -29,7 +29,7 @@ const LoginPage = () => {
         } else if (data.role === 'Staff') {
           navigate('/secretary/dashboard'); // Navigate to admin dashboard
         } else if (data.role === 'Admin') {
-          navigate('/secretary/dashboard'); // Navigate to admin dashboard
+          navigate('/superadmin/dashboard'); // Navigate to admin dashboard
         }else {
           setError('Unauthorized user role'); // Set error if role is not recognized
         }

@@ -19,7 +19,7 @@ class Queue(models.Model):
         ("Others", "Others"),
     ]
 
-    queue_number = models.IntegerField()
+    queue_number = models.CharField(max_length=5)
     status = models.CharField(
         max_length=10, choices=QUEUE_STATUS_CHOICES, default="Pending"
     )

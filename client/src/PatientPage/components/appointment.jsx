@@ -11,7 +11,6 @@ import { useNavigate } from 'react-router-dom';
 import CancelConfirmationModal from '../../LoginPage/cancelConfirmationModal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../styles/AppointmentPatient.css"; // Assuming you have a custom CSS file
-import PatientChat from './PatientChat';
 import SuccessModal from '../../SecretaryPage/components/successModal';
 
 
@@ -40,10 +39,26 @@ const Appointment = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [cancelConfirmationOpen, setCancelConfirmationOpen] = useState(false);
-  const [userId, setUserId] = useState(null);
+  const [user, setUser] = useState(null);
   const [dropdownAnchor, setDropdownAnchor] = useState(null);
   const [queueModalOpen, setQueueModalOpen] = useState(false); // For the queue modal
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [newAppointment, setNewAppointment] = useState({
+    first_name:'',
+    middle_name:'',
+    last_name:'',
+    suffix:'',
+    age:'',
+    address:'',
+    sex:'',
+    contact_number:'',
+    purpose:'',
+    type:'',
+    staff:'n/a',
+    appointmentDate: '',
+  });
+  const [addAppointmentModalOpen, setAddAppointmentModalOpen] = useState(false);
+  
   
   const filteredAppointments = appointments
   .filter((appointment) => {
@@ -72,6 +87,38 @@ const Appointment = () => {
       DoctorNameFull: doctorName, // Correctly assign the doctor's full name
     };
   });
+  const handleAddAppointment = async () => {
+    if (!newAppointment.appointmentDate) {
+      alert('Please select a valid appointment date.');
+      return;
+    }
+  
+    try {
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/patient/createAppointment/`,
+        newAppointment,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
+  
+      // Fetch updated appointments to ensure data consistency
+      const updatedAppointments = await axios.get(`${process.env.REACT_APP_API_URL}/patient/appointment/viewAppointments`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+  
+      setAppointments(updatedAppointments.data);
+      setAddAppointmentModalOpen(false);
+      setNewAppointment({ appointmentDate: '' });
+    } catch (error) {
+      console.error('Error adding appointment:', error);
+      alert('Failed to add appointment. Please try again.');
+    }
+  };
+  
+  
 
   const [queueDetails, setQueueDetails] = useState({
     queueList: [],
@@ -91,10 +138,20 @@ const Appointment = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/signup/patient/me`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patient/me`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
-        setUserId(response.data.id);
+        setUser(response.data);  // Assuming you're storing the entire response data in the user state
+        setNewAppointment((prev) => ({
+          ...prev,
+          first_name: response.data.first_name || '',
+          middle_name: response.data.middle_name || '',
+          last_name: response.data.last_name || '',
+          suffix: response.data.suffix || '',
+          age: response.data.age || '',
+          address: response.data.address || '',
+          sex: response.data.sex || '',
+        }));
       } catch (error) {
         console.error('Error fetching user info:', error);
       }
@@ -273,6 +330,7 @@ const Appointment = () => {
   }, []);
 
   return (
+    
     <Container className='apptcont'>
       <div className="d-flex mb-3 gap-3">
         <div className='searchbar'>
@@ -284,6 +342,15 @@ const Appointment = () => {
           />
         </div>
         <div>
+        <button
+  type="button"
+  className="btn btn-primary"
+  onClick={() => setAddAppointmentModalOpen(true)}
+>
+  Add Appointment
+</button>
+              </div>
+          <div>
           <Button variant="success" onClick={handleOpenQueueModal}>
             Queue List
           </Button>
@@ -397,6 +464,7 @@ const Appointment = () => {
       </div>
     </div>
   </div>
+  
 )}
 
 {/* Success and Error Modals */}
@@ -472,15 +540,127 @@ const Appointment = () => {
         </Modal.Footer>
       </Modal>
 
+      <Modal show={addAppointmentModalOpen}
+  onHide={() => setAddAppointmentModalOpen(false)} centered>
+  <Modal.Header closeButton>
+    <Modal.Title>Appointment Details</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {/* Patient Information */}
+    <Form.Group className="mb-3">
+      <Form.Label>First Name</Form.Label>
+      <Form.Control 
+        type="text" 
+        value={newAppointment?.first_name || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, first_name: e.target.value })} 
+      />
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>Middle Name</Form.Label>
+      <Form.Control 
+        type="text" 
+        value={newAppointment?.middle_name || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, middle_name: e.target.value })} 
+      />
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>Last Name</Form.Label>
+      <Form.Control 
+        type="text" 
+        value={newAppointment?.last_name || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, last_name: e.target.value })} 
+      />
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>Suffix</Form.Label>
+      <Form.Control 
+        type="text" 
+        value={newAppointment?.suffix || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, suffix: e.target.value })} 
+      />
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>Age</Form.Label>
+      <Form.Control 
+        type="number" 
+        value={newAppointment?.age || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, age: e.target.value })} 
+      />
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>Address</Form.Label>
+      <Form.Control 
+        type="text" 
+        value={newAppointment?.address || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, address: e.target.value })} 
+      />
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>Sex</Form.Label>
+      <Form.Select 
+        value={newAppointment?.sex || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, sex: e.target.value })}>
+        <option value="">Select</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </Form.Select>
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>Contact Number</Form.Label>
+      <Form.Control 
+        type="text" 
+        value={newAppointment?.contact_number || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, contact_number: e.target.value })} 
+      />
+    </Form.Group>
+
+    {/* Appointment Information */}
+    <Form.Group className="mb-3">
+      <Form.Label>Appointment Date</Form.Label>
+      <Form.Control 
+        type="date" 
+        value={newAppointment?.appointment_date || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, appointment_date: e.target.value })} 
+      />
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>Purpose</Form.Label>
+      <Form.Select 
+        value={newAppointment?.purpose || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, purpose: e.target.value })}>
+        <option value=""> select</option>
+        <option value="consultation"> Consultation</option>
+        <option value="certificates"> Certificates</option>
+        <option value="others"> Other</option>
+        </Form.Select>
+    </Form.Group>
+    <Form.Group className="mb-3">
+      <Form.Label>Type</Form.Label>
+      <Form.Control 
+        type="text" 
+        value={newAppointment?.type || ''} 
+        onChange={(e) => setNewAppointment({ ...newAppointment, type: e.target.value })} 
+      />
+    </Form.Group>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Close</Button>
+    <Button variant="primary" onClick={handleAddAppointment}>
+      Add Appointment
+    </Button>
+  </Modal.Footer>
+</Modal>
+      
+
       <CancelConfirmationModal
         isOpen={cancelConfirmationOpen}
         onRequestClose={() => setCancelConfirmationOpen(false)}
         onConfirm={handleCancelAppointment}
       />
-      {/* Chat Component */}
-      {userId && <PatientChat userId={userId} />}
     </Container>
+    
   );
 };
+
 
 export default Appointment;

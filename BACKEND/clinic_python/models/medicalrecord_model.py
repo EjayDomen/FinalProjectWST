@@ -17,7 +17,7 @@ class MedicalRecord(models.Model):
     initialdiagnosis = models.CharField(max_length=255)
     notes = models.CharField(max_length=255)
     age = models.CharField(max_length=50)
-    attendingstaff = models.ForeignKey('clinic_python.User', on_delete=models.CASCADE)  # Use string notation
+    attendingstaff = models.ForeignKey('clinic_python.Staff', on_delete=models.CASCADE)  # Use string notation
 
     def __str__(self):
         return f'{self.patientid} appointment with {self.attendingstaff}'

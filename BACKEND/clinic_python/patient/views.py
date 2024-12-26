@@ -11,20 +11,26 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
+from rest_framework_simplejwt.tokens import AccessToken
 
 @csrf_exempt
 def get_patient_details(request):
-    # Extract token from Authorization header
+    
     auth_header = request.headers.get('Authorization', '')
-    token = auth_header.split(' ')[1] if 'Bearer ' in auth_header else None
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
+        # Extract the token from the header
+    token = auth_header.split(' ')[1]
+    access_token = AccessToken(token)
+    role = access_token['role']  # Retrieve the user role from token claims
+    patient_id = access_token['id']
 
     if not token:
         return JsonResponse({'error': 'Token not provided'}, status=401)
 
     try:
         # Decode JWT token
-        payload = jwt.decode(token, settings.JWT_SECRET, algorithms=['HS256'])
-        patient_id = payload.get('id')
+        
 
         # Fetch patient details
         try:

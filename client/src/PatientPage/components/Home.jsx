@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Notifications } from '@mui/icons-material';
 import doctorImage from '../images/doctor.png';
-import PatientChat from './PatientChat';
 import Modal from '@mui/material/Modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../styles/HomePatient.css"; // Assuming you have a custom CSS file

@@ -1,17 +1,20 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import json
+import datetime
 import jwt
+from django.conf import settings
 import bcrypt
 from django.conf import settings
-from clinic_python.models.admin_model import Staff
-from clinic_python.models.patient_model import Patient
-from clinic_python.models.superadmin_model import SuperAdmin
-from clinic_python.models.roles_model import Role
+from clinic_python.models import Staff
+from clinic_python.models import Patient
+from clinic_python.models import SuperAdmin
+from clinic_python.models import Role
 from .forms import PatientRegistrationForm
 from django.contrib import messages
   # Make sure to import the models
 from django.views.decorators.csrf import csrf_exempt
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Patient Registration
 @csrf_exempt
@@ -40,7 +43,7 @@ def register_patient(request):
             sex = body.get('sex')
             password = body.get('password')
             address = body.get('address')
-            user_level_id = 1
+            user_level_id = 3
 
             # Validate required fields
             required_fields = [
@@ -84,7 +87,36 @@ def register_patient(request):
                 user_level_id=user_level
             )
 
-            return JsonResponse({'message': 'Patient registered successfully!'}, status=201)
+            # Assuming user_level is a foreign key to a Role model
+            role_data = {
+                'id': new_patient.user_level_id.id,
+            }
+
+            # Return the created patient's data including its ID
+            return JsonResponse({
+                'message': 'Patient registered successfully!',
+                'patient': {
+                    'id': new_patient.id,
+                    'student_or_employee_no': new_patient.student_or_employee_no,
+                    'first_name': new_patient.first_name,
+                    'middle_name': new_patient.middle_name,
+                    'last_name': new_patient.last_name,
+                    'suffix': new_patient.suffix,
+                    'campus': new_patient.campus,
+                    'college_office': new_patient.college_office,
+                    'course_designation': new_patient.course_designation,
+                    'year': new_patient.year,
+                    'emergency_contact_number': new_patient.emergency_contact_number,
+                    'emergency_contact_relation': new_patient.emergency_contact_relation,
+                    'bloodtype': new_patient.bloodtype,
+                    'allergies': new_patient.allergies,
+                    'email': new_patient.email,
+                    'age': new_patient.age,
+                    'sex': new_patient.sex,
+                    'address': new_patient.address,
+                    'user_level_id': role_data
+                }
+            }, status=201)
 
         except json.JSONDecodeError:    
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
@@ -101,7 +133,7 @@ def login_view(request):
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
     try:
-        # Parse the request body
+        # Parse request body
         body = json.loads(request.body)
         email = body.get('EMAIL')
         password = body.get('PASSWORD')
@@ -112,63 +144,45 @@ def login_view(request):
         user = None
         role = None
 
-        # Check if the user is a staff
+        # Authenticate user (Staff, Patient, Admin)
         try:
             user = Staff.objects.get(email=email)
             role = 'Staff'
         except Staff.DoesNotExist:
-            # If not found, check if the user is a patient
             try:
                 user = Patient.objects.get(email=email, is_deleted=False)
                 role = 'Patient'
             except Patient.DoesNotExist:
-                try: 
-                    user = SuperAdmin.get(email=email)
+                try:
+                    user = SuperAdmin.objects.get(email=email)
                     role = 'Admin'
                 except SuperAdmin.DoesNotExist:
                     return JsonResponse({'error': 'User not found'}, status=404)
 
-        # # Ensure the stored password is valid and check the password
-        # if not isinstance(user.password, str):
-        #     return JsonResponse({'error': 'Password format error'}, status=500)
-
-        # Print the type and value of the password from the database
-        print(f"password: {password}")
-        print(f"user.password: {user.password}")
-        print(f"password type: {type(password)}")
-        print(f"user.password type: {type(user.password)}")
-
-
-        valid_password = bcrypt.checkpw(password.encode("utf-8"), user.password.encode("utf-8"))  # Re-encode to bytes
+        # Validate password
+        valid_password = bcrypt.checkpw(password.encode("utf-8"), user.password.encode("utf-8"))
         if not valid_password:
-            return JsonResponse({'error': 'Invalid Password'}, status=401)
+            return JsonResponse({'error': 'Invalid password'}, status=401)
 
+        # Generate tokens
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+        
 
-        # Validate user role by USER_LEVEL_ID
-        if role == 'Admin' and user.user_level_id == 1:
-            print('Admin logged in')
-        elif role == 'Staff' and user.user_level_id == 2:
-            print('Staff logged in')
-        elif role == 'Patient' and user.user_level_id == 3:
-            print('Patient logged in')
-        else:
-            print('Unauthorized user role')
+        # Add custom claims to token for role and ID
+        refresh['role'] = role
+        refresh['id'] = user.id
+        access_token = str(refresh.access_token)
 
-
-        # Generate JWT token
-        payload = {
-            'id': user.id,
+        # Return tokens and user role
+        return JsonResponse({
+            'refresh': str(refresh),
+            'access': access_token,
             'role': role
-        }
-        token = jwt.encode(payload, settings.JWT_SECRET, algorithm='HS256')
-
-        # Return the token and role
-        return JsonResponse({'token': token, 'role': role}, status=200)
+        }, status=200)
 
     except Exception as e:
-        return JsonResponse({'error': f'Error during login: {str(e)}'}, status=400)
-    
-    
+        return JsonResponse({'error': f'Error during login: {str(e)}'}, status=500)
 
 
 
