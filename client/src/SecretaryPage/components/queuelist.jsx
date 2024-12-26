@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Add, Search, QrCodeScanner, ArrowDropDown } from '@mui/icons-material';
 import { Autocomplete, Modal, Box, TextField, Button, MenuItem, Select, InputLabel, FormControl, Radio, RadioGroup, FormControlLabel, FormLabel } from '@mui/material';
-
 import styles from '../styles/queueListSecre.module.css';
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
