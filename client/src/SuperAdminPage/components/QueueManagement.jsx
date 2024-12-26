@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/managepatient.module.css';
+import '../styles/ManagePatient.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
 import profileImage from '../images/pookie.jpeg';

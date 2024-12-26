@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../css/managepatient.module.css';
+import '../styles/ManagePatient.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
 import profileImage from '../images/pookie.jpeg';
 import { NavLink } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import Modal from 'react-modal';
-import styles from '../css/managepatient.module.css';
+import styles from '../styles/ManagePatient.module.css';
 
 const PatientManagement = () => {
   const [patients, setPatients] = useState([]);

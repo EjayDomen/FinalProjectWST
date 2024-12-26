@@ -30,12 +30,34 @@ body {
     display: flex;
   }
   
+  .header-left p {
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 100px; /* Space between search and profile container */
+  }
+  
   .search-container {
     position: relative;
     display: flex;
     align-items: center;
-    width: 100%; /* Adjust the width as needed */
-    max-width: 600px; /* Optional: Limit the max width */
+    justify-content: center; /* Center the content horizontally */
+    margin: 0; /* Remove default margin */
+  }
+
+  .profile-container {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between notification icon and user avatar */
+    margin-left: 200px;
+  }
+
+  .profile-icon-container{
+    display: flex;
   }
   
   .search-icon {
@@ -45,11 +67,12 @@ body {
   }
   
   .search-input {
-    padding: 8px 8px 8px 30px; /* Add padding for the icon */
+    padding: 8px 8px 8px 30px; /* Add padding to leave space for the icon */
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
-    width: 100%;
+    width: 600px;
+    background-color: #EEEEEE;
   }
   
   .search-input:focus {
@@ -57,9 +80,27 @@ body {
     border-color: #007bff;
   }
   
+  .notification-icon {
+    font-size: 18px;
+    color: #555;
+  }
+
+  .profile-image {
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image fits within the circle */
+    border: 2px solid #ccc; /* Optional: border around the image */
+  }
+  
+  .user-avatar {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+  }
+  
   .dashboard-title {
     font-size: 24px;
-    padding: 20px; /* Add padding inside the header for spacing */
     margin: 0; /* Remove any default margin */
     font-weight: bold;
     margin-left: 10px;

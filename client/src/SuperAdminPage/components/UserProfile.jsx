@@ -1,5 +1,5 @@
 import React from "react";
-import "../css/UserProfile.css"; // Import CSS for styling
+import "../styles/UserProfile.css"; // Import CSS for styling
 import profileImage from '../images/pookie.jpeg';
 
 const UserProfile = () => {

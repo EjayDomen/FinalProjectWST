@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/Dashboard.css';
+import '../styles/Dashboard.css';
 import { NavLink } from 'react-router-dom';
 import { Doughnut, Line } from 'react-chartjs-2';
 import { faMagnifyingGlass, faBell } from '@fortawesome/free-solid-svg-icons';
@@ -40,7 +40,9 @@ const Dashboard = () => {
 
       <main className="dashboard-content">
         <div className="dashboard-header">
+        <div className="header-left">
           <h1 className="dashboard-title">Dashboard</h1>
+          </div>
           <div className="header-right">
             <div className="search-container">
               <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
@@ -48,7 +50,7 @@ const Dashboard = () => {
             </div>
             <div className="profile-icon-container">
               <FontAwesomeIcon icon={faBell} className="notification-icon" />
-              <NavLink to="/superadmin/dashboard/userprofile" className="profile-nav">
+              <NavLink to="/superadmin/userprofile" className="profile-nav">
               <img src={profileImage} alt="Profile" className="profile-image" />
               <div className="user-avatar">Nick Gerblack</div>
               </NavLink>

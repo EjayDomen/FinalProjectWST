@@ -131,15 +131,15 @@ function App() {
 
         {/* Super Admin routes with SuperAdminLayout */}
         <Route
-          path="/superadmin/dashboard/*"
+          path="/superadmin/*"
           element={
             <SuperAdminLayout>
               <Routes>
-                <Route path="/" element={<DashboardHeader />} />
-                <Route path="/queuemanage" element={<QueueManagement />} />
-                <Route path="/patientmanage" element={<PatientManagement />} />
-                <Route path="/staffmanage" element={<StaffManagement />} />
-                <Route path="/userprofile" element={<UserProfile />} />
+                <Route path="dashboard" element={<DashboardHeader />} />
+                <Route path="queuemanage" element={<QueueManagement />} />
+                <Route path="patientmanage" element={<PatientManagement />} />
+                <Route path="staffmanage" element={<StaffManagement />} />
+                <Route path="userprofile" element={<UserProfile />} />
               </Routes>
             </SuperAdminLayout>
           }
