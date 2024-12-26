@@ -1,5 +1,6 @@
 import React from "react";
 import "../css/UserProfile.css"; // Import CSS for styling
+import profileImage from '../images/pookie.jpeg';
 
 const UserProfile = () => {
   return (
@@ -8,7 +9,7 @@ const UserProfile = () => {
       <div className="profile-container">
         <div className="profile-picture-section">
           <img
-            src="https://via.placeholder.com/150" // Replace with actual profile picture
+            src={profileImage}// Replace with actual profile picture
             alt="Profile"
             className="profile-picture"
           />
