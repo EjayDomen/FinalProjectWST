@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../css/ManagePatient.css';
+import '../css/managePatient.module.css';
 import { NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faMagnifyingGlass, faFilter, faPlus } from '@fortawesome/free-solid-svg-icons';
