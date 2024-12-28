@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from clinic_python.models.patient_model import Patient
 from clinic_python.utils.auth import role_required
+from django.views.decorators.csrf import csrf_exempt
 
 
 @require_http_methods(["GET"])
@@ -52,8 +53,8 @@ def get_patients(request):
         return JsonResponse({'error': str(e)}, status=400)
     
 
-
-@role_required('Staff')  
+@csrf_exempt
+# @role_required('Staff')  
 def delete_patient(request, id):
     if request.method == 'DELETE':
         try:
@@ -122,3 +123,21 @@ def restore_patient(request, id):
     except Exception as e:
         print(f'Error restoring patient: {e}')
         return JsonResponse({'message': 'Internal server error'}, status=500)
+    
+    
+    
+@api_view(['GET'])
+def count_all_patients(request):
+    """
+    Count all active (non-deleted) patients and return the total.
+    """
+    try:
+        # Count all patients where is_deleted is False
+        active_patient_count = Patient.objects.filter(is_deleted=False).count()
+
+        # Return the count as a JSON response
+        return JsonResponse({"total_active_patients": active_patient_count}, status=200)
+
+    except Exception as e:
+        print(f"Error counting patients: {e}")
+        return JsonResponse({'error': 'Internal server error'}, status=500)

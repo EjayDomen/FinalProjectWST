@@ -5,7 +5,7 @@ class Queue(models.Model):
         ("Waiting", "Waiting"),
         ("Served", "Served"),
         ("Skipped", "Skipped"),
-        ("Pending", "Pending"),
+        ("in", "in"),
     ]
 
     TICKET_TYPE_CHOICES = [

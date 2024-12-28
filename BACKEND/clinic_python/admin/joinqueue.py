@@ -112,21 +112,26 @@ def join_queue(request):
             )
 
 
-            # Determine queue number
-            if IS_PRIORITY:
-                last_queue = Queue.objects.filter(qmid=queue_management.id, is_priority=True).order_by('-queue_number').first()
-                if last_queue and last_queue.queue_number.startswith("P"):
-                    last_number = int(last_queue.queue_number[1:])
-                    new_queue_number = f"P{last_number + 1:03d}"
-                else:
-                    new_queue_number = "P001"
+           # Determine queue number format
+            transaction_code_map = {
+                "consultation": "CN" if not IS_PRIORITY else "CP",
+                "certificate": "CEN" if not IS_PRIORITY else "CEP",
+                "others": "ON" if not IS_PRIORITY else "OP"
+            }
+            queue_prefix = transaction_code_map.get(TRANSACTION, "ON" if not IS_PRIORITY else "OP")
+
+            # Determine new queue number
+            last_queue = Queue.objects.filter(
+                qmid=queue_management.id,
+                transaction_type=TRANSACTION,
+                is_priority=IS_PRIORITY
+            ).order_by('-queue_number').first()
+
+            if last_queue:
+                last_number = int(last_queue.queue_number[len(queue_prefix):])
+                new_queue_number = f"{queue_prefix}{last_number + 1:03d}"
             else:
-                last_queue = Queue.objects.filter(qmid=queue_management.id, is_priority=False).order_by('-queue_number').first()
-                if last_queue and last_queue.queue_number.startswith("N"):
-                    last_number = int(last_queue.queue_number[1:])
-                    new_queue_number = f"N{last_number + 1:03d}"
-                else:
-                    new_queue_number = "N001"
+                new_queue_number = f"{queue_prefix}000"
 
             # Add to queue
             Queue.objects.create(
@@ -213,10 +218,10 @@ def view_queue(request):
 def update_queue_status(request):
     try:
         # Get parameters from the request data
-        queue_number = request.data.get('queue_number')
+        queue_number = request.data.get('queueNumber')
         qmid = request.data.get('qmid')
-        status_update = request.data.get('status')
-        transaction_type = request.data.get('transaction')
+        status_update = request.data.get('newStatus')
+        transaction_type = request.data.get('transaction_type')
 
         # Validate required parameters
         if not queue_number or not qmid or not status_update or not transaction_type:
@@ -268,6 +273,49 @@ def update_queue_status(request):
             {"message": "Queue status updated successfully", "updated_queue": updated_queue},
             status=status.HTTP_200_OK
         )
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    
+@api_view(['GET'])
+def get_first_5_waiting_queues(request):
+    try:
+        # Get today's date
+        today_date = datetime.now().date()
+
+        # Filter queues with "waiting" status and today's date
+        queues = Queue.objects.filter(
+            status="waiting",
+            qmid__date=today_date
+        ).select_related('patient', 'appointment').order_by('queue_number')[:5]
+
+        # Prepare the response data
+        queue_data = [
+            {
+                "queue_number": queue.queue_number,
+                "is_priority": queue.is_priority,
+                "status": queue.status,
+                "transaction_type": queue.transaction_type,
+                "ticket_type": queue.ticket_type,
+                "qmid": queue.qmid,
+                "patient": {
+                    "id": queue.patient.id,
+                    "first_name": queue.patient.first_name,
+                    "last_name": queue.patient.last_name,
+                    "email": queue.patient.email
+                },
+                "appointment": {
+                    "id": queue.appointment.id,
+                    "appointment_date": queue.appointment.appointment_date,
+                    "status": queue.appointment.status,
+                    "purpose": queue.appointment.purpose
+                }
+            }
+            for queue in queues
+        ]
+
+        return Response({"queues": queue_data}, status=status.HTTP_200_OK)
 
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

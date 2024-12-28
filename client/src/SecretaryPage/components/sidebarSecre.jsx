@@ -38,16 +38,16 @@ const Sidebar = () => {
 
   const fetchProfile = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/profile`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/me/`, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`  // Assuming token-based authentication
+          'Authorization': `Bearer ${localStorage.getItem('token')}`  // Assuming token-based authentication
         }
       });
       const secretary = response.data;
   
       // Safely construct the full name
-      const firstName = secretary.FIRST_NAME || "";
-      const lastName = secretary.LAST_NAME || "";
+      const firstName = secretary.first_name || "";
+      const lastName = secretary.last_name || "";
       
       setUserName(`${firstName} ${lastName}`.trim()); // Use trim() to remove any extra spaces
     } catch (error) {
@@ -56,16 +56,7 @@ const Sidebar = () => {
     }
   };
 
-    // Function to count unread notifications
-    const countUnreadNotifications = (notifications) => {
-      return notifications.filter(notification => notification.status !== 'read').length; // Adjust the condition based on your status field
-    };
-    const getDisplayedNotifications = () => {
-      // Calculate the slice for the current page
-      const startIndex = currentNotificationPage * notificationsPerPage;
-      const endIndex = startIndex + notificationsPerPage;
-      return notifications.slice(startIndex, endIndex);
-    };
+
 
   
   const handleLogout = () => {
@@ -82,74 +73,11 @@ const Sidebar = () => {
   
     fetchProfile();
     updateDateTime();
-    const intervalId = setInterval(updateDateTime, 1000);
-  
-    return () => clearInterval(intervalId);
   }, []);  
 
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/notifications/`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-  
-        const data = response.data;
-  
-        // Sort the notifications: unread first, then read
-        const sortedNotifications = data.sort((a, b) => {
-          if (a.STATUS === 'unread' && b.STATUS === 'read') {
-            return -1;
-          } else if (a.STATUS === 'read' && b.STATUS === 'unread') {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
-  
-        setNotifications(sortedNotifications); // Set the notifications state with the sorted notifications
-
-      // Count unread notifications and update the state
-      const unreadCount = sortedNotifications.filter((notification) => notification.STATUS === 'unread').length;
-      setUnreadNotificationCount(unreadCount); // Update the unread notifications count
 
 
-        if (unreadCount > 0) {
-          setNewNotification(true); // Set new notification state if there are unread notifications
-        } else {
-          setNewNotification(false); // Reset if no unread notifications
-        }
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
-  
-    // Fetch notifications initially and then every 10 seconds
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 1000);
-  
-    return () => clearInterval(interval); // Clear the interval on component unmount
-  }, []);
 
-  const toggleNotifications = () => {
-    setShowNotifications((prev) => !prev);
-  };
-
-  const handleNotificationClick = async (notificationId) => {
-    try {
-      await axios.patch(`${process.env.REACT_APP_API_URL}/secretary/notifications/${notificationId}`, { status: 'read' }, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-      });
-      setNotifications(prevNotifications =>
-        prevNotifications.filter(notification => notification.ID !== notificationId)
-      );
-      setUnreadNotificationCount(prevCount => prevCount - 1);
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-    }
-  };
   return (
     <div className={styles.bgcol}>
        <div className={styles.sidebar1}>
@@ -170,7 +98,7 @@ const Sidebar = () => {
             <EventNote />
             <span>Appointments</span>
           </NavLink>
-          <NavLink to="/secretary/queueList" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
+          <NavLink to="/secretary/queue" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
             <Queue />
             <span>Queue</span>
           </NavLink>
@@ -227,48 +155,6 @@ const Sidebar = () => {
           <b><p>{currentDate}</p></b>
         </div>
         <div className={styles.headerActions}>
-        <Notifications 
-              className={styles.iconSmall}
-              style={{ fontSize: '60px', padding: '10px', cursor: 'pointer', color: 'gray' }}
-              onClick={toggleNotifications}  ref={notificationRef}
-            />
-            {unreadNotificationCount > 0 && (
-            <span style={{
-              position: 'absolute',
-              top: '10%',  // Adjust this value as needed to position the badge correctly
-              right: '80%', // Adjust this value as needed
-              background: 'red',
-              color: 'white',
-              borderRadius: '50%',
-              padding: '2px 6px',
-              fontSize: '12px',
-              fontWeight: 'bold',
-              lineHeight: 'normal',
-            }}>
-              {unreadNotificationCount}
-            </span>
-            )}
-            {showNotifications && (
-              <div className={styles.notificationDropdown}>
-                {notifications.length > 0 ? (
-                  notifications.slice(
-                    currentNotificationPage * notificationsPerPage, 
-                    (currentNotificationPage + 1) * notificationsPerPage
-                  ).map((notification, index) => (
-                    <div 
-                      key={index} 
-                      className={styles.notificationItem} 
-                      style={getNotificationStyle(notification.TYPE)}
-                      onClick={() => handleNotificationClick(notification.ID)}
-                    >
-                      <p>{notification.MESSAGE}</p>
-                    </div>
-                  ))
-                ) : (
-                  <p>No new notifications.</p>
-                )}
-              </div>
-            )}
           <div className={styles.user}>
             <NavLink to="/secretary/profile" className={styles.profileIcon}>
               <AccountCircle style={{ fontSize: '60px', padding: '10px', cursor: 'pointer', color: 'gray' }} />

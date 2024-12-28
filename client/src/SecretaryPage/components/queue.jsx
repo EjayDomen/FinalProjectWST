@@ -12,7 +12,7 @@ const Queue = () => {
 
   const fetchQueueManagements = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/queues`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/viewallqm`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -35,49 +35,54 @@ const Queue = () => {
 
 
   const handleEventClick = ({ queue }) => {
-    console.log(queue.qid);
-    console.log(queue.doctor_id);
-    console.log(queue.schedule_id);
 
-    navigate(`/secretary/queueList/${queue.qid}`, {
+
+    navigate(`/secretary/queueList/${queue.id}`, {
       state: {
-        doctorId: queue.doctor_id,
-        scheduleId: queue.schedule_id,
-        doctorName: queue.doctorName, // Optional: add any other details if needed
-        doctorSpecialty: queue.specialty
+        purpose: queue.transaction_type,
+        date: queue.date,
+        status: queue.status, // Optional: add any other details if needed
       }
     });
   };
 
 
-  const toggleDropdown = (qid, event) => {
+  const toggleDropdown = (id, event) => {
     event.stopPropagation();
-    setDropdownOpen(dropdownOpen === qid ? null : qid); // Toggle dropdown
+    setDropdownOpen(dropdownOpen === id ? null : id); // Toggle dropdown
   };
 
-  const handleDropdownAction = (action, queueId) => {
-    if (action === 'cancel') {
-      alert(`Cancel queue with ID: ${queueId}`);
-    } else if (action === 'reschedule') {
-      alert(`Reschedule queue with ID: ${queueId}`);
+  const handleDropdownAction = async (action, queueId) => { // Mark function as async
+    if (action === 'completed') {
+      try {
+        const payload = { status: "completed" };
+        console.log("Sending payload:", payload); // Debugging line
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/admin/update-queue-status/${queueId}/`,
+          {
+            method: "POST",
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+  
+        if (response.ok) {
+          const data = await response.json();
+          alert(data.message); // Show success message
+        } else {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.error}`); // Show error message
+        }
+      } catch (error) {
+        alert(`Failed to update status: ${error.message}`); // Handle network errors
+      }
     }
     setDropdownOpen(null); // Close dropdown after action
   };
-  // Function to manually trigger createQueuesForToday
-  const createQueuesForToday = async () => {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/queues/createQueuesForToday`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      alert(response.data.message); // Show success message
-      fetchQueueManagements(); // Refresh the queue list
-    } catch (error) {
-      console.error('Error creating queues for today:', error);
-      alert('Failed to create queues for today.');
-    }
-  };
+  
+  // Function to manually trigger createQueuesForToda
 
   return (
     <div className={styles.doctorsSection}>
@@ -87,10 +92,6 @@ const Queue = () => {
           <h2 style={{fontSize:'35px'}}>Queue List</h2>
           <p style={{marginLeft: '10px', marginTop: '7px'}}>This is the list of doctors and their status. Check now!</p>
         </div>
-        {/* Button to manually trigger createQueuesForToday */}
-        <button className={styles.createQueueButton} onClick={createQueuesForToday}>
-          Create Queues for Today
-        </button>
       </div>
 
       {/* Search, Filter, and Create Queue Section */}
@@ -102,11 +103,10 @@ const Queue = () => {
 
         {/* Table Headers */}
         <div className={styles.tableHeader}>
-          <span>No</span>
+          <span>No.</span>
           <span>QID</span>
-          <span>Doctor's Name</span>
-          <span>Specialty</span>
-          <span>Time</span>
+          <span>Purpose</span>
+          <span>Date</span>
           <span>Status</span>
           <span>Action</span>
         </div>
@@ -114,36 +114,41 @@ const Queue = () => {
         {/* Table Body */}
         <div className={styles.tableBody}>
           {queueManagements.map((queue, index) => (
-            <div className={styles.tableRow} key={queue.qid}
+            <div className={styles.tableRow} key={queue.id}
               onClick={() => handleEventClick({queue})}
               style={{ cursor: 'pointer'}}>
-              <span>{queue.no}</span>
-              <span>{queue.qid}</span>
-              <span>{queue.doctorName}</span>
-              <span>{queue.specialty}</span>
-              <span>{queue.time}</span>
+              <span>{index + 1}</span>
+              <span>{queue.id}</span>
+              <span>{queue.transaction_type}</span>
+              <span>{queue.date}</span>
               <span>{queue.status}</span>
               <span>
                 <div className={styles.dropdownWrapper}>
                   <button
                     className={styles.dropdownToggle}
-                    onClick={(event) => toggleDropdown(queue.qid, event)}
+                    onClick={(event) => toggleDropdown(queue.id, event)}
                   >
                     &#9662;
                   </button>
-                  {dropdownOpen === queue.qid && (
+                  {dropdownOpen === queue.id && (
                     <div className={styles.dropdown}>
                       <div
                         className={styles.dropdownItem}
-                        onClick={() => handleDropdownAction('cancel', queue.qid)}
+                        onClick={() => handleDropdownAction('cancel', queue.id)}
                       >
                         Cancel
                       </div>
                       <div
                         className={styles.dropdownItem}
-                        onClick={() => handleDropdownAction('reschedule', queue.qid)}
+                        onClick={() => handleDropdownAction('reschedule', queue.id)}
                       >
                         Reschedule
+                      </div>
+                      <div
+                        className={styles.dropdownItem}
+                        onClick={() => handleDropdownAction('completed', queue.id)}
+                      >
+                        Completed
                       </div>
                     </div>
                   )}

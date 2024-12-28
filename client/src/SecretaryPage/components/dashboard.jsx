@@ -22,7 +22,7 @@ const Dashboard = () => {
   const [todaysAppointments, setTodaysAppointments] = useState([]);
   const [todaysQueue, setTodaysQueue] = useState([]);
   const [notifications, setNotifications] = useState([]);
-  const [newNotification, setNewNotification] = useState(false);
+  const [specialization, setSpecialization] = useState(false);
   const [attendedData, setAttendedData] = useState([]);
   const [loading, setLoading] = useState(true); // State for loading indicator
   const [loadingQueue, setLoadingQueue] = useState(true); // State for loading the queue
@@ -44,37 +44,19 @@ const Dashboard = () => {
     return notifications.filter(notification => notification.status !== 'read').length; // Adjust the condition based on your status field
   };
 
-   // Notification styling function
-const getNotificationStyle = (type) => {
-  switch (type) {
-    case 'SUCCESS':
-      return { color: '#28a745', backgroundColor: '#d4edda', border: '1px solid #c3e6cb' };
-    case 'FAILED':
-      return { color: '#dc3545', backgroundColor: '#f8d7da', border: '1px solid #f5c6cb' };
-    case 'WARNING':
-      return { color: '#000', backgroundColor: '#fff3cd', border: '1px solid #ffeeba' };
-    case 'INFO':
-      return { color: '#007bff', backgroundColor: '#d1ecf1', border: '1px solid #bee5eb' };
-    case 'CRITICAL':
-      return { color: '#8b0000', backgroundColor: '#f8d7da', border: '1px solid #f5c6cb' };
-    case 'NEUTRAL':
-    default:
-      return { color: '#6c757d', backgroundColor: '#e2e3e5', border: '1px solid #d6d8db' };
-  }
-};
 
   // Fetch doctor and appointment count from the backend
   useEffect(() => {
     const fetchDoctorCount = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/doctors/count`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/countpatients`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
         });
 
         const data = response.data;
-        setDoctorCount(data.doctorCount); // Update the state with the count
+        setDoctorCount(data.total_active_patients); // Update the state with the count
       } catch (error) {
         console.error('Error fetching doctor count:', error);
       }
@@ -82,25 +64,24 @@ const getNotificationStyle = (type) => {
 
     const fetchAppointmentCount = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/appointments/count`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/countapp`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
         });
 
         const data = response.data;
-        setAppointmentCount(data.appointmentCount); // Update the state with the count
+        setAppointmentCount(data.total_appointments); // Update the state with the count
       } catch (error) {
         console.error('Error fetching appointment count:', error);
       } 
     };
     const fetchTodaysAppointments = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/appointments/today/today`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/showtodayappointment/`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-          params: { limit: 5 }
+          }
         });
 
         const data = response.data;
@@ -115,7 +96,7 @@ const getNotificationStyle = (type) => {
 
     const fetchTodaysQueue = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/queues/today/todayQueue`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/showtodayqueue/`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
@@ -130,116 +111,33 @@ const getNotificationStyle = (type) => {
       }
     };
 
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/me/`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`  // Assuming token-based authentication
+          }
+        });
+        const secretary = response.data;
+    
+        
+        setSpecialization(secretary.specialization); // Use trim() to remove any extra spaces
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        // navigate('/');
+      }
+    };
+
     fetchDoctorCount();
     fetchAppointmentCount();
     fetchPatientsAttended();
     fetchTodaysAppointments();
     fetchTodaysQueue();
+    fetchProfile();
   }, []);
 
-  const markNotificationAsRead = async (id) => {
-    try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/secretary/notifications/${id}/read`, {}, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      setNotifications((prevNotifications) => 
-        prevNotifications.map(notification => 
-          notification.id === id ? { ...notification, status: 'read' } : notification
-        )
-      );
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-    }
-  }
-
-  // Function to handle notification deletion
-  const handleDeleteNotification = async (id) => {
-    try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/secretary/notifications/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      setNotifications((prevNotifications) => prevNotifications.filter(notification => notification.id !== id));
-    } catch (error) {
-      console.error('Error deleting notification:', error);
-    }
-  };
-
-  // Polling for new notifications every 10 seconds
-  useEffect(() => {
-    const fetchNotifications = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/notifications/`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-  
-        const data = response.data;
-  
-        // Sort the notifications: unread first, then read
-        const sortedNotifications = data.sort((a, b) => {
-          if (a.STATUS === 'unread' && b.STATUS === 'read') {
-            return -1;
-          } else if (a.STATUS === 'read' && b.STATUS === 'unread') {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
-  
-        setNotifications(sortedNotifications); // Set the notifications state with the sorted notifications
-
-      // Count unread notifications and update the state
-      const unreadCount = sortedNotifications.filter((notification) => notification.STATUS === 'unread').length;
-      setUnreadNotificationCount(unreadCount); // Update the unread notifications count
 
 
-        if (unreadCount > 0) {
-          setNewNotification(true); // Set new notification state if there are unread notifications
-        } else {
-          setNewNotification(false); // Reset if no unread notifications
-        }
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
-  
-    // Fetch notifications initially and then every 10 seconds
-    fetchNotifications();
-    const interval = setInterval(fetchNotifications, 1000);
-  
-    return () => clearInterval(interval); // Clear the interval on component unmount
-  }, []);
-  
-  // Function to calculate and return displayed notifications
-  const getDisplayedNotifications = () => {
-    // Calculate the slice for the current page
-    const startIndex = currentNotificationPage * notificationsPerPage;
-    const endIndex = startIndex + notificationsPerPage;
-    return notifications.slice(startIndex, endIndex);
-  };
-  
-  // Get notifications for the current page
-  const displayedNotifications = getDisplayedNotifications();
-  
- 
-   // Function to handle next page click
-   const handleNextPage = () => {
-     if ((currentNotificationPage + 1) * notificationsPerPage < notifications.length) {
-       setCurrentNotificationPage(prevPage => prevPage + 1);
-     }
-   };
-
-   // Function to handle previous page click
-  const handlePreviousPage = () => {
-    if (currentNotificationPage > 0) {
-      setCurrentNotificationPage(prevPage => prevPage - 1);
-    }
-  };
   const fetchPatientsAttended = async (period) => {
     try {
       let url;
@@ -344,7 +242,6 @@ const calculateMaxCount = (datasets) => {
 
 
 
-
 // Use the function to generate the chart data
 const chartData = prepareChartData(attendedData, period);
 // Use the function to compute maxCount
@@ -402,8 +299,8 @@ const chartOptions = {
           <img src={building} alt="Building" className={styles.icon} />
         </div>
         <div className={styles.textContainer}>
-          <h3>Outpatient Department</h3>
-          <p className={styles.roomInfo}>For <span>Room 420</span></p>
+          <h3>Clinic</h3>
+          <p className={styles.roomInfo}>{`${specialization}`}</p>
         </div>
       </div>
       
@@ -430,10 +327,10 @@ const chartOptions = {
             <img src={doctorLogo} alt="doctor" className={styles.icon} />
           </div>
           <div className={styles.textContainer}>
-            <h3>Doctors</h3>
+            <h3>Patients</h3>
             <p className={styles.count}>
               {doctorCount}
-              <span style={{ fontSize: '18px', color: '#777', marginLeft: '10px', fontWeight: 'normal' }}>Total Doctors</span>
+              <span style={{ fontSize: '18px', color: '#777', marginLeft: '10px', fontWeight: 'normal' }}>Total Patients</span>
             </p>
           </div>
         </div>
@@ -453,7 +350,7 @@ const chartOptions = {
                   <th>No.</th>
                   <th>Patient Name</th>
                   <th>Appointment Date</th>
-                  <th>Doctor's Schedule</th>
+                  <th>Purpose</th>
                 </tr>
               </thead>
               <tbody>
@@ -461,9 +358,9 @@ const chartOptions = {
                   todaysAppointments.map((appointment, index) => (
                     <tr key={appointment.id}>
                       <td>{index + 1}</td>
-                      <td>{`${appointment.FIRST_NAME} ${appointment.LAST_NAME}`}</td>
-                      <td>{appointment.APPOINTMENT_DATE}</td>
-                      <td>{appointment.APPOINTMENT_TIME}</td>
+                      <td>{`${appointment.first_name} ${appointment.last_name}`}</td>
+                      <td>{appointment.appointment_date}</td>
+                      <td>{appointment.purpose}</td>
                     </tr>
                   ))
                 ) : (
@@ -490,15 +387,17 @@ const chartOptions = {
                   <tr>
                     <th>Queue No.</th>
                     <th>Patient Name</th>
+                    <th>Purpose</th>
                     <th>Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   {todaysQueue && todaysQueue.queues && todaysQueue.queues.length > 0 ? (
                     todaysQueue.queues.map((queue, index) => (
-                      <tr key={`${todaysQueue.queueManagementId}-${index}`}>
+                      <tr key={`${todaysQueue.qmid}-${index}`}>
                         <td>{queue.queueNumber}</td>
-                        <td>{queue.patientName}</td>
+                        <td>{queue.patient.first_name}</td>
+                        <td>{queue.purpose}</td>
                         <td>{queue.status}</td>
                       </tr>
                     ))
@@ -513,74 +412,7 @@ const chartOptions = {
             <button className={styles.seeMoreBtn} onClick={() => navigate('../queuelist')}>See More</button>
           </div>
         
-      </div>
 
-      <div className={styles.notifications}>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          <h3><b>Notifications</b></h3>
-          <div style={{ position: 'relative', marginLeft: '10px' }}>
-            <Notifications style={{ fontSize: '35px', marginTop:'-40%', color: newNotification ? 'red' : 'gray' }} />
-            {unreadNotificationCount > 0 && (
-              <span style={{
-                position: 'absolute',
-                top: '-68%',
-                right: '-22.5%',
-                background: 'red',
-                color: 'white',
-                borderRadius: '50%',
-                padding: '2px 6px',
-                fontSize: '12px',
-              }}>
-                {unreadNotificationCount}
-              </span>
-            )}
-          </div>
-        </div>
-        {displayedNotifications.length > 0 ? (
-          <ul>
-          {displayedNotifications.map((notification) => (
-            <li 
-              key={notification.id} 
-              style={{
-                ...getNotificationStyle(notification.TYPE), 
-                fontWeight: notification.status === 'unread' ? 'bold' : 'normal'
-              }} 
-              onClick={() => markNotificationAsRead(notification.id)} 
-              className={styles.notificationItem}
-            >
-              <span style={{ cursor: 'pointer', display: 'block' }}>
-                {notification.MESSAGE}
-              </span>
-              <span 
-                onClick={(e) => { e.stopPropagation(); handleDeleteNotification(notification.id); }} 
-                style={{ cursor: 'pointer', margin:'-23px 0', float: 'right', color:'red'}} 
-                title="Delete Notification"
-              >
-                <Delete />
-              </span>
-            </li>
-          ))}
-        </ul>
-        ) : (
-          <p>No new notifications</p>
-        )}
-        {/* Navigation buttons for notifications */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
-          <button 
-            onClick={handlePreviousPage} 
-            disabled={currentNotificationPage === 0}
-            className={styles.navigationButton}
-          >
-            Previous
-          </button>
-          <button 
-            onClick={handleNextPage} 
-            disabled={(currentNotificationPage + 1) * notificationsPerPage >= notifications.length}
-            className={styles.navigationButton}
-          >
-            Next
-          </button>
-        </div>
       </div>
 
        {/* Third Row: Today's Appointment and Queue List */}

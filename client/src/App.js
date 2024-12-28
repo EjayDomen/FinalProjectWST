@@ -115,7 +115,7 @@ function App() {
                 <Route path="appointments" element={<AppointmentSecre />} />
                 <Route path="appointments/patientList/:scheduleId" element={<PatientListSecre />} />
                 <Route path="queue" element={<QueueSecre />} />
-                <Route path="queueList" element={<QueueListSecre />} />
+                <Route path="queueList/:qid" element={<QueueListSecre />} />
                 <Route path="messages" element={<MessageSecre />} />
                 <Route path="qr-scanner" element={<QRReaderSecre />} />
                 <Route path="report" element={<ReportSecre />} />

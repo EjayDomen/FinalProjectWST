@@ -63,7 +63,7 @@ const Appointments = () => {
 
   const fetchDoctors = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/queues/`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/showallappointment/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
@@ -81,15 +81,13 @@ const Appointments = () => {
           return {
             ...event,
             id: event.id,
-            title: event.title,
+            title: event.patient_name,
             backgroundColor: 'rgba(10, 193, 28, 0.5)',
             daysOfWeek: dow,
-            time: `${startTime} - ${endTime}`,
-            startTime: event.startTime,
-            endTime: event.endTime,
             startRecur,
-            schedCount: event.schedCount,
-            schedId: event.schedId,
+            purpose: event.purpose,
+            type: event.type,
+            date: event.appointment_date,
             borderColor: event.borderColor || '#0056b3', // Default border color
             extendedProps: {
               specialization: event.specialization,
@@ -254,11 +252,11 @@ const Appointments = () => {
 
 const columns = [
   { field: 'rowNumber', headerName: '#', width: 100 },
-  { field: 'id', headerName: 'QM-ID', width: 130 },
-  { field: 'title', headerName: 'Doctor Name', width: 250 },
+  { field: 'id', headerName: 'Appointment ID', width: 130 },
+  { field: 'title', headerName: 'Patient Name', width: 250 },
   { field: 'date', headerName: 'Date', width: 200 },
-  { field: 'time', headerName: 'Time', width: 220 },
-  { field: 'schedCount', headerName: 'Schedule No.', width: 150 },
+  { field: 'purpose', headerName: 'Purpose', width: 220 },
+  { field: 'type', headerName: 'Type', width: 150 },
   { field: 'status', headerName: 'Status', width: 150 },
   {
     field: 'actions',
@@ -316,7 +314,7 @@ return (
         onChange={(e) => setEndDate(e.target.value)}
         InputLabelProps={{ shrink: true }}
       />
-      { <Button
+      {/* { <Button
         onClick={toggleViewMode}
         sx={{
           padding: '10px 15px',
@@ -329,7 +327,7 @@ return (
         }}
       >
         {viewMode === 'list' ? <CalendarMonth /> : <ContentPaste />}
-      </Button> }
+      </Button> } */}
       </div>
 
         {/* Reschedule Modal */}

@@ -36,7 +36,7 @@ const Patient = () => {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/patients/`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/getallpatients/`, {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
         setPatients(response.data.length > 0 ? response.data : []);
@@ -83,7 +83,7 @@ const Patient = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/secretary/patients/delete/${patientToDelete}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/deletepatient/${patientToDelete}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
       });
       setPatients((prevPatients) => prevPatients.filter((patient) => patient.id !== patientToDelete));
@@ -99,10 +99,10 @@ const Patient = () => {
 
   const columns = [
     { field: 'id', headerName: 'Patient ID', width: 200 },
-    { field: 'FIRST_NAME', headerName: 'First Name', width: 300 },
-    { field: 'LAST_NAME', headerName: 'Last Name', width: 300 },
+    { field: 'first_name', headerName: 'First Name', width: 300 },
+    { field: 'last_name', headerName: 'Last Name', width: 300 },
     {
-      field: 'createdAt',
+      field: 'createAt',
       headerName: 'Account Created',
       width: 360,
       renderCell: (params) => (
