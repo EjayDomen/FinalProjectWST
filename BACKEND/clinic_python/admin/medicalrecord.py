@@ -3,17 +3,30 @@ from clinic_python.models import MedicalRecord, Patient, Staff
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
+from rest_framework_simplejwt.tokens import AccessToken
 
 @csrf_exempt
-def create_medical_record(request):
+def create_medical_record(request, patient_id):
     if request.method == 'POST':
+        auth_header = request.headers.get('Authorization', '')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
+            # Extract the token from the header
+        token = auth_header.split(' ')[1]
+        access_token = AccessToken(token)
+        staff_id = access_token['id']  # Retrieve the user ID from token claims
+        role = access_token['role']  # Retrieve the user role from token claims
+
+        # Check if the role is 'Staff'
+        if role != 'Staff':
+            return JsonResponse({'error': 'Unauthorized role'}, status=403)
         try:
             # Parse the incoming JSON data
             data = json.loads(request.body)
 
             # Fetch the related patient and staff objects
-            patient = get_object_or_404(Patient, id=data.id)
-            attending_staff = get_object_or_404(Staff, id=data.get('attendingstaff_id'))
+            patient = get_object_or_404(Patient, id=patient_id)
+            attending_staff = get_object_or_404(Staff, id=staff_id)
 
             # Create the medical record
             medical_record = MedicalRecord.objects.create(
@@ -24,8 +37,8 @@ def create_medical_record(request):
                 height=data.get('height', ''),
                 weight=data.get('weight', ''),
                 age=data.get('age', ''),
-                hr=data.get('hr', ''),
-                rr=data.get('rr', ''),
+                heart_rate=data.get('hr', ''),
+                respiratory_rate=data.get('rr', ''),
                 temperature=data.get('temperature', ''),
                 bloodpressure=data.get('bloodpressure', ''),
                 painscale=data.get('painscale', ''),
@@ -62,8 +75,8 @@ def get_medical_records_by_patient(request, patient_id):
                     'height': record.height,
                     'weight': record.weight,
                     'age': record.age,
-                    'hr': record.hr,
-                    'rr': record.rr,
+                    'heart_rate': record.heart_rate,
+                    'respiratory_rate': record.respiratory_rate,
                     'temperature': record.temperature,
                     'bloodpressure': record.bloodpressure,
                     'painscale': record.painscale,

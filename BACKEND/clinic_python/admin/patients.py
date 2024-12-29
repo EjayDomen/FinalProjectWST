@@ -29,6 +29,7 @@ def get_patients(request):
                 "middle_name": patient.middle_name,
                 "last_name": patient.last_name,
                 "suffix": patient.suffix,
+                "patient_type": patient.patient_type,
                 "campus": patient.campus,
                 "college_office": patient.college_office,
                 "course_designation": patient.course_designation,

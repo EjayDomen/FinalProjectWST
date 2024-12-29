@@ -9,7 +9,11 @@ import { Autocomplete, Modal, FormControl, TextField, Box, Button, Checkbox, For
 import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate from react-router-dom
 
 const LoginPage = () => {
+  const [purpose, setPurpose] = React.useState(""); // Purpose selection
+  const [otherPurpose, setOtherPurpose] = React.useState(""); // Specify others
+
   const [email, setEmail] = useState('');
+  const [patientId, setPatientId] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [currentQueueNumber, setCurrentQueueNumber] = useState(null);
@@ -181,6 +185,35 @@ const LoginPage = () => {
       setError('Invalid username or password. Please try again.'); // Updated error message for wrong credentials
     }
   };
+  const fetchPatientData = async () => {
+    if (!patientId) {
+      alert("Please enter a valid Patient ID.");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`/api/patients/${patientId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message || "Failed to fetch patient data."}`);
+        return;
+      }
+  
+      const data = await response.json();
+      setSelectedPatient(data); // Update the state with the fetched patient data
+      alert("Patient data fetched successfully!");
+    } catch (error) {
+      console.error("Error fetching patient data:", error);
+      alert("An error occurred while fetching patient data. Please try again.");
+    }
+  };
+  
 
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
@@ -265,18 +298,22 @@ const LoginPage = () => {
 
         {patientType === 'existing' && (
           <>
-            <h5>Select Existing Patient:</h5>
-            <Autocomplete
-              fullWidth
-              margin="normal"
-              options={patients}
-              getOptionLabel={(option) => `${option.FIRST_NAME} ${option.LAST_NAME}`}
-              value={selectedPatient || null}
-              onChange={(e, newValue) => handleSelectPatient(newValue)}
-              renderInput={(params) => <TextField {...params} label="Search Patient" />}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-            />
-          </>
+          <h5>Enter Patient ID:</h5>
+          <TextField
+            fullWidth
+            margin="normal"
+            label="Patient ID"
+            value={patientId}
+            onChange={(e) => setPatientId(e.target.value)} // Update state with the entered ID
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={fetchPatientData} // Call function to fetch patient data
+          >
+            Fetch Patient Data
+          </Button>
+        </>
         )}
 
         <h5>Patient Information:</h5>
@@ -387,6 +424,41 @@ const LoginPage = () => {
             style={{ marginBottom: '20px' }}
             disabled={patientType === 'existing'} // Disable if it's an existing patient
           />
+
+<h5>Purpose:</h5>
+<FormControl component="fieldset" style={{ marginBottom: "20px" }}>
+  <RadioGroup
+    value={purpose}
+    onChange={(e) => setPurpose(e.target.value)}
+  >
+    <FormControlLabel
+      value="consultation"
+      control={<Radio />}
+      label="Consultation"
+    />
+    <FormControlLabel
+      value="certificates"
+      control={<Radio />}
+      label="Certificates"
+    />
+    <FormControlLabel
+      value="others"
+      control={<Radio />}
+      label="Others"
+    />
+  </RadioGroup>
+</FormControl>
+
+{purpose === "others" && (
+  <TextField
+    fullWidth
+    margin="normal"
+    label="Specify Purpose"
+    value={otherPurpose}
+    onChange={(e) => setOtherPurpose(e.target.value)}
+    required
+  />
+)}
 
           <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginTop: '5px', marginBottom: '20px' }}>
             <Button

@@ -13,6 +13,7 @@ class Patient(models.Model):
     last_name = models.CharField(max_length=100)
     suffix = models.CharField(max_length=10, blank=True)
     campus = models.CharField(max_length=100)
+    patient_type = models.CharField(max_length=100, default="student")
     college_office = models.CharField(max_length=100)
     course_designation = models.CharField(max_length=100)
     year = models.CharField(max_length=100)

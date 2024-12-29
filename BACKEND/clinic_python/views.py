@@ -30,6 +30,7 @@ def register_patient(request):
             middle_name = body.get('middle_name', '')
             last_name = body.get('last_name')
             suffix = body.get('suffix', '')
+            patient_type= body.get('patient_type','')
             campus = body.get('campus')
             college_office = body.get('college_office')
             course_designation = body.get('course_designation')
@@ -71,6 +72,7 @@ def register_patient(request):
                 middle_name=middle_name,
                 last_name=last_name,
                 suffix=suffix,
+                patient_type= patient_type,
                 campus=campus,
                 college_office=college_office,
                 course_designation=course_designation,
@@ -102,6 +104,7 @@ def register_patient(request):
                     'middle_name': new_patient.middle_name,
                     'last_name': new_patient.last_name,
                     'suffix': new_patient.suffix,
+                    'patient_type': new_patient.patient_type,
                     'campus': new_patient.campus,
                     'college_office': new_patient.college_office,
                     'course_designation': new_patient.course_designation,
