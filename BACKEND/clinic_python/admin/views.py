@@ -6,12 +6,13 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from clinic_python.models import Staff
 from rest_framework_simplejwt.tokens import AccessToken
+from django.views.decorators.csrf import csrf_exempt
 
 def get_all_staff(request):
     if request.method == 'GET':
         try:
-            # Query all staff members
-            staff_members = Staff.objects.all().values(
+            # Query all staff members that are not deleted
+            staff_members = Staff.objects.filter(is_deleted=False).values(
                 'id', 
                 'first_name', 
                 'middle_name', 
@@ -32,6 +33,47 @@ def get_all_staff(request):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+def get_archived_staff(request):
+    if request.method == 'GET':
+        try:
+            # Fetch staff that are soft-deleted
+            archived_staff = Staff.objects.filter(is_deleted=True).values(
+                'id',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'suffix',
+                'specialization',
+                'email'
+            )
+
+            archived_staff_list = list(archived_staff)
+
+            return JsonResponse({'staff': archived_staff_list}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': f'Error fetching archived staff: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+@csrf_exempt
+def restore_staff(request, id):
+    if request.method == 'POST':  # Or whichever method you're using
+        try:
+            # Fetch staff that are soft-deleted
+            staff = Staff.objects.get(id=id, is_deleted=True)
+            staff.is_deleted = False  # Restore the staff record
+            staff.save()
+
+            # Return success response
+            return JsonResponse({'message': 'Staff restored successfully.'}, status=200)
+        except Staff.DoesNotExist:
+            return JsonResponse({'error': 'Staff not found or not soft-deleted.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': f'Error restoring staff: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method. Use POST or PUT.'}, status=405)
+
 
 def is_admin(user):
     return user.groups.filter(name='admin').exists()
@@ -47,6 +89,75 @@ def dashboard(request):
     return render(request, 'admin/dashboard.html')
 
 
+@csrf_exempt
+def delete_staff(request, id):
+    if request.method == 'DELETE':
+        try:
+            staff = Staff.objects.get(id= id)
+
+            if staff.is_deleted:
+                return JsonResponse({'error': 'Staff is already deleted.'}, status=400)
+
+            staff.is_deleted = True
+            staff.save()
+
+            return JsonResponse({'message': 'Staff deleted successfully.'}, status=200)
+        except Staff.DoesNotExist:
+            return JsonResponse({'error': 'Staff not found.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': f'Error deleting staff: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method.'}, status=405)
+
+@csrf_exempt
+def edit_staff(request, id):
+    """
+    Edit a staff member's details like name, specialization, and email.
+    Allows admins or the staff member themselves to update their details.
+    """
+    if request.method == 'PUT':
+        try:
+
+            # Retrieve the staff record from the database
+            staff = Staff.objects.get(id=id, is_deleted=False)
+
+            # Parse the incoming JSON body to get the updated fields
+            body = json.loads(request.body)
+            first_name = body.get('first_name', staff.first_name)
+            middle_name = body.get('middle_name', staff.middle_name)
+            last_name = body.get('last_name', staff.last_name)
+            suffix = body.get('suffix', staff.suffix)
+            specialization = body.get('specialization', staff.specialization)
+            email = body.get('email', staff.email)
+
+            # Update fields only if they are provided in the request
+            staff.first_name = first_name
+            staff.middle_name = middle_name
+            staff.last_name = last_name
+            staff.suffix = suffix
+            staff.specialization = specialization
+            staff.email = email
+
+            # Save the changes to the database
+            staff.save()
+
+            # Return success response
+            return JsonResponse({
+                'message': f'Staff {first_name} {last_name} details updated successfully.',
+                'staff_id': staff.id
+            }, status=200)
+
+        except Staff.DoesNotExist:
+            return JsonResponse({'error': 'Staff not found'}, status=404)
+        except KeyError:
+            return JsonResponse({'error': 'Invalid token payload'}, status=400)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+        except Exception as e:
+            return JsonResponse({'error': f'Error updating staff: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method. Use PUT.'}, status=405)
+
 
 
 @csrf_exempt
@@ -61,10 +172,10 @@ def create_staff(request):
             suffix = body.get('suffix', '')
             specialization = body.get('specialization')
             email = body.get('email')
-            password = body.get('password')
+            
 
             # Check if all required fields are provided
-            if not first_name or not last_name or not specialization or not email or not password:
+            if not first_name or not last_name or not specialization or not email:
                 return JsonResponse({'error': 'All fields are required'}, status=400)
 
             # Check if the user_level_id for Staff (2) exists in Role model
@@ -73,8 +184,11 @@ def create_staff(request):
             except Role.DoesNotExist:
                 return JsonResponse({'error': 'Role with user_level_id 2 not found'}, status=400)
 
+            # Create a predefined password: 'LastName123'
+            predefined_password = f"{last_name}123"
+
             # Hash the password using bcrypt
-            hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            hashed_password = bcrypt.hashpw(predefined_password.encode('utf-8'), bcrypt.gensalt())
 
             # Create the Staff instance
             staff = Staff.objects.create(

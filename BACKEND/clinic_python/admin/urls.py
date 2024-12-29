@@ -14,6 +14,11 @@ urlpatterns = [
     path('update_staff/', views.update_logged_in_staff, name='get_staff_detail'),
     
     path('createStaff/', views.create_staff, name='create_staff'),
+    path('deleteStaff/<int:id>/', views.delete_staff, name='delete_staff'),
+    path('editStaff/<int:id>/', views.edit_staff, name='edit_staff'),
+    path('get_archived_staff/', views.get_archived_staff, name='get_archived_staff'),
+    path('restore_staff/<int:id>/', views.restore_staff, name='restore_staff'),
+    
     path('joinqueue/', joinqueue.join_queue, name='join_queue'),
     path('viewqueue/', joinqueue.view_queue, name='view_queue'),
     path('updatequeuestatus/', joinqueue.update_queue_status, name='update_queue_status'),
