@@ -3,9 +3,124 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import styles from '../styles/profileSecre.module.css';  // Import as module
 import { ArrowBack} from '@mui/icons-material';
+import SuccessModal from '../components/successModal';
+import ErrorModal from '../components/errorModal.jsx';
 
 const Profile = () => {
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [showErrorModal, setShowErrorModal] = useState(false);
+    const [successMessage, setSuccessMessage] = useState('');
+    const handleCloseSuccessModal = () => {
+      setShowSuccessModal(false);
+    };
+    const handleCloseErrorModal = () => {
+      setShowErrorModal(false);
+    };
+    const ChangePasswordModal = ({ isOpen, onClose, formData, handleChange, handleSavePassword }) => {
+      if (!isOpen) return null;
+    
+      return (
+        <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title"><b>Change Password</b></h5>
+                <button type="button" className="btn-close" onClick={onClose}></button>
+              </div>
+              <div className="modal-body">
+                <div className="mb-3">
+                  <label htmlFor="email" className="form-label">Email:</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="email"
+                    value={formData.email}
+                    readOnly
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">Enter Old Password:</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    name="oldPassword"
+                    value={formData.oldPassword}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="password" className="form-label">New Password:</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="confirmPassword" className="form-label">Confirm Password:</label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
+                <button className="btn btn-primary" onClick={handleSavePassword}>Save</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const handleSavePassword = async () => {
+      if (!validatePassword(formData.password)) {
+        alert('Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, and one number.');
+        return;
+      }
+  
+      if (formData.password !== formData.confirmPassword) {
+        alert('Passwords do not match. Please try again.');
+        return;
+      }
+      const token = localStorage.getItem('token');
+        if (!token) {
+          alert('You need to log in first.');
+          navigate('/login'); // Redirect to login page if token is not found
+          return;
+        }
+  
+      try {
+        const response = await axios.put(`${process.env.REACT_APP_API_URL}/api/patient/update-password/`, {
+          email: formData.email,
+          newPassword: formData.password,
+        }, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        setShowSuccessModal(true);
+        setSuccessMessage('Reset password updated successfully!');
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error('Error resetting password:', error.response?.data || error.message);
+        setErrorMessage(error.response?.data?.error || 'Failed to reset password. Please check your details and try again.');
+        setShowErrorModal(true);
+      }
+    };
+    const validatePassword = (password) => {
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
+      return passwordRegex.test(password);
+    };
   const [formData, setFormData] = useState({
     lastName: "",
     firstName: "",
@@ -207,8 +322,21 @@ const Profile = () => {
               />
             </div>
           </div>
-
-          
+          <div>
+            <button className="btn btn-secondary" style={{float:'right'}} onClick={() => setIsModalOpen(true)}>
+              Change Password
+            </button>
+          </div>
+          {/* Modals */}
+          <ChangePasswordModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            formData={formData}
+            handleChange={handleChange}
+            handleSavePassword={handleSavePassword}
+          />
+          {showSuccessModal && <SuccessModal message={successMessage} onClose={handleCloseSuccessModal} />}
+          {showErrorModal && <ErrorModal message={errorMessage} onClose={handleCloseErrorModal} />}
         </div>
       </div>
     </div>
