@@ -9,7 +9,7 @@ body{
 
 .sidebar1 {
   height: 100%;
-  background-color: #313b34; /* Dark background similar to the image */
+  background-color: #1D3461; /* Dark background similar to the image */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -17,6 +17,7 @@ body{
   width: 250px; /* Set a fixed width for the sidebar */
   border-right: 2px solid #ddd; /* Light gray border */
   width: 18%;
+  padding-left: 10px;
 }
 
 /* Logo styling */
@@ -42,7 +43,7 @@ body{
   align-items: center;
   padding: 8px 20px;
   text-decoration: none;
-  color: #b0bec5; /* Light text color */
+  color: white; /* Light text color */
   transition: background-color 0.3s, color 0.3s, padding-left 0.3s;
   border-radius: 5%;
   position: relative;
@@ -50,26 +51,26 @@ body{
 
 
 .navItem1 svg {
-  font-size: 30px;
+  font-size: 24px;
   margin-top: 3px;
-  color: #b0bec5; /* Light icon color */
+  color: white; /* Light icon color */
 }
 
 .navItem1 span {
   margin-left: 15px;
-  font-size: 25px;
+  font-size: 18px;
   font-weight: bold;
 }
 
 .navItem1:hover {
-  background-color: #353d38; 
-  color: #0ac11c; /* White text on hover */
+  background-color: #2563EB; /* Lighter blue */
+  color: white; /* Ensure text remains white on hover */
   padding-left: 40px;
 }
 
 .aactive1 {
-  background-color: #353d38;
-  color: #0ac11c; 
+  background-color: #2563EB; /* Lighter blue */
+  color: white; /* Ensure text remains white on hover */
   padding-left: 40px;
 }
 
@@ -83,7 +84,7 @@ body{
   align-items: center;
   padding: 8px 20px;
   text-decoration: none;
-  color: #b0bec5; /* Light text color */
+  color: white; /* Light text color */
   transition: background-color 0.3s, color 0.3s, padding-left 0.3s;
   border-radius: 5%;
   position: relative;
@@ -91,20 +92,20 @@ body{
 }
 
 .logout svg {
-  font-size: 30px;
+  font-size: 24px;
   margin-top: 3px;
-  color: #b0bec5; /* Light icon color */
+  color: white; /* Light icon color */
 }
 
 .logout span {
   margin-left: 15px;
-  font-size: 25px;
+  font-size: 18px;
   font-weight: bold;
 }
 
 .logout:hover {
-  background-color: #353d38; 
-  color: #0ac11c; /* White text on hover */
+  background-color: #2563EB; /* Lighter blue */
+  color: white; /* Ensure text remains white on hover */
   padding-left: 40px;
 }
 

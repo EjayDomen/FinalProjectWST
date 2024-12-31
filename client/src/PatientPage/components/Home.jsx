@@ -83,11 +83,11 @@ const Home = () => {
           <img src={doctorImage} alt="Doctor Illustration" className="bannerImage" />
             <div className="bannerText">
             <p>
-              Schedule an Appointment with a Specialist to Begin Your Journey to Healing and Wellness.
+              Schedule an Appointment with a Doctor in Queue Care to find the service you are looking for.
             </p>
             <div>
               <Link to="/patient/doctors" className="findDoctorButton">
-                Find Your Doctor Now!
+                Check the List of Available Doctors
               </Link>
             </div>
           </div>

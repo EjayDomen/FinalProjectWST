@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 import Modal from '@mui/material/Modal';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import styles from '../styles/appointmentsSecre.module.css';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const ActionDropdown = ({ onReminder, onReschedule }) => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -291,13 +293,28 @@ return (
   <div className={styles.doctorsSection}>
     {/* Search bar, date filters, and calendar toggle button in one row */}
     <div className={styles.searchAppointment}>
-      <div className={styles.actionButtons}>
+      <div className={styles.actionButtons} style={{
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center', /* Center the content horizontally */
+        margin: 0, /* Remove default margin */
+        gap: '12px',
+        width: '90%'
+      }}>
+        <FontAwesomeIcon icon={faMagnifyingGlass} style={{
+                    position: 'absolute',
+                    left: '22px',
+                    color: '#aaa'
+                  }} />
        <input
           type="text"
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm on input change
-          
+          style={{
+            paddingLeft: '50px'
+          }}
         />
       
       <TextField

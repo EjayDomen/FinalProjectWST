@@ -10,7 +10,7 @@
   margin-top: 25px;
   margin-bottom: 20px;
   padding: 20px;
-  background-color: #6aa483;
+  background-color: #1F487E;
   display: flex;
   border-radius: 8px;
   width: 100%;
@@ -36,6 +36,7 @@
   justify-content: center;
   width: 100%; /* Full width for responsive layout */
   flex-wrap: wrap; /* Wrap content for smaller screens */
+
 }
 
 .bannerImage {
@@ -56,13 +57,13 @@
 .bannerText p {
   margin: 0 auto;
   font-size: 1.5em; /* Adjust font size for smaller screens */
-  color: #333;
+  color: white;
   font-weight: 600;
   margin-bottom: 20px;
 }
 
 .findDoctorButton {
-  background-color: rgb(76, 175, 80);
+  background-color: #6290c8;
   color: white;
   border: none;
   padding: 15px 20px;

@@ -104,10 +104,14 @@ const Sidebar = () => {
           </NavLink>
           
           <div>
-            <NavLink
+          <NavLink
               to="/secretary/report"
-              className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}
-            >
+              className={({ isActive }) =>
+                `${styles.navItem1} ${
+                  isActive && window.location.pathname === '/secretary/report' ? styles.aactive1 : ''
+                }`
+              }
+          >
               <Assessment />
               <span>Reports</span>
             </NavLink>
@@ -116,15 +120,15 @@ const Sidebar = () => {
                 to="/secretary/report/logs"
                 className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}
               >
-                <History style={{ fontSize: '25px' }} />
-                <span style={{ fontSize: '22px' }}>Logs</span>
+                <History style={{ fontSize: '24px' }} />
+                <span style={{ fontSize: '18px' }}>Logs</span>
               </NavLink>
               <NavLink
                 to="/secretary/report/feedback"
                 className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}
               >
-                <Feedback style={{ fontSize: '25px' }} />
-                <span style={{ fontSize: '22px' }}>Feedback</span>
+                <Feedback style={{ fontSize: '24px' }} />
+                <span style={{ fontSize: '18px' }}>Feedback</span>
               </NavLink>
             </div>
           </div>

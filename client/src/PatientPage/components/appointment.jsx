@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Modal, Button, Container, Row, Col, Form, Table } from 'react-bootstrap';
 import { Menu, MenuItem,Typography, Box, IconButton, Divider } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -327,6 +329,7 @@ const Appointment = () => {
     <Container className='apptcont'>
       <div className="d-flex mb-3 gap-3">
         <div className='searchbar'>
+        <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
           <Form.Control
             type="text"
             placeholder="Search Appointment"

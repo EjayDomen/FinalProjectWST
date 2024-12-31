@@ -69,14 +69,14 @@ const Sidebar = () => {
 
   return (
     <div className="sidebar">
-      <nav className="navbar navbar-expand-lg navbar-light bg-light fixed-top shadow">
+      <nav className="navbar navbar-expand-lg navbar-light fixed-top shadow">
         <div className="container-fluid">
           <div
             className="menu-container"
             onMouseEnter={handleMouseEnter} // Hover to open (large screens)
             onMouseLeave={handleMouseLeave} // Hover out to close (large screens)
           >
-            <button className="menu-btn bg-light" onClick={toggleMenu}>
+            <button className="menu-btn" style={{ backgroundColor: '#1D3461', color: 'white'}} onClick={toggleMenu}>
               <Menu style={{ fontSize: "30px" }} />
             </button>
 
@@ -112,7 +112,7 @@ const Sidebar = () => {
 
           <div className="text d-flex-column align-items-center me-auto">
             <h5 className="ms-3 mb-0">Good Day {user?.FIRST_NAME}!</h5>
-            <p className="text-muted ms-3 mb-0 d-none d-md-block">How are you feeling today?</p>
+            <p className="text-white ms-3 mb-0 d-none d-md-block">How are you feeling today?</p>
           </div>
 
           <div className="d-flex align-items-center">

@@ -8,6 +8,9 @@ import DeleteConfirmationModal from '../components/deleteConfirmationModal.jsx';
 import MedicalRecordsModal from '../components/MedicalRecordsModal';
 import ArchivedPatients from './archivedPatient.jsx';
 import CreateMedicalRecordModal from './CreateMedicalRecordModal';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 Modal.setAppElement('#root'); // Set the root element for accessibility
 
@@ -229,12 +232,27 @@ const Patient = () => {
       </div>
 
       <div className={styles.searchAppointment}>
-        <div style={{display: 'flex', gap:'1%'}}>
+        <div style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center', /* Center the content horizontally */
+            margin: 0, /* Remove default margin */
+            gap: '12px',
+            width: '90%'}}>
+        <FontAwesomeIcon icon={faMagnifyingGlass} style={{
+            position: 'absolute',
+            left: '22px',
+            color: '#aaa'
+          }} />
           <input
             type="text"
             placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              paddingLeft: '60px'
+            }}
           />
           <button className={styles.iconButton}onClick={handleOpenArchiveModal}><Archive/> Archive</button>
         </div>

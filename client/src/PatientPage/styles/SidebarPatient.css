@@ -3,6 +3,15 @@ body{
   background-Color:#f5f7fa;
 }
 
+.navbar {
+  background-color: #1D3461 !important; /* Replace with your desired color */
+  color: white; /* Optional: Change text color */
+}
+
+.text-muted {
+  color: white;
+}
+
 .dropdown-menu-custom {
   position: absolute;
   top: 75%; /* Position below the button */
@@ -50,15 +59,15 @@ body{
 
 
 .dropdown-item-custom:hover {
-  background-color: #f1f9f5; /* Light green background */
-  color: #0ac11c;           /* Green text on hover */
+  background-color: #6290CB; /* Light green background */
+  color: #1f487e;           /* Green text on hover */
   padding-left: 40px;       /* Indent on hover */
 }
 
 /* Active state styling */
 .menuItem.active {
-  background-color: #e0ffe0; /* Light green for active state */
-  color: #006400;           /* Darker green text */
+  background-color: #6290cb; /* Light green for active state */
+  color: #1f487e;           /* Darker green text */
 }
 
 .menuItem.active:hover{
@@ -78,11 +87,11 @@ body{
   display: flex;
   align-items: center;
   justify-content: center;
-  color: gray;
+  color: white;
 }
 
 .icon-button:hover {
-  color: black;
+  color: whitesmoke;
 }
 
 .user-info {
@@ -125,7 +134,7 @@ body{
 .menu-btn {
   border: none; /* Remove border */
   cursor: pointer; /* Add pointer cursor for better UX */
-  outline: none; /* Remove the focus outline */
+  outline: none; /* Remove the focus outline */ 
 }
 
 

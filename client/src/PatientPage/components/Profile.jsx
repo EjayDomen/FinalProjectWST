@@ -570,7 +570,7 @@ const Profile = () => {
     >
       Delete Profile
     </button>
-    <button className="btn btn-secondary me-2" onClick={() => setIsModalOpen(true)}>
+    <button className="btn btn-secondary mt-3" onClick={() => setIsModalOpen(true)}>
       Change Password
     </button>
   </div>

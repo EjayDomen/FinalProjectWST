@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import styles from '../styles/profileSecre.module.css';  // Import as module
-import { ArrowBack} from '@mui/icons-material';
+import { ArrowBack } from '@mui/icons-material';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
 import SuccessModal from '../components/successModal';
 import ErrorModal from '../components/errorModal.jsx';
 import doc from '../images/doc.png';
@@ -273,6 +275,7 @@ const Profile = () => {
       borderRadius: '50%',
       objectFit: 'cover',
       boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+      marginRight: '40px'
     }}
   />
   
@@ -301,13 +304,14 @@ const Profile = () => {
       left: '50%',
       width: '225px',
       height: '30px',
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      backgroundColor: '#376996',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       cursor: 'pointer',
       color: '#fff',
       borderRadius: '15px', // Optional, to make the button rounder
+      margin: 'auto'
     }}
     onClick={() => document.getElementById("profilePictureInput").click()}  // Trigger file input on button click
   >
@@ -333,7 +337,15 @@ const Profile = () => {
           <div style={{display: 'flex', justifyContent:'space-between'}}>
             <div className={styles.sectionTitle}>Personal Information:</div>
             <button className={styles.editButton} onClick={toggleEditMode}>
-              {isEditable ? "Save" : "Edit"}
+              {isEditable ? (
+              <>
+                <SaveIcon /> Save
+              </>
+              ) : (
+              <>
+                 <EditIcon /> Edit
+              </>
+               )}
             </button>
           </div>
           <div className={styles.row}>
@@ -409,7 +421,7 @@ const Profile = () => {
             </div>
           </div>
           <div>
-            <button className="btn btn-secondary" style={{float:'right'}} onClick={() => setIsModalOpen(true)}>
+            <button className="btn" style={{float:'right', backgroundColor: '#376996', color: 'white'}} onClick={() => setIsModalOpen(true)}>
               Change Password
             </button>
           </div>

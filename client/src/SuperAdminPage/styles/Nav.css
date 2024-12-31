@@ -65,19 +65,22 @@ body {
     border-radius: 4px;
     text-decoration: none; /* Remove underline from links */
     color: white; /* Text color */
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: background-color 0.3s ease, color 0.3s ease,  padding-left 0.3s;
+    font-weight: bold;
 }
 
 /* Hover effect */
 .superadmin-sidebar nav a:hover {
     background-color: #2563EB; /* Lighter blue */
     color: white; /* Ensure text remains white on hover */
+    padding-left: 40px;
 }
 
 /* Active link */
 .superadmin-sidebar nav a.active {
     background-color: #2563EB; /* Highlight active link */
     color: white;
+    padding-left: 40px;
 }
 
 /* Icon size */

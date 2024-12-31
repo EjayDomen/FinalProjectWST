@@ -7,7 +7,24 @@
 
 .searchbar{
   width: 90%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Center the content horizontally */
+  margin: 0; /* Remove default margin */
 }
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  color: #aaa;
+}
+
+.searchbar input {
+  padding-left: 30px; /* Add padding to the left of the input to make room for the icon */
+  width: 100%; /* Ensure the input takes full width of the container */
+}
+
 
 .custom-dropdown .dropdown-menu {
   position: absolute !important;

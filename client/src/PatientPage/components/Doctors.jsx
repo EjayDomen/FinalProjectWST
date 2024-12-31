@@ -4,6 +4,8 @@ import FullCalendar from '@fullcalendar/react';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Modal from 'react-modal';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Button, Container, Row, Col, Form, Card } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import doc from "../images/doc.png";
@@ -313,12 +315,27 @@ const DoctorList = () => {
       {/* Search Bar */}
       <Form className="mb-4">
         <Row className="justify-content-center">
-          <Col md={6}>
+          <Col md={6} style={{
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center', /* Center the content horizontally */
+            margin: 0 /* Remove default margin */
+          }}>
+          <FontAwesomeIcon icon={faMagnifyingGlass} style={{
+            position: 'absolute',
+            left: '22px',
+            color: '#aaa'
+          }} />
             <Form.Control
               type="text"
               placeholder="Search..."
               value={searchTerm}
               onChange={handleSearch}
+              style={{
+                paddingLeft: '30px', 
+                width: '100%'
+              }}  
             />
           </Col>
         </Row>

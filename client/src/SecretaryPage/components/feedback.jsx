@@ -6,6 +6,9 @@ import axios from 'axios';
 import { jsPDF } from "jspdf";
 import "jspdf-autotable";
 import styles from '../styles/reportsSecre.module.css';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 const Feedback = () => {
   const [feedback, setFeedback] = useState([]);
@@ -240,11 +243,27 @@ const Feedback = () => {
 
       {/* Search Field and Filters */}
       <div className={styles.searchAppointment}>
-        <div className={styles.actionButtons}>
+        <div className={styles.actionButtons} style={{
+                              position: 'relative',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center', /* Center the content horizontally */
+                              margin: 0, /* Remove default margin */
+                              gap: '12px',
+                              width: '100%'
+        }}>
+          <FontAwesomeIcon icon={faMagnifyingGlass} style={{
+                              position: 'absolute',
+                              left: '22px',
+                              color: '#aaa'
+                            }} />
           <input
             type="text"
             placeholder="Search"
             onChange={(e) => setSearchTerm(e.target.value)}
+            style={{
+              paddingLeft: '50px'
+            }}
           />
           <TextField
             label="Start Date"

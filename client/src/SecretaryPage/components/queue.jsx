@@ -4,6 +4,9 @@ import { FilterAlt, Search, Add } from '@mui/icons-material';
 import { Button} from '@mui/material';
 import styles from '../styles/queuesSecre.module.css';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 
 const Queue = () => {
@@ -97,7 +100,7 @@ const Queue = () => {
                 <div style={{gap:'10px', display:'flex'}}>
                   <div>
                     <button className={styles.addDoctorBtn} >
-                        <Add style={{ fontSize: '30px'}} /> Walk-ins
+                        <Add style={{ fontSize: '16px'}} /> Walk-ins
                     </button>
                   </div>
                   <div>
@@ -110,10 +113,27 @@ const Queue = () => {
 
       {/* Search, Filter, and Create Queue Section */}
       <div className={styles.searchAppointment}>
-        <input type="text" placeholder="Search Appointment" />
+        <div style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center', /* Center the content horizontally */
+                margin: 0, /* Remove default margin */
+                gap: '12px',
+                width: '90%'
+              }}>
+        <FontAwesomeIcon icon={faMagnifyingGlass} style={{
+                    position: 'absolute',
+                    left: '22px',
+                    color: '#aaa'
+                  }} />
+        <input type="text" placeholder="Search Appointment" style={{
+          paddingLeft: '50px'
+        }}/>
         <button className={styles.filterBtn}><Search /></button>
         <button className={styles.filterBtn}><FilterAlt /></button>
-      
+
+        </div>
 
         {/* Table Headers */}
         <div className={styles.tableHeader}>

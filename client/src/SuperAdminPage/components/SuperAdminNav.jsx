@@ -1,6 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGauge, faUsers, faUser, faPeopleRoof, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { Home, Person, Groups2, Queue, Logout } from '@mui/icons-material';
 import logoImage from '../../LoginPage/images/logo.png';
 import '../styles/Nav.css';
 
@@ -15,35 +14,35 @@ export const SuperAdminNav = () => {
                     className={({ isActive }) => (isActive ? 'active' : '')}
                     end
                 >
-                    <FontAwesomeIcon icon={faGauge} className="icon" /> Dashboard
+                    <Home /> <span>Dashboard</span> 
                 </NavLink>
                 <NavLink 
                     to="/superadmin/queuemanage" 
                     className={({ isActive }) => (isActive ? 'active' : '')}
                     end
                 >
-                    <FontAwesomeIcon icon={faUsers} className="icon" /> Queue Management
+                    <Queue /> <span>Queue</span>
                 </NavLink>
                 <NavLink 
                     to="/superadmin/patientmanage" 
                     className={({ isActive }) => (isActive ? 'active' : '')}
                     end
                 >
-                    <FontAwesomeIcon icon={faUser} className="icon" /> Patient Management
+                   <Groups2 /> <span>Patients</span>
                 </NavLink>
                 <NavLink 
                     to="/superadmin/staffmanage" 
                     className={({ isActive }) => (isActive ? 'active' : '')}
                     end
                 >
-                    <FontAwesomeIcon icon={faPeopleRoof} className="icon" /> Staff Management
+                    <Person /> <span>Staffs</span> 
                 </NavLink>
                 <NavLink 
                     to="/" 
                     className={({ isActive }) => (isActive ? 'active' : '')}
                     end
                 >
-                    <FontAwesomeIcon icon={faRightFromBracket} className="icon" /> Log Out
+                    <Logout />  <span>Log Out</span>
                 </NavLink>
             </nav>
         </aside>

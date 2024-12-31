@@ -25,9 +25,9 @@ import PatientSecre from './SecretaryPage/components/patient';
 import PatientListSecre from './SecretaryPage/components/patientlist';
 import AppointmentSecre from './SecretaryPage/components/appointments';
 import QueueSecre from './SecretaryPage/components/queue';
-import ViewQueueSecre from './SecretaryPage/components/viewQueue.jsx';
+//import ViewQueueSecre from './SecretaryPage/components/viewQueue.jsx';
 import QueueListSecre from './SecretaryPage/components/queuelist.jsx';
-import ViewQueueListSecre from './SecretaryPage/components/viewQueueList.jsx';
+//import ViewQueueListSecre from './SecretaryPage/components/viewQueueList.jsx';
 import MessageSecre from './SecretaryPage/components/messages';
 import ReportSecre from './SecretaryPage/components/report';
 import ReportLogsSecre from './SecretaryPage/components/logs.jsx';
@@ -117,9 +117,9 @@ function App() {
                 <Route path="appointments" element={<AppointmentSecre />} />
                 <Route path="appointments/patientList/:scheduleId" element={<PatientListSecre />} />
                 <Route path="queue" element={<QueueSecre />} />
-                <Route path="viewQueue" element={<ViewQueueSecre />} />
+                {/*<Route path="viewQueue" element={<ViewQueueSecre />} /> */}
                 <Route path="queueList/:qid" element={<QueueListSecre />} />
-                <Route path="viewQueueList/:qid" element={<ViewQueueListSecre />} />
+                {/* <Route path="viewQueueList/:qid" element={<ViewQueueListSecre />} /> */}
                 <Route path="messages" element={<MessageSecre />} />
                 <Route path="qr-scanner" element={<QRReaderSecre />} />
                 <Route path="report" element={<ReportSecre />} />
