@@ -8,6 +8,37 @@
   height: 100%;
 }
 
+.addDoctorBtn {
+  padding: 8px 30px;
+  background-color: #28a745;
+  color: rgb(239, 239, 239);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.addDoctorBtn2 {
+  padding: 8px 30px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 20px;
+  color: white;
+  background-color: #007bff;
+}
+
+.addDoctorBtn2:hover {
+  background-color: #1a416c;
+}
+
+
+.addDoctorBtn:hover {
+  color: rgb(239, 239, 239);
+  background-color: #218838;
+}
+
 /* Doctors Header */
 .doctorsHeader {
   display: flex;
