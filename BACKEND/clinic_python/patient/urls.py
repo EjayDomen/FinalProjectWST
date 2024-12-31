@@ -11,6 +11,7 @@ urlpatterns = [
     path('deleteAcc/', views.soft_delete_patient, name= 'Delete'),
     path('update-password/', views.UpdatePasswordView, name='update-password'),
     path('createAppointment/', appointment.create_appointment, name='create-appointment'),
+    path('viewAppointment/', appointment.view_all_appointments, name= 'view_all_appointments'),
     # Add other paths for superadmin-related views here
 ]   
 

@@ -8,8 +8,16 @@ import { NavLink } from 'react-router-dom';
 import { DataGrid } from '@mui/x-data-grid';
 import Modal from 'react-modal';
 import styles from '../styles/ManagePatient.module.css';
+import { Delete, Archive } from '@mui/icons-material';
+import MedicalRecordsModal from '../../SecretaryPage/components/MedicalRecordsModal';
+import ArchivedPatients from '../../SecretaryPage/components/archivedPatient';
+import CreateMedicalRecordModal from '../../SecretaryPage/components/CreateMedicalRecordModal';
+import DeleteConfirmationModal from '../../SecretaryPage/components/deleteConfirmationModal.jsx';
+
 
 const PatientManagement = () => {
+    const [medicalRecords, setMedicalRecords] = useState([]);
+  const [isModalRecordOpen, setModalRecordOpen] = useState(false);
   const [patients, setPatients] = useState([]);
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,23 +25,100 @@ const PatientManagement = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [updateMessage, setUpdateMessage] = useState(null);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false); // State for delete confirmation modal
+  const [selectedPatientId, setSelectedPatientId] = useState(null);
+  const [isMedicalRecordsModalOpen, setMedicalRecordsModalOpen] = useState(false);
+  const [patientToDelete, setPatientToDelete] = useState(null); // Holds the patient ID to delete
+  const openMedicalRecordsModal = async (patientId) => {
+    setSelectedPatientId(patientId);
+    console.log(patientId);
+    setMedicalRecordsModalOpen(true);
+  };
+  const openCreateMedicalRecordModal = (patientId) => {
+    setSelectedPatientId(patientId);
+    setModalRecordOpen(true);
+  };
+  const closeMedicalRecordsModal = () => {
+    setMedicalRecordsModalOpen(false);
+    setSelectedPatientId(null);
+    setMedicalRecords([]);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/deletepatient/${patientToDelete}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+      });
+      setPatients((prevPatients) => prevPatients.filter((patient) => patient.id !== patientToDelete));
+      setUpdateMessage('Patient deleted successfully');
+    } catch (error) {
+      console.error('Error deleting patient:', error);
+      setUpdateMessage('Error deleting patient');
+    } finally {
+      setShowDeleteConfirmation(false);
+      setPatientToDelete(null);
+    }
+  };
+  const closeCreateMedicalRecordModal = () => {
+    setModalRecordOpen(false);
+    setSelectedPatientId(null);
+  };
+
+  const handleCreateMedicalRecord = (patientId, data) => {
+    // Send data to the backend using an API call
+    fetch('${process.env.REACT_APP_API_URL}/api/admin/patients/${patientId}/medical-records/', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ patientId, ...data }),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log('Medical record created:', result);
+        // Refresh data or give user feedback
+      })
+      .catch((error) => console.error('Error creating medical record:', error));
+  };
 
   const columns = [
     { field: 'patientId', headerName: 'Patient ID', width: 150 },
     { field: 'name', headerName: 'Patient Name', width: 350 },
     { field: 'createdAt', headerName: 'Account Created', width: 300 },
     {
-      field: 'actions',
-      headerName: 'Action',
-      width: 250,
-      renderCell: (params) => (
-        <button className="view-button" onClick={() => handleView(params.row)}>
-          View
-        </button>
-      ),
+          field: 'actions',
+          headerName: 'Action',
+          sortable: false,
+          width: 400, // Adjusted width to accommodate both buttons
+          renderCell: (params) => (
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button
+                className={styles.iconButton}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeleteClick(params.row.id);
+                }}
+              >
+                <Delete />
+              </button>
+              <button
+                className={styles.iconButton}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent row click from triggering
+                  openMedicalRecordsModal(params.row.id);
+                }}
+              >
+                View Medical Records
+              </button>
+            </div>
+          ),
     },
   ];
 
+  const handleDeleteClick = (patientId) => {
+    setPatientToDelete(patientId);
+    setShowDeleteConfirmation(true);
+  };
   const handleView = (row) => {
     alert(`Viewing details for ${row.name}`);
     // Navigate or show a modal with patient details here
@@ -175,6 +260,13 @@ const PatientManagement = () => {
                   '& .MuiDataGrid-cell': { fontSize: '14px' },
                   '& .MuiDataGrid-columnHeaders': { backgroundColor: '#f5f5f5' },
                 }}
+              />
+               {/* Medical Records Modal */}
+              <MedicalRecordsModal
+                isOpen={isMedicalRecordsModalOpen}
+                onClose={closeMedicalRecordsModal}
+                patientName={medicalRecords}
+                patientId={selectedPatientId}
               />
             </div>
           </div>
@@ -403,6 +495,22 @@ const PatientManagement = () => {
           </div>
         )}
       </Modal>
+          {/* Delete Confirmation Modal */}
+          {showDeleteConfirmation && (
+          <DeleteConfirmationModal
+            isOpen={showDeleteConfirmation}
+            onRequestClose={() => setShowDeleteConfirmation(false)}
+            onConfirm={handleConfirmDelete}
+          />
+        )}
+
+        {/* Other components, like a patient table */}
+      <CreateMedicalRecordModal
+        isOpen={isModalRecordOpen}
+        onClose={closeCreateMedicalRecordModal}
+        onSubmit={handleCreateMedicalRecord}
+        patientId={selectedPatientId}
+      />
     </div>
   );
 };

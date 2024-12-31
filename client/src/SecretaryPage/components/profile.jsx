@@ -5,6 +5,7 @@ import styles from '../styles/profileSecre.module.css';  // Import as module
 import { ArrowBack} from '@mui/icons-material';
 import SuccessModal from '../components/successModal';
 import ErrorModal from '../components/errorModal.jsx';
+import doc from '../images/doc.png';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const Profile = () => {
     const [errorMessage, setErrorMessage] = useState('');
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
+    const [profilePicture, setProfilePicture] = useState(null);
     const handleCloseSuccessModal = () => {
       setShowSuccessModal(false);
     };
@@ -128,9 +130,28 @@ const Profile = () => {
     middleName: "",
     email: "",
     department: "",
+    profilePicture: null,
   });
 
   const [isEditable, setIsEditable] = useState(false); // Toggle for edit mode
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+  
+    // Optional: Check if the file is an image
+    if (file && file.type.startsWith("image/")) {
+      setProfilePicture(file);  // This will update the profilePicture state (optional)
+      
+      // Update formData with the file object
+      setFormData((prevData) => ({
+        ...prevData,
+        profilePicture: file,
+      }));
+    } else {
+      alert("Please select a valid image file.");
+    }
+  };
+  
 
   const fetchProfile = async () => {
     try { 
@@ -147,6 +168,7 @@ const Profile = () => {
         suffix: secretary.suffix || "",
         email: secretary.email || "",
         department: secretary.specialization || "",
+        profilePicture: null,
       });
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -185,18 +207,31 @@ const Profile = () => {
 
   const updateProfile = async () => {
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/update_staff/`, {
-        FIRST_NAME: formData.firstName,
-        MIDDLE_NAME: formData.middleName,
-        LAST_NAME: formData.lastName,
-        SUFFIX: formData.suffix,
-        EMAIL: formData.email,
-        DEPARTMENT: formData.department,
-      }, {
+      const formDataToSend = new FormData();
+    
+    // Append the profile data (including image, if updated)
+    formDataToSend.append('firstName', formData.firstName);
+    formDataToSend.append('middleName', formData.middleName);
+    formDataToSend.append('lastName', formData.lastName);
+    formDataToSend.append('suffix', formData.suffix);
+    formDataToSend.append('email', formData.email);
+    formDataToSend.append('department', formData.department);
+
+    if (profilePicture) {
+      formDataToSend.append('profilePicture', profilePicture); // Append image file if updated
+    }
+
+    // Make the request to update the profile
+    const response = await axios.put(
+      `${process.env.REACT_APP_API_URL}/api/admin/update_staff/`,
+      formDataToSend,
+      {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`  // Assuming token-based authentication
-        }
-      });
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data', // Set content type for FormData
+        },
+      }
+    );
       alert('Profile updated successfully!');
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -227,8 +262,59 @@ const Profile = () => {
           >
             <ArrowBack></ArrowBack>
           </button>
-          <div style={{ marginTop: '15%' }}>
-            <h2>{formData.firstName} {formData.middleName.charAt(0)}. {formData.lastName} {formData.suffix}</h2>
+          <div style={{ textAlign: 'center', marginBottom: '10px', position: 'relative' }}>
+  {/* Profile Picture */}
+  <img
+    src={formData.profilePicture ? formData.profilePicture.url : doc}  // Show the uploaded picture or fallback
+    alt="Profile"
+    style={{
+      width: '150px',
+      height: '150px',
+      borderRadius: '50%',
+      objectFit: 'cover',
+      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+    }}
+  />
+  
+  {/* File Input - Visible and overlaying the profile picture */}
+  <input
+    type="file"
+    id="profilePictureInput"
+    name="profilePicture"
+    style={{
+      position: 'absolute',
+      top: '0',
+      left: '0',
+      width: '150px',
+      height: '150px',
+      opacity: '0', // Make input invisible but still clickable
+      cursor: 'pointer', // Make the file input clickable
+      borderRadius: '50%',  // Round the corners to match the profile image
+    }}
+    onChange={handleFileChange} // Handle file change
+  />
+  
+  {/* Optional - Change Profile Picture Button */}
+  <div
+    style={{
+      bottom: '0px', // Adjusted to place it below the image
+      left: '50%',
+      width: '225px',
+      height: '30px',
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      cursor: 'pointer',
+      color: '#fff',
+      borderRadius: '15px', // Optional, to make the button rounder
+    }}
+    onClick={() => document.getElementById("profilePictureInput").click()}  // Trigger file input on button click
+  >
+    <span>Change Profile Picture</span> {/* You can use an icon here (e.g., Material-UI icon) */}
+  </div>
+
+                <h2>{formData.firstName} {formData.middleName.charAt(0)}. {formData.lastName} {formData.suffix}</h2>
           </div>
 
           <div className={styles.detailsSection}>

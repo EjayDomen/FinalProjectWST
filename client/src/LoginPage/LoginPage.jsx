@@ -106,9 +106,7 @@ const LoginPage = () => {
       try {
         // Prepare form data, setting missing fields to null if not provided
         const dataToSend = {
-          doctor_id: queueDetails.doctorId || null,
-          schedule_id: queueDetails.scheduleId || null,
-          DATE: queueDetails.date || null,
+          DATE: formData.appointmentDate || null,
           FIRST_NAME: formData.firstName || null,
           MIDDLE_NAME: formData.middleName || null,
           LAST_NAME: formData.lastName || null,
@@ -121,7 +119,7 @@ const LoginPage = () => {
         };
   
         // Send data to the backend to join the queue
-        const response = await axios.post(`${process.env.REACT_APP_API_URL}/secretary/appointments/joinQueue`, dataToSend, {
+        const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/admin/joinqueue/`, dataToSend, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
@@ -151,7 +149,8 @@ const LoginPage = () => {
       sex: '',
       email: '',
       contactNumber: '',
-      address: ''
+      address: '',
+      appointmentDate:'',
     });
     setSelectedPatient(null); // Reset selected patient
   };
@@ -410,6 +409,21 @@ const LoginPage = () => {
               style={{ width: '300px' }}
               disabled={patientType === 'existing'} // Disable if it's an existing patient
             />
+            <TextField
+            label="Date"
+            type="date"
+            name="appointmentDate"
+            value={formData.appointmentDate || new Date().toISOString().split('T')[0]}
+            onChange={handleChange}
+            margin="normal"
+            fullWidth
+            style={{ width: '300px' }}
+            InputLabelProps={{
+              shrink: true, // Ensures the label stays above the field
+            }}
+            disabled={patientType === 'existing'} // Disable if it's an existing patient
+          />
+
           </div>
 
           <TextField

@@ -2,6 +2,7 @@ from django.db import models
 
 class Staff(models.Model):
 
+    profilepicture = models.ImageField(default="default.png", blank=True)
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100)

@@ -4,8 +4,8 @@ import jwt
 from django.http import JsonResponse
 from functools import wraps
 from clinic_python.models import Staff, Patient, SuperAdmin, Role
+from rest_framework_simplejwt.tokens import AccessToken
 
-JWT_SECRET = os.getenv('JWT_SECRET', 'your_default_secret')
 
 def role_required(required_role=None):
     def decorator(view_func):
@@ -17,20 +17,21 @@ def role_required(required_role=None):
                 if not auth_header or not auth_header.startswith('Bearer '):
                     return JsonResponse({'error': 'Authorization header is missing or malformed'}, status=401)
 
-                # Extract token from header
+                
                 token = auth_header.split(' ')[1]
+                access_token = AccessToken(token)
+                staff_id = access_token['id']  # Retrieve the user ID from token claims
+                role = access_token['role']  # Retrieve the user role from token claims# Extract token from header
 
-                # Verify token
-                decoded = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
 
                 # Fetch the user based on role
                 user = None
-                if decoded.get('role') == 'Staff':
-                    user = Staff.objects.filter(id=decoded.get('id')).first()
-                elif decoded.get('role') == 'Patient':
-                    user = Patient.objects.filter(id=decoded.get('id')).first()
-                elif decoded.get('role') == 'Admin':
-                    user = SuperAdmin.objects.filter(id=decoded.get('id')).first()
+                if role == 'Staff':
+                    user = Staff.objects.filter(id=staff_id).first()
+                elif role == 'Patient':
+                    user = Patient.objects.filter(id=staff_id).first()
+                elif role == 'Admin':
+                    user = SuperAdmin.objects.filter(id=staff_id).first()
                 else:
                     return JsonResponse({'error': 'Invalid role'}, status=401)
 
@@ -38,7 +39,7 @@ def role_required(required_role=None):
                     return JsonResponse({'error': 'User not found'}, status=404)
 
                 # Fetch user's role level from UserLevel model
-                user_level = UserLevel.objects.filter(id=user.user_level_id_id).first()
+                user_level = UserLevel.objects.filter(id=user.user_level_id).first()
                 if not user_level:
                     return JsonResponse({'error': 'User level not found'}, status=404)
 

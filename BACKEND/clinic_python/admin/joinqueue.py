@@ -2,15 +2,16 @@ from django.db import transaction
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from clinic_python.models.patient_model import Patient
-from clinic_python.models.appointment_model import Appointment
-from clinic_python.models.queuemanagement_model import QueueManagement
-from clinic_python.models.queue_model import Queue
+from clinic_python.models import Patient
+from clinic_python.models import Appointment
+from clinic_python.models import QueueManagement
+from clinic_python.models import Queue
 import bcrypt
 from clinic_python.utils.auth import role_required
 from rest_framework_simplejwt.tokens import AccessToken
 from django.http import JsonResponse
 from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -319,3 +320,4 @@ def get_first_5_waiting_queues(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 from api.views import CreateUserView
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -15,3 +15,5 @@ urlpatterns = [
     path('api/login/', views.login_view, name='login_patient'),
     path('demo/register/', views.register_patient_demo, name='register_patient_demo'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

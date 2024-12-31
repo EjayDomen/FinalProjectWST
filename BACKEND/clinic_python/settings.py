@@ -22,15 +22,15 @@ DEBUG = True
 # Allowed hosts
 ALLOWED_HOSTS = ["*"]
 
-REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES":(
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
-    ),
-    "DEFAULT_PERMISSION_CLASSES":[
-        "rest_framework.permissions.AllowAny",
-        # "rest_framework.permissions.IsAuthenticated",
-    ],
-}
+# REST_FRAMEWORK = {
+#     "DEFAULT_AUTHENTICATION_CLASSES":(
+#         "rest_framework_simplejwt.authentication.JWTAuthentication",
+#     ),
+#     "DEFAULT_PERMISSION_CLASSES":[
+#         "rest_framework.permissions.AllowAny",
+#         # "rest_framework.permissions.IsAuthenticated",
+#     ],
+# }
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
@@ -125,7 +125,10 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'static')
+]
 
 # Default auto field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -133,9 +136,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS =  True
 
-
+MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
+
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",

@@ -170,7 +170,7 @@ const Patient = () => {
 
   const saveChanges = async () => {
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/secretary/patients/update/${selectedPatient.id}`, selectedPatient, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/updatePatientDetails/${selectedPatient.id}/`, selectedPatient, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       });
       setUpdateMessage('Patient information updated successfully');
@@ -282,41 +282,53 @@ const Patient = () => {
       <hr />
       {updateMessage && <p>{updateMessage}</p>}
       <h3>Personal Information</h3>
+      {/* Email Field */}
+      <div className={styles.formGroup}>
+        <label><strong>Student or Employee Number:</strong></label>
+        <input
+          type="text"
+          name="student_or_employee_no"
+          value={selectedPatient.student_or_employee_no || ''}
+          onChange={handleInputChange}
+          readOnly={!isEditing}
+          style={{ width: '100%' }} // Full width input
+        />
+      </div>
       <div className={styles.formGroup}>
         <label><strong>Name:</strong></label>
         <div style={{ display: 'flex', gap: '10px' }}>
           <input
             type="text"
-            name="FIRST_NAME"
+            name="first_name"
             placeholder='firstname'
-            value={selectedPatient.FIRST_NAME || ''}
+            value={selectedPatient.first_name || ''}
             onChange={handleInputChange}
             readOnly={!isEditing}
             style={{ flex: '1', minWidth: '150px' }} // Set a consistent width
           />
           <input
             type="text"
-            name="MIDDLE_NAME"
+            name="middle_name"
             placeholder='middlename'
-            value={selectedPatient.MIDDLE_NAME || ''}
+            value={selectedPatient.middle_name || ''}
             onChange={handleInputChange}
             readOnly={!isEditing}
             style={{ flex: '1', minWidth: '100px' }} // Set a consistent width
           />
           <input
             type="text"
-            name="LAST_NAME"
+            name="last_name"
             placeholder='lastname'
-            value={selectedPatient.LAST_NAME || ''}
+            value={selectedPatient.last_name || ''}
             onChange={handleInputChange}
             readOnly={!isEditing}
             style={{ flex: '1', minWidth: '150px' }} // Set a consistent width
           />
           <input
             type="text"
-            name="SUFFIX"
+            name="suffix"
             placeholder='suffix'
-            value={selectedPatient.SUFFIX || ''}
+            value={selectedPatient.suffix || ''}
             onChange={handleInputChange}
             readOnly={!isEditing}
             style={{ flex: '0.5', minWidth: '70px' }} // Smaller width for suffix
@@ -329,8 +341,8 @@ const Patient = () => {
         <label><strong>Email:</strong></label>
         <input
           type="email"
-          name="EMAIL"
-          value={selectedPatient.EMAIL || ''}
+          name="email"
+          value={selectedPatient.email || ''}
           onChange={handleInputChange}
           readOnly={!isEditing}
           style={{ width: '100%' }} // Full width input
@@ -341,11 +353,11 @@ const Patient = () => {
       <div className={styles.formGroup}>
         <div style={{ display: 'flex', gap: '20px' }}>
           <div style={{ flex: 1 }}>
-            <label><strong>Birthday:</strong></label>
+            <label><strong>Patient Type</strong></label>
             <input
-              type="date"
-              name="BIRTHDAY"
-              value={selectedPatient.BIRTHDAY || ''} // Use the raw date format
+              type="text"
+              name="patient_type"
+              value={selectedPatient.patient_type || ''} // Use the raw date format
               onChange={handleInputChange}
               readOnly={!isEditing}
               style={{ width: '100%' }} // Full width input
@@ -355,8 +367,8 @@ const Patient = () => {
             <label><strong>Age:</strong></label>
             <input
               type="text"
-              name="AGE"
-              value={selectedPatient.AGE || ''}
+              name="age"
+              value={selectedPatient.age || ''}
               onChange={handleInputChange}
               readOnly={!isEditing}
               style={{ width: '100%' }} // Full width input
@@ -365,8 +377,8 @@ const Patient = () => {
           <div style={{ flex: 1 }}>
             <label><strong>Gender:</strong></label>
             <select
-              name="SEX"
-              value={selectedPatient.SEX || ''}
+              name="sex"
+              value={selectedPatient.sex || ''}
               onChange={handleInputChange}
               disabled={!isEditing}
               style={{ width: '100%', height:'60%', color:'gray' }} // Full width dropdown
@@ -384,100 +396,112 @@ const Patient = () => {
       </div>
 
       {/* Contact Number Field */}
-      <div className={styles.formGroup}>
-        <label><strong>Contact No.:</strong></label>
-        <input
-          type="text"
-          name="CONTACT_NUMBER"
-          value={selectedPatient.CONTACT_NUMBER || ''}
-          onChange={handleInputChange}
-          readOnly={!isEditing}
-          style={{ width: '100%' }} // Full width input
-        />
-      </div>
 
       {/* Address Field */}
       <div className={styles.formGroup}>
         <label><strong>Address:</strong></label>
         <input
           type="text"
-          name="ADDRESS"
-          value={selectedPatient.ADDRESS || ''}
+          name="address"
+          value={selectedPatient.address || ''}
           onChange={handleInputChange}
           readOnly={!isEditing}
           style={{ width: '100%' }} // Full width input
         />
       </div>
 
-      {/* Medical Information */}
-      <hr />
-      <h3>Medical Information</h3>
-      <h4 style={{ color: 'gray' }}>Covid-19 Vaccination Details:</h4>
-      <div className={styles.formGroup}>
+            {/* Birthday, Age, and Sex Fields */}
+        <div className={styles.formGroup}>
         <div style={{ display: 'flex', gap: '20px' }}>
-          <label><strong>1st Dose Brand:</strong></label>
-          <input
-            type="text"
-            name="FIRST_DOSE_BRAND"
-            value={selectedPatient.FIRST_DOSE_BRAND || ''}
-            onChange={handleInputChange}
-            readOnly={!isEditing}
-            style={{ flex: '1', minWidth: '150px' }}
-          />
-          <label><strong>Date:</strong></label>
-          <input
-            type="date"
-            name="FIRST_DOSE_DATE"
-            value={selectedPatient.FIRST_DOSE_DATE}
-            onChange={handleInputChange}
-            readOnly={!isEditing}
-            style={{ flex: '1', minWidth: '150px' }}
-          />
-        </div>
-        {/* 2nd Dose Details */}
-        <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
-                <label><strong>2nd Dose Brand:</strong></label>
-                <input
-                  type="text"
-                  name="SECOND_DOSE_BRAND"
-                  value={selectedPatient.SECOND_DOSE_BRAND || ''}
-                  onChange={handleInputChange}
-                  readOnly={!isEditing}
-                  style={{ flex: '1', minWidth: '150px', marginLeft:'-8px' }}
-                />
-                <label><strong>Date:</strong></label>
-                <input
-                  type="date"
-                  name="SECOND_DOSE_DATE"
-                  value={selectedPatient.SECOND_DOSE_DATE}
-                  onChange={handleInputChange}
-                  readOnly={!isEditing}
-                  style={{ flex: '1', minWidth: '150px' }}
-                />
-              </div>
+          <div style={{ flex: 1 }}>
+            <label><strong>College or Office:</strong></label>
+            <input
+              type="text"
+              name="college_office"
+              value={selectedPatient.college_office || ''} // Use the raw date format
+              onChange={handleInputChange}
+              readOnly={!isEditing}
+              style={{ width: '100%' }} // Full width input
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label><strong>Course or Designation:</strong></label>
+            <input
+              type="text"
+              name="course_designation"
+              value={selectedPatient.age || ''}
+              onChange={handleInputChange}
+              readOnly={!isEditing}
+              style={{ width: '100%' }} // Full width input
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label><strong>Year:</strong></label>
+            <input
+              type="text"
+              name="year"
+              value={selectedPatient.year || ''}
+              onChange={handleInputChange}
+              readOnly={!isEditing}
+              style={{ width: '100%' }} // Full width input
+            />
+          </div>
 
-              {/* Booster Dose Details */}
-              <div style={{ display: 'flex', gap: '20px', marginTop: '10px' }}>
-                <label><strong>Booster Brand:</strong></label>
-                <input
-                  type="text"
-                  name="BOOSTER_BRAND"
-                  value={selectedPatient.BOOSTER_BRAND || ''}
-                  onChange={handleInputChange}
-                  readOnly={!isEditing}
-                  style={{ flex: '1', minWidth: '150px' }}
-                />
-                <label><strong>Date:</strong></label>
-                <input
-                  type="date"
-                  name="BOOSTER_DATE"
-                  value={selectedPatient.BOOSTER_DATE}
-                  onChange={handleInputChange}
-                  readOnly={!isEditing}
-                  style={{ flex: '1', minWidth: '150px' }}
-                />
-              </div>
+        </div>
       </div>
+      <div className={styles.formGroup}>
+        <label><strong>Emergency Contact Number:</strong></label>
+        <input
+          type="email"
+          name="emergency_contact_number"
+          value={selectedPatient.emergency_contact_number || ''}
+          onChange={handleInputChange}
+          readOnly={!isEditing}
+          style={{ width: '100%' }} // Full width input
+        />
+      </div>
+      <div className={styles.formGroup}>
+        <label><strong>Emergency Contact Relation:</strong></label>
+        <input
+          type="email"
+          name="emergency_contact_relation"
+          value={selectedPatient.emergency_contact_relation || ''}
+          onChange={handleInputChange}
+          readOnly={!isEditing}
+          style={{ width: '100%' }} // Full width input
+        />
+      </div>
+
+          {/* Birthday, Age, and Sex Fields */}
+          <div className={styles.formGroup}>
+        <div style={{ display: 'flex', gap: '20px' }}>
+          <div style={{ flex: 1 }}>
+            <label><strong>BloodType:</strong></label>
+            <input
+              type="text"
+              name="bloodtype"
+              value={selectedPatient.bloodtype || ''} // Use the raw date format
+              onChange={handleInputChange}
+              readOnly={!isEditing}
+              style={{ width: '100%' }} // Full width input
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <label><strong>Allergies:</strong></label>
+            <input
+              type="text"
+              name="allergies"
+              value={selectedPatient.allergies || ''}
+              onChange={handleInputChange}
+              readOnly={!isEditing}
+              style={{ width: '100%' }} // Full width input
+            />
+          </div>
+
+        </div>
+      </div>
+
+      
 
       {/* Modal Actions */}
       <div className={styles.modalActions}>

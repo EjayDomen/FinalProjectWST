@@ -7,6 +7,8 @@ from . import patients
 from . import queuemanagement
 from . import appointment
 from . import medicalrecord
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('', views.dashboard, name='admin_dashboard'),
@@ -22,10 +24,16 @@ urlpatterns = [
     path('joinqueue/', joinqueue.join_queue, name='join_queue'),
     path('viewqueue/', joinqueue.view_queue, name='view_queue'),
     path('updatequeuestatus/', joinqueue.update_queue_status, name='update_queue_status'),
+    path('showtodayqueue/', joinqueue.get_first_5_waiting_queues , name='get_first_5_waiting_queues'),
+    
     path('getallpatients/', patients.get_patients, name='get_patients'),
     path('deletepatient/<int:id>/', patients.delete_patient, name='delete_patient'),
     path('archivedpatient/', patients.get_archived_patients, name='get_archived_patients'),
     path('restorepatient/', patients.restore_patient, name='restore_patient'),
+    path('updatePatientDetails/<int:id>/', patients.update_patient, name='get_queue_management_by_id'),
+    
+    
+    
     path('viewallqm/', queuemanagement.get_all_queue_management, name='get_all_queue_management'),
     path('viewqmtoday/', queuemanagement.get_today_queue_management, name='get_today_queue_management'),
     path('queues/<int:qmid>/', queuemanagement.get_queues_by_qmid, name='get_queues_by_qmid'),
@@ -44,6 +52,9 @@ urlpatterns = [
     path('reports/appointments/', appointment.get_appointment_details_report , name='get_appointment_details_report'),
     
     
-    path('showtodayqueue/', joinqueue.get_first_5_waiting_queues , name='get_first_5_waiting_queues'),
+
     # Add other paths for superadmin-related views here
 ]
+
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

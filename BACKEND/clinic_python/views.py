@@ -181,7 +181,8 @@ def login_view(request):
         return JsonResponse({
             'refresh': str(refresh),
             'access': access_token,
-            'role': role
+            'role': role,
+            "patient": user.id
         }, status=200)
 
     except Exception as e:

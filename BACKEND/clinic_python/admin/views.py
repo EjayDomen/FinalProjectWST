@@ -240,6 +240,7 @@ def get_staff_detail(request):
                 'specialization': staff.specialization,
                 'email': staff.email,
                 'user_level_id': staff.user_level_id.id if staff.user_level_id else None,
+                'profilePicture': staff.profilepicture.url if staff.profilepicture else None,
                 'is_deleted': staff.is_deleted,
             }
             return JsonResponse(staff_data, status=200)
@@ -254,7 +255,7 @@ def get_staff_detail(request):
 @csrf_exempt
 def update_logged_in_staff(request):
     """
-    Update the logged-in staff's details like name, specialization, and email.
+    Update the logged-in staff's details like name, specialization, email, and profile picture.
     Only allows the staff member to update their own details.
     """
     if request.method == 'PUT':
@@ -263,17 +264,25 @@ def update_logged_in_staff(request):
             auth_header = request.headers.get('Authorization', '')
             if not auth_header or not auth_header.startswith('Bearer '):
                 return JsonResponse({'error': 'Authorization token is missing or invalid'}, status=401)
-            
+
             # Extract the token and decode it
             token = auth_header.split(' ')[1]
             access_token = AccessToken(token)
-            
+
             # Get staff ID from the token payload
             staff_id = access_token['id']
-            
+
             # Retrieve the staff record from the database
             staff = Staff.objects.get(id=staff_id, is_deleted=False)
-            
+
+            # # Check if profile picture is part of the request
+            # if 'PROFILE_PICTURE' in request.FILES:
+            #     staff.profilepicture = request.FILES['PROFILE_PICTURE']
+            #     print("File name:", request.FILES['PROFILE_PICTURE'].name)
+            #     print("File size:", request.FILES['PROFILE_PICTURE'].size)
+            # else:
+            #     print("No file uploaded")
+
             # Parse the incoming JSON body to get the updated fields
             body = json.loads(request.body)
             first_name = body.get('FIRST_NAME', staff.first_name)
@@ -282,7 +291,7 @@ def update_logged_in_staff(request):
             suffix = body.get('SUFFIX', staff.suffix)
             specialization = body.get('DEPARTMENT', staff.specialization)
             email = body.get('EMAIL', staff.email)
-            
+
             # Update fields only if they are provided in the request
             staff.first_name = first_name
             staff.middle_name = middle_name

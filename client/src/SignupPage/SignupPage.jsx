@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import styles from './SignupPage.module.css';
 import logoImage from './images/logo.png';
-import { TextField, Button, Checkbox, FormControlLabel } from '@mui/material';
+import { TextField, Button, MenuItem, Checkbox, Select ,InputLabel, FormControlLabel } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import TermsModal from './TermsModal';
 import PrivacyPolicyModal from './PrivacyPolicyModal';
@@ -16,7 +16,7 @@ const SignupPage = () => {
     lastName: '',
     suffix: '',
     email: '',
-    phoneNumber: '',
+    patient_type: '',
     password: '',
     confirmPassword: '',
     campus: '',
@@ -91,19 +91,7 @@ const SignupPage = () => {
     delete fieldsToCheck.suffix; // Exclude 'suffix'
     delete fieldsToCheck.middleName; // Exclude 'middleName'
   
-    // Validate phone number
-    const validatePhoneNumber = (phoneNumber) => {
-      const phoneNumberRegex = /^09\d{9}$/;
-      return phoneNumberRegex.test(phoneNumber);
-    };
-  
-    if (!validatePhoneNumber(formValues.phoneNumber)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        phoneNumber: 'Phone number must start with "09" and have exactly 11 digits.',
-      }));
-      valid = false;
-    }
+
   
     // // Check required fields
     // for (const key in fieldsToCheck) {
@@ -145,7 +133,7 @@ const SignupPage = () => {
           last_name: formValues.lastName,
           suffix: formValues.suffix,
           email: formValues.email,
-          contact_number: formValues.phoneNumber,
+          patient_type: formValues.phoneNumber,
           password: formValues.password,
           campus: formValues.campus,
           college_office: formValues.college_office,
@@ -283,16 +271,19 @@ const SignupPage = () => {
                 required
                 type="email"
               />
-              <TextField
-                label="Phone Number"
-                variant="outlined"
-                fullWidth
-                className={styles.inputField}
-                name="phoneNumber"
-                value={formValues.phoneNumber}
+              <InputLabel id="role-select-label">Role</InputLabel>
+              <Select
+                labelId="role-select-label"
+                id="role-select"
+                value={formValues.role}
                 onChange={handleInputChange}
-                required
-              />
+                label="Role"
+                name="role" // Make sure this corresponds to the correct field in your formValues
+              >
+                <MenuItem value="student">Student</MenuItem>
+                <MenuItem value="employee">Employee</MenuItem>
+                <MenuItem value="non_academic_personnel">Non-Academic Personnel</MenuItem>
+              </Select>
             </div>
 
             <div className={styles.inputGroup}>

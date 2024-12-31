@@ -1,64 +1,74 @@
+from rest_framework_simplejwt.tokens import AccessToken
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.db import transaction
-from django.utils.timezone import now
-from clinic_python.models.appointment_model import Appointment
-from clinic_python.models.patient_model import Patient
-from clinic_python.models.admin_model import Staff
-
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from clinic_python.models import Appointment, Patient
+from django.core.exceptions import ObjectDoesNotExist
 
-# Appointment creation
+@csrf_exempt
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def create_appointment(request):
-    user = request.patient
+    auth_header = request.headers.get('Authorization', '')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
+    
+    # Extract the token from the header
+    token = auth_header.split(' ')[1]
+    try:
+        access_token = AccessToken(token)
+    except Exception as e:
+        return JsonResponse({'error': 'Invalid or expired token'}, status=401)
+    
+    role = access_token['role']  # Retrieve the user role from token claims
+    patient_id = access_token['id']
 
-    if not hasattr(user, 'patient'):
-        return Response({"error": "Patient information is missing or incomplete"}, status=status.HTTP_400_BAD_REQUEST)
+    if not token:
+        return JsonResponse({'error': 'Token not provided'}, status=401)
 
     data = request.data
 
     try:
         with transaction.atomic():
-            # Retrieve patient details
-            patient = user.patient
+            # Ensure the patient ID is provided and valid
+            if not patient_id:
+                return JsonResponse({'error': 'Patient ID is required'}, status=400)
+
+            # try:
+            patient = Patient.objects.get(id=patient_id)
+            # except ObjectDoesNotExist:
+            #     return JsonResponse({'error': 'User not found'}, status=404)
 
             # Check for duplicate appointments
             if Appointment.objects.filter(
-                appointment_date=data['appointmentDate'],
-                patientid=data['patientid'],
-                email=data['email']
+                appointment_date=data['appointment_date'],
+                patientid=patient_id,
+                purpose= data['purpose']
             ).exists():
                 return Response({"error": "Appointment already exists for this patient and email"}, status=status.HTTP_400_BAD_REQUEST)
 
             # Create appointment
             appointment = Appointment.objects.create(
-                patientid=patient.id,
+                patientid=patient,
                 first_name=data.get('firstName', 'N/A'),
                 middle_name=data.get('middleName', 'N/A'),
                 last_name=data.get('lastName', 'N/A'),
                 suffix=data.get('suffix', 'N/A'),
                 age=data.get('age', 'N/A'),
                 sex=data.get('gender', 'N/A'),
-                emergency_contact_number=data.get('emergency_contact_number', 'N/A'),
                 address=data.get('address', 'N/A'),
                 purpose=data.get('purpose', 'N/A'),
                 type=data.get('walk-in', 'Online'),
-                status='pending',
-                appointment_time=schedule.start_time,  # Assuming the schedule has a start_time field
-                appointment_date=data['appointmentDate'],
-                staff_id='n/a'
+                status='pending', # Ensure this field is in the data
+                appointment_date=data['appointment_date'],
+                staff_id= none
             )
 
-            # Handle queue creation if QueueManagement exists
-            # (Adjust this section based on your Queue model and logic)
-            # ...
-
-            return Response(AppointmentSerializer(appointment).data, status=status.HTTP_201_CREATED)
+            # Serialize and return the created appointment
+            return Response({"message": "Appointment created successfully", "appointment_id": appointment.id}, status=status.HTTP_201_CREATED)
 
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -66,7 +76,6 @@ def create_appointment(request):
 
 # View appointments
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def view_appointments(request):
     user = request.patient
 
@@ -100,7 +109,6 @@ def view_appointments(request):
 
 # Cancel appointment
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def cancel_appointment(request, appointment_id):
     user = request.patient
 
@@ -121,3 +129,59 @@ def cancel_appointment(request, appointment_id):
 
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+@api_view(['GET'])
+def view_all_appointments(request):
+    # Extract the token from the Authorization header
+    auth_header = request.headers.get('Authorization', '')
+    if not auth_header or not auth_header.startswith('Bearer '):
+        return Response({'error': 'Authorization header missing or invalid'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    token = auth_header.split(' ')[1]
+    try:
+        access_token = AccessToken(token)
+        patient_id = access_token['id']  # Retrieve the patient ID from token claims
+    except Exception:
+        return Response({'error': 'Invalid or expired token'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    # Ensure the patient exists
+    try:
+        patient = Patient.objects.get(id=patient_id)
+    except Patient.DoesNotExist:
+        return Response({'error': 'Patient not found'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Retrieve all appointments for the patient
+    appointments = Appointment.objects.filter(patientid=patient).select_related('staff')
+
+    # Handle the case where there are no appointments
+    if not appointments.exists():
+        return Response({'message': 'No appointments found for this patient.'}, status=status.HTTP_404_NOT_FOUND)
+
+    # Serialize the appointment data
+    data = []
+    for appointment in appointments:
+        data.append({
+        "appointment_id": appointment.id,
+        "queue_number": "0",  # Replace with actual queue logic if needed
+        "patient_details": {
+            "patient_id": appointment.patientid.id,
+            "first_name": appointment.first_name,
+            "middle_name": appointment.middle_name,
+            "last_name": appointment.last_name,
+            "suffix": appointment.suffix,
+            "age": appointment.age,
+            "address": appointment.address,
+            "sex": appointment.sex,
+            "contact_number": appointment.contact_number,
+        },
+        "appointment_details": {
+            "appointment_date": appointment.appointment_date,
+            "purpose": appointment.purpose,
+            "status": appointment.status,
+            "type": appointment.type,
+        },
+    })
+
+    return Response(data, status=status.HTTP_200_OK)

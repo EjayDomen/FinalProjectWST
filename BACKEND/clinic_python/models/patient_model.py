@@ -26,7 +26,7 @@ class Patient(models.Model):
     sex = models.CharField(max_length=10)
     password = models.CharField(max_length=255)
     address = models.TextField()
-    profilePicture = models.ImageField(_("Image"),upload_to=upload_to , default='profile_pictures/default.jpg')
+    profilePicture = models.ImageField(default="default.png", blank=True)
     user_level_id = models.ForeignKey(
         "clinic_python.Role", on_delete=models.CASCADE, null=True, blank=True
     )

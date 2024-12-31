@@ -204,16 +204,6 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
           ></textarea>
         </label>
-        <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Attending Staff:
-          <input
-            type="text"
-            name="attendingStaff"
-            value={formData.attendingStaff}
-            onChange={handleInputChange}
-            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-          />
-        </label>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
           <button
             type="submit"

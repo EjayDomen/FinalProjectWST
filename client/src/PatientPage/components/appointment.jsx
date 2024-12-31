@@ -61,38 +61,21 @@ const Appointment = () => {
   
   
   const filteredAppointments = appointments
-  .filter((appointment) => {
-    const search = searchTerm.toLowerCase();
-    return (
-      appointment.DoctorName.toLowerCase().includes(search) ||
-      appointment.APPOINTMENT_DATE.toLowerCase().includes(search) ||
-      appointment.STATUS.toLowerCase().includes(search)
-    );
-  })
-  .map((appointment) => {
-    const doctor = appointment.doctor; // Ensure the 'Doctor' object exists
-    let doctorName = 'Unknown'; // Default value
+  .filter((appointment) =>
+    appointment.appointment_details.purpose?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    appointment.appointment_details.appointment_date ?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    appointment.appointment_details.status?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+  .map((appointment) => ({
+    id: appointment.appointment_id, // Ensure this is unique for each row
+    purpose: `${appointment.appointment_details.purpose}`,
+    APPOINTMENT_DATE: appointment.appointment_details.appointment_date,
+    Queue: appointment.appointment_details.queue_number || 'N/A',
+    STATUS: appointment.appointment_details.status,
+  }));
 
-    // Check if the 'Doctor' object exists and if its properties are available
-    if (doctor) {
-      const firstName = doctor.FIRST_NAME || '';
-      const middleName = doctor.MIDDLE_NAME ? doctor.MIDDLE_NAME.charAt(0) + '.' : '';
-      const lastName = doctor.LAST_NAME || '';
-      const suffix = doctor.SUFFIX ? ', ' + doctor.SUFFIX : '';
-      doctorName = `${firstName} ${middleName} ${lastName}${suffix}`;
-    }
 
-    return {
-      ...appointment,
-      DoctorNameFull: doctorName, // Correctly assign the doctor's full name
-    };
-  });
   const handleAddAppointment = async () => {
-    if (!newAppointment.appointmentDate) {
-      alert('Please select a valid appointment date.');
-      return;
-    }
-  
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/patient/createAppointment/`,
@@ -104,19 +87,31 @@ const Appointment = () => {
         }
       );
   
-      // Fetch updated appointments to ensure data consistency
-      const updatedAppointments = await axios.get(`${process.env.REACT_APP_API_URL}/patient/appointment/viewAppointments`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-      });
-  
-      setAppointments(updatedAppointments.data);
+      // Handle success case (appointment added successfully)
       setAddAppointmentModalOpen(false);
       setNewAppointment({ appointmentDate: '' });
+  
     } catch (error) {
       console.error('Error adding appointment:', error);
-      alert('Failed to add appointment. Please try again.');
+  
+      // Check if the error is an Axios error and has a response
+      if (error.response) {
+        const errorData = error.response.data;
+  
+        // Specific error handling for "user_not_found"
+        if (errorData.code === 'user_not_found') {
+          alert(errorData.detail); // Show specific message to the user
+        } else {
+          // Generic error for other responses
+          alert('Failed to add appointment. Please try again.');
+        }
+      } else {
+        // If there's no response, it's a network or other issue
+        alert('An error occurred. Please check your internet connection and try again.');
+      }
     }
   };
+  
   
   
 
@@ -159,7 +154,7 @@ const Appointment = () => {
 
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/patient/appointment/viewAppointments`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patient/viewAppointment/`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         setAppointments(response.data);
@@ -232,12 +227,11 @@ const Appointment = () => {
   const columns = [
     { field: 'id', headerName: 'AppID', width: 100 },
     {
-      field: 'DoctorNameFull',
+      field: 'purpose',
       headerName: 'Doctor Name',
       width: 350,
     },
     { field: 'APPOINTMENT_DATE', headerName: 'Date', width: 200 },
-    { field: 'APPOINTMENT_TIME', headerName: 'Time', width: 200 },
     {
       field: 'Queue',
       headerName: 'Queue #',
@@ -273,7 +267,6 @@ const Appointment = () => {
               },
             }}
           >
-            <MenuItem onClick={() => handleDropdownAction('view')}>View QR</MenuItem>
             <Divider style={{ margin: '0', color: 'black' }} />
             <MenuItem onClick={() => handleDropdownAction('cancel')} style={{ color: 'red' }}>
               Cancel
@@ -321,13 +314,13 @@ const Appointment = () => {
     }
   };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      fetchQueue();
-    }, POLLING_INTERVAL);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     fetchQueue();
+  //   }, POLLING_INTERVAL);
   
-    return () => clearInterval(interval); // Clear the interval on cleanup
-  }, []);
+  //   return () => clearInterval(interval); // Clear the interval on cleanup
+  // }, []);
 
   return (
     
@@ -361,20 +354,37 @@ const Appointment = () => {
         <DataGrid rows={filteredAppointments} columns={columns} pageSize={10} />
       </div>
 
-      <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)}>
-        <Modal.Header closeButton>
-          <Modal.Title>Appointment Details</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p><strong>Appointment ID:</strong> {selectedAppointment?.id}</p>
-          <p><strong>Doctor Name:</strong> {selectedAppointment?.DoctorName}</p>
-          <p><strong>Date:</strong> {selectedAppointment?.APPOINTMENT_DATE}</p>
-          <p><strong>Time:</strong> {selectedAppointment?.APPOINTMENT_TIME}</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Close</Button>
-        </Modal.Footer>
-      </Modal>
+      <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)} centered>
+  <Modal.Header closeButton>
+    <Modal.Title>Appointment Details</Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    {/* Patient Information */}
+    <div style={{ marginBottom: '15px' }}>
+      <h5>Patient Information</h5>
+      <p><strong>Full Name:</strong> {`${selectedAppointment?.patient_details?.first_name || "N/A"} ${selectedAppointment?.patient_details?.middle_name || ""} ${selectedAppointment?.patient_details?.last_name || "N/A"} ${selectedAppointment?.patient_details?.suffix || ""}`}</p>
+      <p><strong>Age:</strong> {selectedAppointment?.patient_details?.age || "N/A"}</p>
+      <p><strong>Sex:</strong> {selectedAppointment?.patient_details?.sex || "N/A"}</p>
+      <p><strong>Contact Number:</strong> {selectedAppointment?.patient_details?.contact_number || "N/A"}</p>
+      <p><strong>Address:</strong> {selectedAppointment?.patient_details?.address || "N/A"}</p>
+    </div>
+    <Divider />
+    {/* Appointment Information */}
+    <div style={{ marginTop: '15px', marginBottom: '15px' }}>
+      <h5>Appointment Information</h5>
+      <p><strong>Appointment ID:</strong> {selectedAppointment?.appointment_id || "N/A"}</p>
+      <p><strong>Date:</strong> {selectedAppointment?.appointment_details?.appointment_date || "N/A"}</p>
+      <p><strong>Type:</strong> {selectedAppointment?.appointment_details?.type || "N/A"}</p>
+      <p><strong>Status:</strong> {selectedAppointment?.appointment_details?.status || "N/A"}</p>
+      <p><strong>Purpose:</strong> {selectedAppointment?.appointment_details?.purpose || "N/A"}</p>
+      <p><strong>Queue Number:</strong> {selectedAppointment?.queue_number || "N/A"}</p>
+    </div>
+  </Modal.Body>
+  <Modal.Footer>
+    <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Close</Button>
+  </Modal.Footer>
+</Modal>
+
 
        {/* QR Modal */}
        {qrModalOpen && selectedAppointment && (
@@ -542,6 +552,9 @@ const Appointment = () => {
 
       <Modal show={addAppointmentModalOpen}
   onHide={() => setAddAppointmentModalOpen(false)} centered>
+
+
+
   <Modal.Header closeButton>
     <Modal.Title>Appointment Details</Modal.Title>
   </Modal.Header>

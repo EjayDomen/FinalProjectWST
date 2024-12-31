@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from clinic_python.models import MedicalRecord, Patient, Staff
+from clinic_python.models import MedicalRecord, Patient, Staff, SuperAdmin
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
@@ -17,17 +17,19 @@ def create_medical_record(request, patient_id):
         staff_id = access_token['id']  # Retrieve the user ID from token claims
         role = access_token['role']  # Retrieve the user role from token claims
 
-        # Check if the role is 'Staff'
-        if role != 'Staff':
-            return JsonResponse({'error': 'Unauthorized role'}, status=403)
+        # # Check if the role is 'Staff'
+        # if role != 'Staff' or role!= 'Admin':
+        #     return JsonResponse({'error': 'Unauthorized role'}, status=403)
         try:
             # Parse the incoming JSON data
             data = json.loads(request.body)
 
             # Fetch the related patient and staff objects
             patient = get_object_or_404(Patient, id=patient_id)
-            attending_staff = get_object_or_404(Staff, id=staff_id)
-
+            if role == 'Staff':
+                attending_staff = get_object_or_404(Staff, id=staff_id)
+            elif role =='Admin' :
+                attending_staff = get_object_or_404(SuperAdmin, id=staff_id)
             # Create the medical record
             medical_record = MedicalRecord.objects.create(
                 patientid=patient,
