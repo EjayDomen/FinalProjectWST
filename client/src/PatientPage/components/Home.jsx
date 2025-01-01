@@ -86,8 +86,8 @@ const Home = () => {
               Schedule an Appointment with a Doctor in Queue Care to find the service you are looking for.
             </p>
             <div>
-              <Link to="/patient/doctors" className="findDoctorButton">
-                Check the List of Available Doctors
+              <Link to="/patient/appointment" className="findDoctorButton">
+                Check the List of Appoinments
               </Link>
             </div>
           </div>
