@@ -130,7 +130,6 @@ const Dashboard = () => {
 
     fetchDoctorCount();
     fetchAppointmentCount();
-    fetchPatientsAttended();
     fetchTodaysAppointments();
     fetchTodaysQueue();
     fetchProfile();
@@ -140,14 +139,7 @@ const Dashboard = () => {
 
   const fetchPatientsAttended = async (period) => {
     try {
-      let url;
-      if (period === 'daily') {
-        url = `${process.env.REACT_APP_API_URL}/secretary/patients/patients-attended/daily`;
-      } else if (period === 'weekly') {
-        url = `${process.env.REACT_APP_API_URL}/secretary/patients/patients-attended/weekly`;
-      } else if (period === 'monthly') {
-        url = `${process.env.REACT_APP_API_URL}/secretary/patients/patients-attended/monthly`;
-      }
+      const url = `${process.env.REACT_APP_API_URL}/api/admin/appoinmentCounts/?period=${period}`;
   
       const response = await axios.get(url, {
         headers: {
@@ -155,7 +147,13 @@ const Dashboard = () => {
         },
       });
   
-      setAttendedData(response.data); // Set the data for the chart
+      const completedCount = response.data.completed_count;
+      if (Array.isArray(completedCount)) {
+        setAttendedData(completedCount);
+      } else {
+        console.error('Invalid data format:', completedCount);
+        setAttendedData([]); // Reset to an empty array in case of invalid data
+      }
     } catch (error) {
       console.error('Error fetching patients attended data:', error);
     }
@@ -358,7 +356,7 @@ const chartOptions = {
                   todaysAppointments.map((appointment, index) => (
                     <tr key={appointment.id}>
                       <td>{index + 1}</td>
-                      <td>{`${appointment.first_name} ${appointment.last_name}`}</td>
+                      <td>{`${appointment.patientid.first_name} ${appointment.patientid.last_name}`}</td>
                       <td>{appointment.appointment_date}</td>
                       <td>{appointment.purpose}</td>
                     </tr>

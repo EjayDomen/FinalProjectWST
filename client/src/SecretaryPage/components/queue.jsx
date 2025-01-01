@@ -17,7 +17,7 @@ const Queue = () => {
 
   const fetchQueueManagements = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/viewallqm`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/viewqmtoday/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },

@@ -50,6 +50,7 @@ urlpatterns = [
     path('countpatients/', patients.count_all_patients , name='count_all_patient'),
     path('showtodayappointment/', appointment.get_todays_appointments , name='show_today_appointment'),
     path('reports/appointments/', appointment.get_appointment_details_report , name='get_appointment_details_report'),
+    path('appoinmentCounts/', appointment.count_completed_appointments , name='count_completed_appointments'),
     
     
 

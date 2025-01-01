@@ -83,7 +83,7 @@ const Appointments = () => {
           return {
             ...event,
             id: event.id,
-            title: event.patient_name,
+            title: `${event.patientid.first_name} ${event.patientid.last_name} ${event.patientid.suffix && event.patientid.suffix.toLowerCase() !== 'n/a' ? event.patientid.suffix : ''}`.trim(),
             backgroundColor: 'rgba(10, 193, 28, 0.5)',
             daysOfWeek: dow,
             startRecur,

@@ -6,7 +6,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from clinic_python.models import Appointment, Patient
+from clinic_python.models import Appointment, QueueManagement, Queue, Patient 
 from django.core.exceptions import ObjectDoesNotExist
 
 @csrf_exempt
@@ -37,10 +37,7 @@ def create_appointment(request):
             if not patient_id:
                 return JsonResponse({'error': 'Patient ID is required'}, status=400)
 
-            # try:
             patient = Patient.objects.get(id=patient_id)
-            # except ObjectDoesNotExist:
-            #     return JsonResponse({'error': 'User not found'}, status=404)
 
             # Check for duplicate appointments
             if Appointment.objects.filter(
@@ -48,7 +45,7 @@ def create_appointment(request):
                 patientid=patient_id,
                 purpose= data['purpose']
             ).exists():
-                return Response({"error": "Appointment already exists for this patient and email"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "Appointment already exists for this patient and purpose"}, status=status.HTTP_400_BAD_REQUEST)
 
             # Create appointment
             appointment = Appointment.objects.create(
@@ -62,9 +59,58 @@ def create_appointment(request):
                 address=data.get('address', 'N/A'),
                 purpose=data.get('purpose', 'N/A'),
                 type=data.get('walk-in', 'Online'),
-                status='pending', # Ensure this field is in the data
+                status='pending',  # Ensure this field is in the data
                 appointment_date=data['appointment_date'],
-                staff_id= none
+                staff_id=None
+            )
+
+            # Queue Management Logic
+            # Assuming these variables are defined in the request data or environment
+            TRANSACTION = data.get('transaction_type', 'consultation')  # Set transaction type
+            DATE = data['appointment_date']  # Set appointment date
+            IS_PRIORITY = data.get('is_priority', False)  # Set if priority or not
+            TYPE = data.get('type', 'Online')  # Set ticket type
+
+            # Queue Management
+            queue_management, created = QueueManagement.objects.get_or_create(
+                transaction_type=TRANSACTION,
+                date=DATE,
+                defaults={
+                    "status": "in-progress",
+                }
+            )
+
+            # Determine queue number format
+            transaction_code_map = {
+                "consultation": "CN" if not IS_PRIORITY else "CP",
+                "certificate": "CEN" if not IS_PRIORITY else "CEP",
+                "others": "ON" if not IS_PRIORITY else "OP"
+            }
+            queue_prefix = transaction_code_map.get(TRANSACTION, "ON" if not IS_PRIORITY else "OP")
+
+            # Determine new queue number
+            last_queue = Queue.objects.filter(
+                qmid=queue_management.id,
+                transaction_type=TRANSACTION,
+                is_priority=IS_PRIORITY
+            ).order_by('-queue_number').first()
+
+            if last_queue:
+                last_number = int(last_queue.queue_number[len(queue_prefix):])
+                new_queue_number = f"{queue_prefix}{last_number + 1:03d}"
+            else:
+                new_queue_number = f"{queue_prefix}001"
+
+            # Add to queue
+            Queue.objects.create(
+                queue_number=new_queue_number,
+                appointment=appointment,
+                patient=patient,
+                qmid=queue_management,
+                is_priority=IS_PRIORITY,
+                status="waiting",
+                transaction_type=TRANSACTION,
+                ticket_type=TYPE.lower()
             )
 
             # Serialize and return the created appointment
@@ -72,7 +118,6 @@ def create_appointment(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 
 # View appointments
 @api_view(['GET'])
@@ -92,9 +137,15 @@ def view_appointments(request):
     for appointment in appointments:
         staff = appointment.staff
         doctor_name = f"{staff.first_name} {staff.last_name}" if staff else "N/A"
+         # Find the corresponding queue for the current appointment
+        queue = Queue.objects.filter(appointment=appointment).first()  # Assuming appointment is related to Queue
+        
+        # Check if a queue exists for this appointment, otherwise set queue_number to '0'
+        queue_number = queue.queue_number if queue else "0"  # If no queue, assign default '0'
+        
         data.append({
             "appointment_id": appointment.id,
-            "queue_number": "0",  # Replace with actual queue logic if applicable
+            "queue_number": queue_number,  # Replace with actual queue logic if applicable
             "details": {
                 "first_name": appointment.first_name,
                 "last_name": appointment.last_name,
@@ -162,9 +213,13 @@ def view_all_appointments(request):
     # Serialize the appointment data
     data = []
     for appointment in appointments:
+        queue = Queue.objects.filter(appointment=appointment).first()  # Assuming appointment is related to Queue
+        
+        # Check if a queue exists for this appointment, otherwise set queue_number to '0'
+        queue_number = queue.queue_number if queue else "0"  # If no queue, assign default '0'
         data.append({
         "appointment_id": appointment.id,
-        "queue_number": "0",  # Replace with actual queue logic if needed
+        "queue_number": queue_number,  # Replace with actual queue logic if needed
         "patient_details": {
             "patient_id": appointment.patientid.id,
             "first_name": appointment.first_name,

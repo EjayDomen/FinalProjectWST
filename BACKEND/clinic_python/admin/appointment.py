@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from clinic_python.models import Appointment
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils.timezone import make_aware
 import pytz
 from django.db.models import Prefetch
@@ -21,7 +21,12 @@ def get_all_appointments(request):
         data = [
             {
                 "id": appointment.id,
-                "patient_id": appointment.patientid.id,
+                "patientid": {
+                    "id": appointment.patientid.id if appointment.patientid else None,  # Add only the serializable fields
+                    "first_name": appointment.patientid.first_name if appointment.patientid else None,
+                    "last_name": appointment.patientid.last_name,
+                    "suffix": appointment.patientid.suffix,
+                },
                 "patient_name": f"{appointment.first_name} {appointment.last_name} {appointment.suffix or ''}".strip(),
                 "age": appointment.age,
                 "address": appointment.address,
@@ -31,7 +36,11 @@ def get_all_appointments(request):
                 "purpose": appointment.purpose,
                 "status": appointment.status,
                 "type": appointment.type,
-                "staff_id": appointment.staff.id,
+                "staff": {
+                    "id": appointment.staff.id if appointment.staff else None,  # Add only the serializable fields for staff
+                    "name": f"{appointment.staff.first_name if appointment.staff else None} {appointment.staff.last_name if appointment.staff else None}",
+                    # Include other relevant fields of staff here
+                },
                 "created_at": appointment.createdAt.strftime("%Y-%m-%d %H:%M:%S"),
             }
             for appointment in appointments
@@ -41,7 +50,6 @@ def get_all_appointments(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 @api_view(['GET'])
 def count_all_appointments(request):
@@ -82,23 +90,32 @@ def get_todays_appointments(request):
 
         # Prepare the response data
         data = [
-            {
-                "id": appointment.id,
-                "patient_id": appointment.patientid.id,
-                "patient_name": f"{appointment.first_name} {appointment.last_name} {appointment.suffix or ''}".strip(),
-                "age": appointment.age,
-                "address": appointment.address,
-                "sex": appointment.sex,
-                "contact_number": appointment.contact_number,
-                "appointment_date": appointment.appointment_date.strftime("%Y-%m-%d"),
-                "purpose": appointment.purpose,
-                "status": appointment.status,
-                "type": appointment.type,
-                "staff_id": appointment.staff.id,
-                "created_at": make_aware(appointment.createdAt, timezone=manila_tz).strftime("%Y-%m-%d %H:%M:%S"),
-            }
-            for appointment in todays_appointments
-        ]
+                {
+                    "id": appointment.id,
+                    "patientid": {
+                        "id": appointment.patientid.id,  # Add only the serializable fields
+                        "first_name": appointment.patientid.first_name,
+                        "last_name": appointment.patientid.last_name,
+                        "suffix": appointment.patientid.suffix,
+                    },
+                    "patient_name": f"{appointment.first_name} {appointment.last_name} {appointment.suffix or ''}".strip(),
+                    "age": appointment.age,
+                    "address": appointment.address,
+                    "sex": appointment.sex,
+                    "contact_number": appointment.contact_number,
+                    "appointment_date": appointment.appointment_date.strftime("%Y-%m-%d"),
+                    "purpose": appointment.purpose,
+                    "status": appointment.status,
+                    "type": appointment.type,
+                    "staff_id": appointment.staff.id if appointment.staff else None,
+                    "created_at": (
+                        appointment.createdAt.astimezone(manila_tz).strftime("%Y-%m-%d %H:%M:%S")
+                        if appointment.createdAt.tzinfo else
+                        make_aware(appointment.createdAt, timezone=manila_tz).strftime("%Y-%m-%d %H:%M:%S")
+                    ),
+                }
+                for appointment in todays_appointments
+            ]
 
         return Response(data, status=status.HTTP_200_OK)
 
@@ -142,3 +159,53 @@ def get_appointment_details_report(request):
             "message": "An error occurred while fetching appointment details.",
             "error": str(e)
         }, status=500)
+        
+        
+        
+        
+@api_view(['GET'])
+def count_completed_appointments(request):
+    """
+    Count all completed appointments based on the provided period (daily, weekly, or monthly).
+    """
+    try:
+        # Define Manila timezone
+        manila_tz = pytz.timezone('Asia/Manila')
+
+        # Get today's date in Manila timezone
+        today = make_aware(datetime.now(), timezone=manila_tz).date()
+
+        # Determine the period from the query parameter
+        period = request.query_params.get('period', 'daily')
+
+        # Retrieve the earliest completed appointment date
+        first_completed_appointment = Appointment.objects.order_by('appointment_date').first()
+
+        if not first_completed_appointment:
+            # No completed appointments found, return 0
+            return Response({"completed_count": 0}, status=status.HTTP_200_OK)
+
+        # Get the date of the first completed appointment
+        first_completed_date = first_completed_appointment.appointment_date
+
+        # Determine the start date based on the period
+        if period == 'daily':
+            start_date = max(first_completed_date, today)
+        elif period == 'weekly':
+            start_date = max(first_completed_date, today - timedelta(days=today.weekday()))
+        elif period == 'monthly':
+            start_date = max(first_completed_date, today.replace(day=1))
+        else:
+            return Response({"error": "Invalid period specified."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Count completed appointments from the determined start date
+        completed_count = Appointment.objects.filter(
+            status='completed',
+            appointment_date__gte=start_date
+        ).count()
+
+        # Return the count as JSON response
+        return Response({"completed_count": completed_count}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

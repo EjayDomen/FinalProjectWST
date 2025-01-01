@@ -72,7 +72,7 @@ const Appointment = () => {
     id: appointment.appointment_id, // Ensure this is unique for each row
     purpose: `${appointment.appointment_details.purpose}`,
     APPOINTMENT_DATE: appointment.appointment_details.appointment_date,
-    Queue: appointment.appointment_details.queue_number || 'N/A',
+    Queue: appointment.queue_number || 'N/A',
     STATUS: appointment.appointment_details.status,
   }));
 
@@ -230,7 +230,7 @@ const Appointment = () => {
     { field: 'id', headerName: 'AppID', width: 100 },
     {
       field: 'purpose',
-      headerName: 'Doctor Name',
+      headerName: 'Purpose',
       width: 350,
     },
     { field: 'APPOINTMENT_DATE', headerName: 'Date', width: 200 },
@@ -346,11 +346,6 @@ const Appointment = () => {
   Add Appointment
 </button>
               </div>
-          <div>
-          <Button variant="success" onClick={handleOpenQueueModal}>
-            Queue List
-          </Button>
-        </div>
       </div>
 
       <div style={{ height: 650, width: '100%' }}>
