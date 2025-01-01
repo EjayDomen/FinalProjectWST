@@ -340,10 +340,13 @@ const Appointment = () => {
         <div>
         <button
   type="button"
-  className="btn btn-primary"
+  className="btn btn-success"
   onClick={() => setAddAppointmentModalOpen(true)}
+  style={{
+    width: '200px'
+  }}
 >
-  Add Appointment
+  + Add Appointment
 </button>
               </div>
       </div>
@@ -548,120 +551,141 @@ const Appointment = () => {
         </Modal.Footer>
       </Modal>
 
-      <Modal show={addAppointmentModalOpen}
-  onHide={() => setAddAppointmentModalOpen(false)} centered>
-
-
-
+      <Modal
+  show={addAppointmentModalOpen}
+  onHide={() => setAddAppointmentModalOpen(false)}
+  centered
+  dialogClassName="custom-modal-width"
+>
   <Modal.Header closeButton>
     <Modal.Title>Appointment Details</Modal.Title>
   </Modal.Header>
   <Modal.Body>
-    {/* Patient Information */}
-    <Form.Group className="mb-3">
-      <Form.Label>First Name</Form.Label>
-      <Form.Control 
-        type="text" 
-        value={newAppointment?.first_name || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, first_name: e.target.value })} 
-      />
-    </Form.Group>
-    <Form.Group className="mb-3">
-      <Form.Label>Middle Name</Form.Label>
-      <Form.Control 
-        type="text" 
-        value={newAppointment?.middle_name || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, middle_name: e.target.value })} 
-      />
-    </Form.Group>
-    <Form.Group className="mb-3">
-      <Form.Label>Last Name</Form.Label>
-      <Form.Control 
-        type="text" 
-        value={newAppointment?.last_name || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, last_name: e.target.value })} 
-      />
-    </Form.Group>
-    <Form.Group className="mb-3">
-      <Form.Label>Suffix</Form.Label>
-      <Form.Control 
-        type="text" 
-        value={newAppointment?.suffix || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, suffix: e.target.value })} 
-      />
-    </Form.Group>
-    <Form.Group className="mb-3">
-      <Form.Label>Age</Form.Label>
-      <Form.Control 
-        type="number" 
-        value={newAppointment?.age || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, age: e.target.value })} 
-      />
-    </Form.Group>
-    <Form.Group className="mb-3">
-      <Form.Label>Address</Form.Label>
-      <Form.Control 
-        type="text" 
-        value={newAppointment?.address || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, address: e.target.value })} 
-      />
-    </Form.Group>
-    <Form.Group className="mb-3">
-      <Form.Label>Sex</Form.Label>
-      <Form.Select 
-        value={newAppointment?.sex || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, sex: e.target.value })}>
-        <option value="">Select</option>
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-      </Form.Select>
-    </Form.Group>
-    <Form.Group className="mb-3">
-      <Form.Label>Contact Number</Form.Label>
-      <Form.Control 
-        type="text" 
-        value={newAppointment?.contact_number || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, contact_number: e.target.value })} 
-      />
-    </Form.Group>
+    <Form>
+      <Row>
+        {/* First Column */}
+        <Col md={6}>
+          <Form.Group className="mb-3">
+            <Form.Label>First Name</Form.Label>
+            <Form.Control
+              type="text"
+              className="uniform-input"
+              value={newAppointment?.first_name || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, first_name: e.target.value })}
+            />
+          </Form.Group> 
+          <Form.Group className="mb-3">
+            <Form.Label>Last Name</Form.Label>
+            <Form.Control
+              type="text"
+              className="uniform-input"
+              value={newAppointment?.last_name || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, last_name: e.target.value })}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Address</Form.Label>
+            <Form.Control
+              type="text"
+              className="uniform-input"
+              value={newAppointment?.address || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, address: e.target.value })}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Age</Form.Label>
+            <Form.Control
+              type="number"
+              className="uniform-input"
+              value={newAppointment?.age || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, age: e.target.value })}
+            />
+          </Form.Group>
+        </Col>
 
-    {/* Appointment Information */}
-    <Form.Group className="mb-3">
-      <Form.Label>Appointment Date</Form.Label>
-      <Form.Control 
-        type="date" 
-        value={newAppointment?.appointment_date || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, appointment_date: e.target.value })} 
-      />
-    </Form.Group>
-    <Form.Group className="mb-3">
-      <Form.Label>Purpose</Form.Label>
-      <Form.Select 
-        value={newAppointment?.purpose || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, purpose: e.target.value })}>
-        <option value=""> select</option>
-        <option value="consultation"> Consultation</option>
-        <option value="certificates"> Certificates</option>
-        <option value="others"> Other</option>
-        </Form.Select>
-    </Form.Group>
-    <Form.Group className="mb-3">
-      <Form.Label>Type</Form.Label>
-      <Form.Control 
-        type="text" 
-        value={newAppointment?.type || ''} 
-        onChange={(e) => setNewAppointment({ ...newAppointment, type: e.target.value })} 
-      />
-    </Form.Group>
+        {/* Second Column */}
+        <Col md={6}>
+        <Form.Group className="mb-3">
+            <Form.Label>Middle Name</Form.Label>
+            <Form.Control
+              type="text"
+              className="uniform-input"
+              value={newAppointment?.middle_name || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, middle_name: e.target.value })}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Sex</Form.Label>
+            <Form.Select
+              className="uniform-input"
+              value={newAppointment?.sex || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, sex: e.target.value })}
+            >
+              <option value="">Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </Form.Select>
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Contact Number</Form.Label>
+            <Form.Control
+              type="text"
+              className="uniform-input"
+              value={newAppointment?.contact_number || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, contact_number: e.target.value })}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Appointment Date</Form.Label>
+            <Form.Control
+              type="date"
+              className="uniform-input"
+              value={newAppointment?.appointment_date || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, appointment_date: e.target.value })}
+            />
+          </Form.Group>
+        </Col>
+      </Row>
+
+      {/* Additional Fields in Full Width */}
+      <Row>
+        <Col md={6}>
+          <Form.Group className="mb-3">
+            <Form.Label>Purpose</Form.Label>
+            <Form.Select
+              className="uniform-input"
+              value={newAppointment?.purpose || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, purpose: e.target.value })}
+            >
+              <option value="">Select</option>
+              <option value="consultation">Consultation</option>
+              <option value="certificates">Certificates</option>
+              <option value="others">Other</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
+        <Col md={6}>
+          <Form.Group className="mb-3">
+            <Form.Label>Type</Form.Label>
+            <Form.Control
+              type="text"
+              className="uniform-input"
+              value={newAppointment?.type || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, type: e.target.value })}
+            />
+          </Form.Group>
+        </Col>
+      </Row>
+    </Form>
   </Modal.Body>
   <Modal.Footer>
-    <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Close</Button>
-    <Button variant="primary" onClick={handleAddAppointment}>
+    <Button variant="danger" onClick={() => setIsModalOpen(false)}>Close</Button>
+    <Button variant="success" onClick={handleAddAppointment}>
       Add Appointment
     </Button>
   </Modal.Footer>
 </Modal>
-      
+
 
       <CancelConfirmationModal
         isOpen={cancelConfirmationOpen}

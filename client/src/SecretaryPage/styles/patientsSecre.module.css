@@ -6,6 +6,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   margin-left: 18%;
   height: 100%;
+  overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 /* Doctors Header */
@@ -91,6 +92,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  z-index: 1000; /* Keep it above other elements */
 }
 
 /* Form Groups */
@@ -197,8 +200,25 @@
   width: 15%;
 }
 
+.actionButton {
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 6px 10px;
+  line-height: normal;
+  font-size: 14px;
+  text-transform: none;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
 .iconButton svg {
   font-size: 20px;
+}
+
+.actionButton svg {
+  font-size: 18px;
+  margin-right: 2px;
 }
 
 .iconButton:hover {

@@ -5,6 +5,20 @@
   border-Radius: 8px;
 }
 
+.custom-modal-width {
+  max-width: 900px; /* Adjust the width as needed */
+  margin-left: 500px;
+}
+
+.uniform-input {
+  height: 40px; /* Adjust height as needed */
+  width: 100%; /* Ensure full width inside columns */
+  padding: 8px 12px;
+  box-sizing: border-box; /* Prevent padding from affecting width */
+  margin-top: 4px;
+}
+
+
 .searchbar{
   width: 90%;
   position: relative;

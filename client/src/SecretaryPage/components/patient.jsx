@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import Modal from 'react-modal';
-import { Delete, Archive } from '@mui/icons-material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Delete, Archive, AddCircleOutline } from '@mui/icons-material';
 import styles from '../styles/patientsSecre.module.css';
 import DeleteConfirmationModal from '../components/deleteConfirmationModal.jsx';
 import MedicalRecordsModal from '../components/MedicalRecordsModal';
@@ -139,31 +141,43 @@ const Patient = () => {
       renderCell: (params) => (
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
-            className={styles.iconButton}
+            className={styles.actionButton}
             onClick={(e) => {
               e.stopPropagation();
               handleDeleteClick(params.row.id);
             }}
+            style={{
+              backgroundColor: 'rgb(255, 77, 77)'
+            }}
           >
             <Delete />
+            Delete
           </button>
           <button
-            className={styles.iconButton}
+            className={styles.actionButton}
             onClick={(e) => {
               e.stopPropagation(); // Prevent row click from triggering
               openMedicalRecordsModal(params.row.id);
             }}
+            style={{
+              backgroundColor: '#0d6efd',
+            }}
           >
-            View Medical Records
+            <VisibilityIcon />
+            View Records
           </button>
           <button
-            className={styles.iconButton}
+            className={styles.actionButton}
             onClick={(e) => {
               e.stopPropagation(); // Prevent row click from triggering
               openCreateMedicalRecordModal(params.row.id);
             }}
+            style={{
+              backgroundColor: '#198754'
+            }}
           >
-            Create Medical Record
+            <AddCircleOutlineIcon />
+            Create Record
           </button>
         </div>
       ),

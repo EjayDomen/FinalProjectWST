@@ -52,6 +52,7 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
       style={{
         overlay: {
           backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          zIndex: 1000
         },
         content: {
           width: '600px',
@@ -211,7 +212,7 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
               padding: '10px 20px',
               borderRadius: '4px',
               border: 'none',
-              backgroundColor: '#007BFF',
+              backgroundColor: 'rgb(25, 135, 84)',
               color: 'white',
               cursor: 'pointer',
             }}
