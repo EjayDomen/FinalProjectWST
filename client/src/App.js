@@ -107,7 +107,7 @@ function App() {
 
         {/* Secretary routes with SidebarSecre layout */}
         <Route
-          path="/secretary/*"
+          path="/staff/*"
           element={
             <SecretaryLayout>
               <Routes>

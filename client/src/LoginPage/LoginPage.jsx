@@ -42,61 +42,25 @@ const LoginPage = () => {
       sex: '',
       email: '',
       contactNumber: '',
-      address: ''
+      address: '',
+      is_priority: '',
     });
 
     const handleSelectPatient = (patient) => {
       // Set formData with selected patient information
       setSelectedPatient(patient);
       setFormData({
-        firstName: patient.FIRST_NAME,
-        middleName: patient.MIDDLE_NAME,
-        lastName: patient.LAST_NAME,
-        suffix: patient.SUFFIX,
-        age: patient.AGE,
-        sex: patient.SEX,
-        email: patient.EMAIL,
-        contactNumber: patient.CONTACT_NUMBER,
-        address: patient.ADDRESS
+        firstName: patient.first_name,
+        middleName: patient.middle_name,
+        lastName: patient.last_name,
+        suffix: patient.suffix,
+        age: patient.age,
+        sex: patient.sex,
+        email: patient.email,
+        address: patient.address
       });
     };
 
-    const fetchQueueDetails = async () => {
-      try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/queues/today/CurrentQueueList`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-        });
-        // Check if QueueManagement status is 'in-progress'
-        if (response.data.status === 'in-progress') {
-          setQueueDetails(response.data);
-    
-          // Find the queue with status 'In' to display the current active queue
-          const inQueue = response.data.queues.find(queue => queue.status === 'In');
-          setCurrentQueueNumber(inQueue ? inQueue.queueNumber : null);
-    
-          const formattedTime = response.data.time ? response.data.time.slice(0, 5) : '';
-          setFormData((prevData) => ({
-            ...prevData,
-            appointmentDate: response.data.date || '',
-            appointmentTime: formattedTime,
-          }));
-        } else {
-          // Handle cases where the status is not 'in-progress'
-          setQueueDetails(null);
-          setQueueError('No available queue'); // Display message if no active queue
-        }
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching queue details:', err);
-        setError('Failed to load queue details');
-        setQueueError('No queue available for today');
-        setLoading(false);
-      } finally {
-        setLoadingQueue(false);
-      }
-    };
 
     const handleChange = (e) => {
       setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -104,6 +68,8 @@ const LoginPage = () => {
 
     const handleSubmit = async () => {
       try {
+        // Check if the purpose is 'others' and concatenate 'others - otherPurpose' if true
+        const finalPurpose = purpose === 'others' ? `others - ${otherPurpose}` : purpose;
         // Prepare form data, setting missing fields to null if not provided
         const dataToSend = {
           DATE: formData.appointmentDate || null,
@@ -116,6 +82,8 @@ const LoginPage = () => {
           SEX: formData.sex || 'N/A',
           CONTACT_NUMBER: formData.contactNumber|| null,
           EMAIL: formData.email,
+          TRANSACTION: finalPurpose,
+          IS_PRIORITY: formData.is_priority,
         };
   
         // Send data to the backend to join the queue
@@ -130,7 +98,6 @@ const LoginPage = () => {
         setSuccessModalOpen(true);
         setSuccessMessage('Walk-in successfully joined the queue');
         handleCloseModal(); // Close the modal on success
-        fetchQueueDetails();
       } catch (error) {
         console.error('Error joining queue:', error);
         setErrorModalMessage(error.response?.data?.error || 'Failed to add walk-in. Please try again later.');
@@ -170,7 +137,7 @@ const LoginPage = () => {
         if (data.role === 'Patient') {
           navigate('/patient/home'); // Navigate to patient dashboard
         } else if (data.role === 'Staff') {
-          navigate('/secretary/dashboard'); // Navigate to admin dashboard
+          navigate('/staff/dashboard'); // Navigate to admin dashboard
         } else if (data.role === 'Admin') {
           navigate('/superadmin/dashboard'); // Navigate to admin dashboard
         }else {
@@ -184,6 +151,8 @@ const LoginPage = () => {
       setError('Invalid username or password. Please try again.'); // Updated error message for wrong credentials
     }
   };
+
+
   const fetchPatientData = async () => {
     if (!patientId) {
       alert("Please enter a valid Patient ID.");
@@ -191,20 +160,17 @@ const LoginPage = () => {
     }
   
     try {
-      const response = await fetch(`/api/patients/${patientId}`, {
-        method: "GET",
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patient/details/`, {
+        params: {
+          student_or_employee_no: patientId, // Sending the patientId as a query parameter
+        },
         headers: {
           "Content-Type": "application/json",
         },
       });
   
-      if (!response.ok) {
-        const errorData = await response.json();
-        alert(`Error: ${errorData.message || "Failed to fetch patient data."}`);
-        return;
-      }
-  
-      const data = await response.json();
+      const data = response.data;  // axios automatically parses the response JSON
+      handleSelectPatient(data);
       setSelectedPatient(data); // Update the state with the fetched patient data
       alert("Patient data fetched successfully!");
     } catch (error) {
@@ -473,6 +439,26 @@ const LoginPage = () => {
     required
   />
 )}
+
+<h5>Is Priority:</h5>
+<FormControl component="fieldset" style={{ marginBottom: "20px" }}>
+  <RadioGroup
+    row
+    value={formData.is_priority}
+    onChange={(e) => setFormData({ ...formData, is_priority: e.target.value === 'true' })}
+  >
+    <FormControlLabel
+      value="true"
+      control={<Radio />}
+      label="Yes"
+    />
+    <FormControlLabel
+      value="false"
+      control={<Radio />}
+      label="No"
+    />
+  </RadioGroup>
+</FormControl>
 
           <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginTop: '5px', marginBottom: '20px' }}>
             <Button

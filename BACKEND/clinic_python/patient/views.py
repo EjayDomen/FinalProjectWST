@@ -271,3 +271,47 @@ def UpdatePasswordView(request):
             return JsonResponse({'error': str(e)}, status=400)
     else:
         return JsonResponse({'message': 'This endpoint only supports PUT requests.'}, status=405)
+    
+    
+    
+    
+@csrf_exempt
+def get_patient_details_by_student_or_employee_no(request):
+    # Extract the student_or_employee_no from URL parameters
+    student_or_employee_no = request.GET.get('student_or_employee_no', None)
+    
+    if not student_or_employee_no:
+        return JsonResponse({'error': 'student_or_employee_no parameter is required'}, status=400)
+
+    try:
+        # Fetch patient details by student_or_employee_no
+        patient = Patient.objects.get(student_or_employee_no=student_or_employee_no)
+        
+        
+        patient_data = {
+            'id': patient.id,
+            'student_or_employee_no': patient.student_or_employee_no,
+            'first_name': patient.first_name,
+            'middle_name': patient.middle_name,
+            'last_name': patient.last_name,
+            'suffix': patient.suffix,
+            'campus': patient.campus,
+            'college_office': patient.college_office,
+            'course_designation': patient.course_designation,
+            'year': patient.year,
+            'emergency_contact_number': patient.emergency_contact_number,
+            'emergency_contact_relation': patient.emergency_contact_relation,
+            'bloodtype': patient.bloodtype,
+            'allergies': patient.allergies,
+            'email': patient.email,
+            'age': patient.age,
+            'sex': patient.sex,
+            'address': patient.address,
+        }
+        
+        return JsonResponse(patient_data, status=200)
+    
+    except Patient.DoesNotExist:
+        return JsonResponse({'error': 'Patient not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)

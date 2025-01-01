@@ -21,7 +21,7 @@ const Report = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}api/admin/reports/`);
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/reports/appointments/`);
         setAppointments(response.data);
       } catch (error) {
         console.error('Error fetching appointments:', error);
@@ -191,7 +191,7 @@ const Report = () => {
 
 
     // Table content
-    const tableColumn = ["ID", "Name", "Doctor", "Contact Number", "Age", "Address", "Sex", "Appointment Date", "Appointment Time"];
+    const tableColumn = ["ID", "Patient Name", "Staff Name", "Contact Number", "Age", "Address", "Sex", "Appointment Date", "Purpose"];
     const tableRows = [];
 
     filteredAppointments.forEach(appointment => {
@@ -320,7 +320,7 @@ const Report = () => {
     const dateRangeInfo = `Appointment Date Range: ${startDate} - ${endDate}`;
 
     // Define headers and rows
-    const headers = ["ID", "Name", "Doctor", "Contact Number", "Age", "Address", "Sex", "Appointment Date"];
+    const headers = ["ID", "Patient Name", "Staff Name", "Contact Number", "Age", "Address", "Sex", "Appointment Date", "Purpose"];
     const rows = filteredAppointments.map(appointment => [
       appointment.id,
       appointment.fullName,
@@ -329,7 +329,8 @@ const Report = () => {
       appointment.age,
       appointment.address,
       appointment.sex,
-      appointment.date
+      appointment.date,
+      appointment.time
     ]);
 
     // Construct CSV content with title, date range, headers, and rows
@@ -355,17 +356,17 @@ const Report = () => {
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 65 },
-    { field: 'fullName', headerName: 'Name', width: 250 },
+    { field: 'patientFullName', headerName: 'Name', width: 250 },
     {
-      field: 'doctorFullName',
-      headerName: 'Doctor',
+      field: 'purpose',
+      headerName: 'Purpose',
       width: 220,
     },
     { field: 'contactNumber', headerName: 'Contact Number', width: 150 },
     { field: 'age', headerName: 'Age', width: 70 },
     { field: 'address', headerName: 'Address', width: 250 },
     { field: 'sex', headerName: 'Sex', width: 90 },
-    { field: 'date', headerName: 'Appointment Date', width: 200 },
+    { field: 'appointmentDate', headerName: 'Appointment Date', width: 200 },
   ];
 
 

@@ -1,13 +1,57 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Dashboard.css';
 import { NavLink } from 'react-router-dom';
 import { Doughnut, Line } from 'react-chartjs-2';
 import { faMagnifyingGlass, faBell } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import profileImage from '../images/pookie.jpeg';
-
+import axios from 'axios';
 
 const Dashboard = () => {
+  const [patientCounts, setPatientCounts] = useState({
+    studentCount: 0,
+    employeeCount: 0,
+    nonAcademicCount: 0,
+    activePatientCount: 0,
+    deletedPatientCount: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const fetchCounts = async () => {
+      try {
+        const [patientTypeResponse, patientStatusResponse] = await Promise.all([
+          axios.get(`${process.env.REACT_APP_API_URL}/api/superadmin/countPatient/`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/superadmin/activePatient/`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }),
+        ]);
+
+        // Update state with fetched data
+        setPatientCounts({
+          studentCount: patientTypeResponse.data.student_count,
+          employeeCount: patientTypeResponse.data.employee_count,
+          nonAcademicCount: patientTypeResponse.data.non_academic_count,
+          activePatientCount: patientStatusResponse.data.active_patient_count,
+          deletedPatientCount: patientStatusResponse.data.deleted_patient_count,
+        });
+      } catch (err) {
+        setError('Error fetching data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCounts();
+  }, []);
+
   // Data for Line Chart
   const lineData = {
     labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
@@ -28,20 +72,22 @@ const Dashboard = () => {
     labels: ['Active', 'Inactive'],
     datasets: [
       {
-        data: [65, 35],
+        data: [patientCounts.activePatientCount, patientCounts.deletedPatientCount],
         backgroundColor: ['#2563EB', '#E5E7EB'],
         hoverOffset: 4,
       },
     ],
   };
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
+
   return (
     <div className="dashboard">
-
       <main className="dashboard-content">
         <div className="dashboard-header">
-        <div className="header-left">
-          <h1 className="dashboard-title">Dashboard</h1>
+          <div className="header-left">
+            <h1 className="dashboard-title">Dashboard</h1>
           </div>
           <div className="header-right">
             <div className="search-container">
@@ -51,30 +97,30 @@ const Dashboard = () => {
             <div className="profile-icon-container">
               <FontAwesomeIcon icon={faBell} className="notification-icon" />
               <NavLink to="/superadmin/userprofile" className="profile-nav">
-              <img src={profileImage} alt="Profile" className="profile-image" />
-              <div className="user-avatar">Nick Gerblack</div>
+                <img src={profileImage} alt="Profile" className="profile-image" />
+                <div className="user-avatar">Nick Gerblack</div>
               </NavLink>
-              </div>
+            </div>
           </div>
         </div>
-        
+
         {/* Stats */}
         <div className="stats-container">
-          <div className="stats-card" id="stat1" style={{color: 'white'}}>
-            <h3>Students</h3>
+          <div className="stats-card" id="stat1" style={{ color: 'white' }}>
+            <h3>Appointments</h3>
             <h1>21</h1>
           </div>
-          <div className="stats-card" id="stat2" style={{color: 'white'}}>
-            <h3>Employees</h3>
-            <h1>22</h1>
+          <div className="stats-card" id="stat2" style={{ color: 'white' }}>
+            <h3>Students</h3>
+            <h1>{patientCounts.studentCount}</h1>
           </div>
           <div className="stats-card" id="stat3">
             <h3>Employees</h3>
-            <h1>23</h1>
+            <h1>{patientCounts.employeeCount}</h1>
           </div>
           <div className="stats-card" id="stat4">
-            <h3>Employees</h3>
-            <h1>24</h1>
+            <h3>Non-Academic Personnel</h3>
+            <h1>{patientCounts.nonAcademicCount}</h1>
           </div>
         </div>
 

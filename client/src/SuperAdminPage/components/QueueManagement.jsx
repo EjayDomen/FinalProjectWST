@@ -1,102 +1,190 @@
-import React from 'react';
-import '../styles/ManagePatient.css';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { FilterAlt, Search, Add } from '@mui/icons-material';
+import { Button} from '@mui/material';
+import styles from '../../SecretaryPage/styles/queuesSecre.module.css';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
-import profileImage from '../images/pookie.jpeg';
-import { NavLink } from 'react-router-dom';
-import { DataGrid } from '@mui/x-data-grid';
+
+
 
 const QueueManagement = () => {
-  const rows = [
-    {
-      id: 1,
-      qid: '40302',
-      doctorName: 'Frenz Benobo',
-      specialty: 'Cardiologist',
-      time: '11:00am - 2:00pm',
-      status: 'In',
-    },
-  ];
+  const [queueManagements, setQueueManagements] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(null); // State to track open dropdown
+  const navigate = useNavigate();
 
-  const columns = [
-    { field: 'id', headerName: 'No', width: 100 },
-    { field: 'qid', headerName: 'QID', width: 150 },
-    { field: 'doctorName', headerName: "Doctor's Name", width: 250 },
-    { field: 'specialty', headerName: 'Specialty', width: 150 },
-    { field: 'time', headerName: 'Time', width: 180 },
-    { field: 'status', headerName: 'Status', width: 100 },
-    {
-      field: 'action',
-      headerName: 'Action',
-      width: 200,
-      renderCell: () => (
-        <button className="view-button">Cancel Reschedule</button>
-      ),
-    },
-  ];
+  const fetchQueueManagements = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/viewqmtoday/`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setQueueManagements(response.data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching queue management details:', error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchQueueManagements();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+
+  const handleEventClick = ({ queue }) => {
+
+
+    navigate(`/staff/queueList/${queue.id}`, {
+      state: {
+        purpose: queue.transaction_type,
+        date: queue.date,
+        status: queue.status, // Optional: add any other details if needed
+      }
+    });
+  };
+
+
+  const toggleDropdown = (id, event) => {
+    event.stopPropagation();
+    setDropdownOpen(dropdownOpen === id ? null : id); // Toggle dropdown
+  };
+
+  const handleDropdownAction = async (action, queueId) => { // Mark function as async
+    if (action === 'completed') {
+      try {
+        const payload = { status: "completed" };
+        console.log("Sending payload:", payload); // Debugging line
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/admin/update-queue-status/${queueId}/`,
+          {
+            method: "POST",
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+            body: JSON.stringify(payload),
+          }
+        );
+  
+        if (response.ok) {
+          const data = await response.json();
+          alert(data.message); // Show success message
+        } else {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.error}`); // Show error message
+        }
+      } catch (error) {
+        alert(`Failed to update status: ${error.message}`); // Handle network errors
+      }
+    }
+    setDropdownOpen(null); // Close dropdown after action
+  };
+  
+  // Function to manually trigger createQueuesForToda
 
   return (
-    <div className="patient">
-      <main className="patient-content">
-        <div className="patient-header">
-          <div className="header-left">
-            <h1 className="queue-title">Queue</h1>
-          </div>
-          <div className="header-right">
-            <div className="search-container">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
-              <input type="text" placeholder="Search" className="search-input" />
-            </div>
-            <div className="profile-icon-container">
-              <FontAwesomeIcon icon={faBell} className="notification-icon" />
-              <NavLink to="/dashboard/userprofile" className="profile-nav">
-                <img src={profileImage} alt="Profile" className="profile-image" />
-                <div className="user-avatar">Nick Gerblack</div>
-              </NavLink>
-            </div>
-          </div>
+    <div className={styles.doctorsSection}>
+      {/* Header */}
+      <div className={styles.doctorsHeader}>
+        <div>
+          <h2 style={{fontSize:'35px'}}>Queue List</h2>
+          <p style={{marginLeft: '10px', marginTop: '7px'}}>This is the list of doctors and their status. Check now!</p>
+        </div>
+                <div style={{gap:'10px', display:'flex'}}>
+                </div>
+      </div>
+
+      {/* Search, Filter, and Create Queue Section */}
+      <div className={styles.searchAppointment}>
+        <div style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center', /* Center the content horizontally */
+                margin: 0, /* Remove default margin */
+                gap: '12px',
+                width: '90%'
+              }}>
+        <FontAwesomeIcon icon={faMagnifyingGlass} style={{
+                    position: 'absolute',
+                    left: '22px',
+                    color: '#aaa'
+                  }} />
+        <input type="text" placeholder="Search Appointment" style={{
+          paddingLeft: '50px'
+        }}/>
+        <button className={styles.filterBtn}><Search /></button>
+        <button className={styles.filterBtn}><FilterAlt /></button>
+
         </div>
 
-        <div className="queue-section">
-          <h1 className="queue-title">Queue List</h1>
-          <p className="queue-subtitle">
-            This is the list of doctors and their status & queue. Check now.
-          </p>
-          <div className="queue-content">
-            <div className="queue-search">
-              <div className="queue-search-container">
-                <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
-                <input
-                  type="text"
-                  placeholder="Search Appointment"
-                  className="search-appointment-input"
-                />
-              </div>
-              <button className="filter-button">
-                <FontAwesomeIcon icon={faFilter} />
-              </button>
-              <button className="staff-button">+ Create Queue</button>
-            </div>
-
-            <div className="queue-table">
-              <DataGrid
-                rows={rows}
-                columns={columns}
-                pageSize={5}
-                rowsPerPageOptions={[5, 10, 15]}
-                autoHeight
-                disableSelectionOnClick
-                sx={{
-                  '& .MuiDataGrid-cell': { fontSize: '14px' },
-                  '& .MuiDataGrid-columnHeaders': { backgroundColor: '#f5f5f5' },
-                }}
-              />
-            </div>
-          </div>
+        {/* Table Headers */}
+        <div className={styles.tableHeader}>
+          <span>No.</span>
+          <span>QID</span>
+          <span>Purpose</span>
+          <span>Date</span>
+          <span>Status</span>
+          <span>Action</span>
         </div>
-      </main>
+
+        {/* Table Body */}
+        <div className={styles.tableBody}>
+          {queueManagements.map((queue, index) => (
+            <div className={styles.tableRow} key={queue.id}
+              onClick={() => handleEventClick({queue})}
+              style={{ cursor: 'pointer'}}>
+              <span>{index + 1}</span>
+              <span>{queue.id}</span>
+              <span>{queue.transaction_type}</span>
+              <span>{queue.date}</span>
+              <span>{queue.status}</span>
+              <span>
+                <div className={styles.dropdownWrapper}>
+                  <button
+                    className={styles.dropdownToggle}
+                    onClick={(event) => toggleDropdown(queue.id, event)}
+                  >
+                    &#9662;
+                  </button>
+                  {dropdownOpen === queue.id && (
+                    <div className={styles.dropdown}>
+                      <div
+                        className={styles.dropdownItem}
+                        onClick={() => handleDropdownAction('cancel', queue.id)}
+                      >
+                        Cancel
+                      </div>
+                      <div
+                        className={styles.dropdownItem}
+                        onClick={() => handleDropdownAction('reschedule', queue.id)}
+                      >
+                        Reschedule
+                      </div>
+                      <div
+                        className={styles.dropdownItem}
+                        onClick={() => handleDropdownAction('completed', queue.id)}
+                      >
+                        Completed
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </span>
+            </div>
+          ))}
+        </div>
+        </div>
     </div>
   );
 };
+
 
 export default QueueManagement;

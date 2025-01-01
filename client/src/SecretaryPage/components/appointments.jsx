@@ -103,7 +103,7 @@ const Appointments = () => {
         console.log('Mapped eventData:', eventData); // Log after mapping
   
         // Deduplicate if necessary
-        const uniqueEventData = [...new Map(eventData.map(item => [item.schedId, item])).values()];
+        const uniqueEventData = [...new Map(eventData.map(item => [item.id, item])).values()];
         console.log('Unique eventData:', uniqueEventData); // Log deduplicated data
   
         setEvents(uniqueEventData);
@@ -157,7 +157,7 @@ const Appointments = () => {
     const appDate = params.row.date || 'Unknown Date';
     const time = `${formatTime(params.row.startTime || '')} - ${formatTime(params.row.endTime || '')}`;
     
-    navigate(`/secretary/appointments/patientList/${params.row.schedId}`, {
+    navigate(`/staff/appointments/patientList/${params.row.schedId}`, {
       state: { doctorName, appDate, time },
     });
   };
@@ -228,7 +228,6 @@ const Appointments = () => {
 
   
   const filterEvents = () => {
-    // Filter events based on the search term and date range
     const filteredData = events
       .filter((event) => {
         const matchesSearchTerm = Object.values(event).some((value) =>
@@ -242,10 +241,12 @@ const Appointments = () => {
   
         return matchesSearchTerm && isWithinDateRange;
       })
-      .map((event, index) => ({ ...event, rowNumber: index + 1 })); // Add rowNumber
+      .map((event, index) => ({ ...event, rowNumber: index + 1 }));
   
+    console.log('Filtered Events:', filteredData); // Log filtered events
     setFilteredEvents(filteredData);
   };
+  
 
   useEffect(() => {
     filterEvents();
@@ -283,7 +284,7 @@ const handleEventClickCalendar = (info) => {
   const time = `${event.start?.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })} - ${event.end?.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`;
 
   // Navigate to the desired page with state
-  navigate(`/secretary/appointments/patientList/${event.extendedProps.schedId}`, {
+  navigate(`/staff/appointments/patientList/${event.extendedProps.schedId}`, {
     state: { doctorName, appDate, time },
   });
 };

@@ -85,46 +85,46 @@ const Sidebar = () => {
           <img src={logo} alt="Logo" />
         </div>
         <nav className={styles.nav1}>
-          <NavLink to="/secretary/dashboard" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
+          <NavLink to="/staff/dashboard" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
             <Home />
             <span>Dashboard</span>
           </NavLink>
           
-          <NavLink to="/secretary/patients" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
+          <NavLink to="/staff/patients" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
             <Groups2 />
             <span>Patients</span>
           </NavLink>
-          <NavLink to="/secretary/appointments" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
+          <NavLink to="/staff/appointments" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
             <EventNote />
             <span>Appointments</span>
           </NavLink>
-          <NavLink to="/secretary/queue" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
+          <NavLink to="/staff/queue" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
             <Queue />
             <span>Queue</span>
           </NavLink>
           
           <div>
           <NavLink
-              to="/secretary/report"
+              to="/staff/report"
               className={({ isActive }) =>
                 `${styles.navItem1} ${
-                  isActive && window.location.pathname === '/secretary/report' ? styles.aactive1 : ''
+                  isActive && window.location.pathname === '/staff/report' ? styles.aactive1 : ''
                 }`
               }
           >
               <Assessment />
               <span>Reports</span>
             </NavLink>
-            <div style={{ display: window.location.pathname.includes('/secretary/report') ? 'block' : 'none', marginLeft: '15%' }}>
+            <div style={{ display: window.location.pathname.includes('/staff/report') ? 'block' : 'none', marginLeft: '15%' }}>
               <NavLink
-                to="/secretary/report/logs"
+                to="/staff/report/logs"
                 className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}
               >
                 <History style={{ fontSize: '24px' }} />
                 <span style={{ fontSize: '18px' }}>Logs</span>
               </NavLink>
               <NavLink
-                to="/secretary/report/feedback"
+                to="/staff/report/feedback"
                 className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}
               >
                 <Feedback style={{ fontSize: '24px' }} />
@@ -135,9 +135,9 @@ const Sidebar = () => {
 
           <div>
             
-            <div style={{ display: window.location.pathname.includes('/secretary/services') || window.location.pathname.includes('/secretary/PredefinedQuestion') ? 'block' : 'none', marginLeft: '15%' }}>
+            <div style={{ display: window.location.pathname.includes('/staff/services') || window.location.pathname.includes('/staff/PredefinedQuestion') ? 'block' : 'none', marginLeft: '15%' }}>
               <NavLink
-                to="/secretary/PredefinedQuestion"
+                to="/staff/PredefinedQuestion"
                 className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}
               >
                 <Message style={{ fontSize: '25px' }} />
@@ -160,7 +160,7 @@ const Sidebar = () => {
         </div>
         <div className={styles.headerActions}>
           <div className={styles.user}>
-            <NavLink to="/secretary/profile" className={styles.profileIcon}>
+            <NavLink to="/staff/profile" className={styles.profileIcon}>
               <AccountCircle style={{ fontSize: '60px', padding: '10px', cursor: 'pointer', color: 'gray' }} />
             </NavLink>
             <span className={styles.userName}>{userName}</span>

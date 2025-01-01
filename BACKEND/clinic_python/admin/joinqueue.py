@@ -5,7 +5,7 @@ from rest_framework import status
 from clinic_python.models import Patient
 from clinic_python.models import Appointment
 from clinic_python.models import QueueManagement
-from clinic_python.models import Queue
+from clinic_python.models import Queue, Staff
 import bcrypt
 from clinic_python.utils.auth import role_required
 from rest_framework_simplejwt.tokens import AccessToken
@@ -18,18 +18,6 @@ from django.views.decorators.csrf import csrf_exempt
 @api_view(['POST'])
 # @role_required(required_role="Staff") 
 def join_queue(request):
-    auth_header = request.headers.get('Authorization', '')
-    if not auth_header or not auth_header.startswith('Bearer '):
-        return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
-        # Extract the token from the header
-    token = auth_header.split(' ')[1]
-    access_token = AccessToken(token)
-    staff_id = access_token['id']  # Retrieve the user ID from token claims
-    role = access_token['role']  # Retrieve the user role from token claims
-
-    # Check if the role is 'Staff'
-    if role != 'Staff':
-        return JsonResponse({'error': 'Unauthorized role'}, status=403)
 
     data = request.data
 
@@ -45,15 +33,17 @@ def join_queue(request):
     EMAIL = data.get("EMAIL", "N/A")
     ADDRESS = data.get("ADDRESS", "N/A")
     TRANSACTION = data.get("TRANSACTION", "N/A")
-    IS_PRIORITY = data.get("IS_PRIORITY", "false").lower() == "true"
+    IS_PRIORITY = data.get("IS_PRIORITY", "false") == "true"
 
     # Appointment-related details
-    DATE = data.get("DATE", "N/A")
+    # In the join_queue function, replace the line where DATE is set
+    DATE = datetime.now().strftime("%Y-%m-%d")
     TYPE = data.get("TYPE", "walk-in")  # Can be "followup" or "walk-in"
 
     try:
         with transaction.atomic():
              # Check if the student_or_employee_no already exists
+            staff_member = Staff.objects.get(id=2)
             patient = None
             if PATIENT_ID:
                 patient = Patient.objects.filter(id=PATIENT_ID).first()
@@ -93,14 +83,12 @@ def join_queue(request):
                 middle_name=MIDDLE_NAME,
                 last_name=LAST_NAME,
                 suffix=SUFFIX,
-                # age=AGE,
-                # address=ADDRESS,
                 sex=SEX,
                 appointment_date=DATE,
                 purpose=TRANSACTION,
                 status="pending",
                 type=TYPE.lower(),
-                staff_id=staff_id
+                staff=staff_member
             )
 
             # Queue Management
@@ -115,9 +103,9 @@ def join_queue(request):
 
            # Determine queue number format
             transaction_code_map = {
-                "consultation": "CN" if not IS_PRIORITY else "CP",
-                "certificate": "CEN" if not IS_PRIORITY else "CEP",
-                "others": "ON" if not IS_PRIORITY else "OP"
+                "consultation": "CN" if not IS_PRIORITY else "CP", #CP001 CN001
+                "certificate": "CEN" if not IS_PRIORITY else "CEP", #CEN001 CEP001
+                "others": "ON" if not IS_PRIORITY else "OP" #ON001 OP001
             }
             queue_prefix = transaction_code_map.get(TRANSACTION, "ON" if not IS_PRIORITY else "OP")
 
@@ -132,7 +120,7 @@ def join_queue(request):
                 last_number = int(last_queue.queue_number[len(queue_prefix):])
                 new_queue_number = f"{queue_prefix}{last_number + 1:03d}"
             else:
-                new_queue_number = f"{queue_prefix}000"
+                new_queue_number = f"{queue_prefix}001"
 
             # Add to queue
             Queue.objects.create(
@@ -256,7 +244,7 @@ def update_queue_status(request):
         queue.save()
 
         # If the status is "completed", update the related appointment as well
-        if status_update == "completed" and queue.appointment:
+        if status_update == "Completed" and queue.appointment:
             queue.appointment.status = "completed"
             queue.appointment.save()
 
@@ -299,7 +287,7 @@ def get_first_5_waiting_queues(request):
                 "status": queue.status,
                 "transaction_type": queue.transaction_type,
                 "ticket_type": queue.ticket_type,
-                "qmid": queue.qmid,
+                "qmid": queue.qmid.id if queue.qmid else None,  # Extract the id or relevant field from qmid
                 "patient": {
                     "id": queue.patient.id,
                     "first_name": queue.patient.first_name,

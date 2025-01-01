@@ -66,7 +66,8 @@ def create_appointment(request):
 
             # Queue Management Logic
             # Assuming these variables are defined in the request data or environment
-            TRANSACTION = data.get('transaction_type', 'consultation')  # Set transaction type
+            TRANSACTION = data.get('purpose', 'consultation')  # Get the transaction type
+            TRANSACTION = TRANSACTION.split(' ')[0] if len(TRANSACTION.split(' ')) > 1 else TRANSACTION  # Get the second part if it exists
             DATE = data['appointment_date']  # Set appointment date
             IS_PRIORITY = data.get('is_priority', False)  # Set if priority or not
             TYPE = data.get('type', 'Online')  # Set ticket type
@@ -80,20 +81,30 @@ def create_appointment(request):
                 }
             )
 
-            # Determine queue number format
+                    # Ensure IS_PRIORITY is a boolean and check the transaction value.
             transaction_code_map = {
-                "consultation": "CN" if not IS_PRIORITY else "CP",
-                "certificate": "CEN" if not IS_PRIORITY else "CEP",
-                "others": "ON" if not IS_PRIORITY else "OP"
+                "consultation": "CN",
+                "certificate": "CEN",
+                "others": "ON",
             }
-            queue_prefix = transaction_code_map.get(TRANSACTION, "ON" if not IS_PRIORITY else "OP")
 
+            # Get the appropriate queue prefix based on transaction and priority
+            queue_prefix = transaction_code_map.get(TRANSACTION.lower(), "ON")
+
+            # Modify the prefix if IS_PRIORITY is True
+            if IS_PRIORITY:
+                if queue_prefix == "CN":
+                    queue_prefix = "CP"
+                elif queue_prefix == "CEN":
+                    queue_prefix = "CEP"
+                elif queue_prefix == "ON":
+                    queue_prefix = "OP"
             # Determine new queue number
             last_queue = Queue.objects.filter(
                 qmid=queue_management.id,
                 transaction_type=TRANSACTION,
-                is_priority=IS_PRIORITY
-            ).order_by('-queue_number').first()
+                is_priority=IS_PRIORITY,
+            ).order_by('queue_number').first()
 
             if last_queue:
                 last_number = int(last_queue.queue_number[len(queue_prefix):])

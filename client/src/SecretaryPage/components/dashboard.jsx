@@ -10,10 +10,12 @@ import { useNavigate } from 'react-router-dom';
 import { Delete } from '@mui/icons-material'; // Import the delete icon
 import { Link } from 'react-router-dom';
 
+
 // Chart.js components and options
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, ChartDataLabels);
+
 
 const Dashboard = () => {
   const [period, setPeriod] = useState('daily'); // Default period is 'daily'
@@ -393,9 +395,9 @@ const chartOptions = {
                   {todaysQueue && todaysQueue.queues && todaysQueue.queues.length > 0 ? (
                     todaysQueue.queues.map((queue, index) => (
                       <tr key={`${todaysQueue.qmid}-${index}`}>
-                        <td>{queue.queueNumber}</td>
+                        <td>{queue.queue_number}</td>
                         <td>{queue.patient.first_name}</td>
-                        <td>{queue.purpose}</td>
+                        <td>{queue.transaction_type}</td>
                         <td>{queue.status}</td>
                       </tr>
                     ))

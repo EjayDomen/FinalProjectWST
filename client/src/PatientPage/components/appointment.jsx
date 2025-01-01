@@ -3,7 +3,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { Modal, Button, Container, Row, Col, Form, Table } from 'react-bootstrap';
-import { Menu, MenuItem,Typography, Box, IconButton, Divider } from '@mui/material';
+import { Menu, MenuItem,Typography, Box, IconButton, Divider, TextField } from '@mui/material';
+import { Autocomplete, FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import QRCode from 'react-qr-code';
 import { toPng } from 'html-to-image';
@@ -35,6 +36,8 @@ const getStatusStyle = (status) => {
 };
 
 const Appointment = () => {
+  const [purpose, setPurpose] = React.useState(""); // Purpose selection
+  const [otherPurpose, setOtherPurpose] = React.useState(""); 
   const [appointments, setAppointments] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedAppointment, setSelectedAppointment] = useState(null);
@@ -45,6 +48,7 @@ const Appointment = () => {
   const [dropdownAnchor, setDropdownAnchor] = useState(null);
   const [queueModalOpen, setQueueModalOpen] = useState(false); // For the queue modal
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [specificPurpose, setSpecificPurpose] = useState('');
   const [newAppointment, setNewAppointment] = useState({
     first_name:'',
     middle_name:'',
@@ -61,6 +65,33 @@ const Appointment = () => {
   });
   const [addAppointmentModalOpen, setAddAppointmentModalOpen] = useState(false);
   
+  const handlePurposeChange = (e) => {
+    const selectedPurpose = e.target.value;
+
+    // If "others" is selected, keep the purpose as "others"
+    setNewAppointment({
+      ...newAppointment,
+      purpose: selectedPurpose,
+    });
+
+    if (selectedPurpose !== 'others') {
+      // If not "others", clear specificPurpose
+      setSpecificPurpose('');
+    }
+  };
+
+  const handleSpecificPurposeChange = (e) => {
+    const value = e.target.value;
+    setSpecificPurpose(value);
+
+    // Update the purpose only when "others" is selected
+    if (newAppointment.purpose === 'others') {
+      setNewAppointment({
+        ...newAppointment,
+        purpose: `others - ${value}`, // Concatenate the value with "others"
+      });
+    }
+  };
   
   const filteredAppointments = appointments
   .filter((appointment) =>
@@ -79,9 +110,13 @@ const Appointment = () => {
 
   const handleAddAppointment = async () => {
     try {
+      const finalPurpose = purpose === 'others' ? `others - ${otherPurpose}` : purpose;
       const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/patient/createAppointment/`,
-        newAppointment,
+        {
+          ...newAppointment,  // Spread the existing newAppointment object
+          purpose: finalPurpose,  // Assign the final purpose value
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -650,19 +685,42 @@ const Appointment = () => {
       {/* Additional Fields in Full Width */}
       <Row>
         <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Purpose</Form.Label>
-            <Form.Select
-              className="uniform-input"
-              value={newAppointment?.purpose || ''}
-              onChange={(e) => setNewAppointment({ ...newAppointment, purpose: e.target.value })}
-            >
-              <option value="">Select</option>
-              <option value="consultation">Consultation</option>
-              <option value="certificates">Certificates</option>
-              <option value="others">Other</option>
-            </Form.Select>
-          </Form.Group>
+        <Form.Group className="mb-3">
+      <h5>Purpose:</h5>
+      <FormControl component="fieldset" style={{ marginBottom: "20px" }}>
+      <RadioGroup
+          value={purpose}
+          onChange={(e) => setPurpose(e.target.value)}
+        >
+          <FormControlLabel
+            value="consultation"
+            control={<Radio />}
+            label="Consultation"
+          />
+          <FormControlLabel
+            value="certificate"
+            control={<Radio />}
+            label="Certificates"
+          />
+          <FormControlLabel
+            value="others"
+            control={<Radio />}
+            label="Others"
+          />
+        </RadioGroup>
+      </FormControl>
+
+      {purpose === "others" && (
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Specify Purpose"
+          value={otherPurpose}
+          onChange={(e) => setOtherPurpose(e.target.value)}
+          required
+        />
+      )}
+    </Form.Group>
         </Col>
         <Col md={6}>
           <Form.Group className="mb-3">

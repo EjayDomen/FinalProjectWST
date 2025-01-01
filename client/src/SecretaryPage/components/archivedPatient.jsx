@@ -12,13 +12,13 @@ const ArchivedPatientsModal = ({ isOpen, onClose }) => {
   const fetchArchivedPatients = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/patients/archivedPatients`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/viewArchivedPatient`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       const rows = response.data.map((patient) => ({
         id: patient.id,
-        FIRST_NAME: patient.FIRST_NAME,
-        LAST_NAME: patient.LAST_NAME,
+        FIRST_NAME: patient.first_name,
+        LAST_NAME: patient.last_name,
         createdAt: new Date(patient.createdAt).toLocaleDateString(), // Format the date
       }));
       setArchiveRows(rows);
@@ -32,7 +32,7 @@ const ArchivedPatientsModal = ({ isOpen, onClose }) => {
   // Restore a patient
   const restorePatient = async (id) => {
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/secretary/patients/restore/${id}`, {}, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/restorePatient/${id}/`, {}, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
       alert('Patient restored successfully!');

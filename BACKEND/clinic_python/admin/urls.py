@@ -31,8 +31,8 @@ urlpatterns = [
     path('archivedpatient/', patients.get_archived_patients, name='get_archived_patients'),
     path('restorepatient/', patients.restore_patient, name='restore_patient'),
     path('updatePatientDetails/<int:id>/', patients.update_patient, name='get_queue_management_by_id'),
-    
-    
+    path('viewArchivedPatient/', patients.archived_patients, name='archived_patients'),
+     path('restorePatient/<int:patient_id>/', patients.restore_patient, name='restore_patient'),
     
     path('viewallqm/', queuemanagement.get_all_queue_management, name='get_all_queue_management'),
     path('viewqmtoday/', queuemanagement.get_today_queue_management, name='get_today_queue_management'),

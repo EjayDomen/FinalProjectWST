@@ -42,7 +42,7 @@ const Queue = () => {
   const handleEventClick = ({ queue }) => {
 
 
-    navigate(`/secretary/queueList/${queue.id}`, {
+    navigate(`/staff/queueList/${queue.id}`, {
       state: {
         purpose: queue.transaction_type,
         date: queue.date,
@@ -97,18 +97,6 @@ const Queue = () => {
           <h2 style={{fontSize:'35px'}}>Queue List</h2>
           <p style={{marginLeft: '10px', marginTop: '7px'}}>This is the list of doctors and their status. Check now!</p>
         </div>
-                <div style={{gap:'10px', display:'flex'}}>
-                  <div>
-                    <button className={styles.addDoctorBtn} >
-                        <Add style={{ fontSize: '16px'}} /> Walk-ins
-                    </button>
-                  </div>
-                  <div>
-                    <button  className={styles.addDoctorBtn2} onClick={() => navigate('../viewQueue')}>
-                      View Queue
-                    </button>
-                  </div>
-                </div>
       </div>
 
       {/* Search, Filter, and Create Queue Section */}

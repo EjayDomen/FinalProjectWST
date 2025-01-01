@@ -211,3 +211,50 @@ def update_patient(request, id):
     except Exception as e:
         print(f"Error updating patient: {e}")
         return JsonResponse({'message': 'Internal server error'}, status=500)
+
+
+
+# Restore a patient by setting is_deleted to False
+@csrf_exempt
+def restore_patient(request, patient_id):
+    try:
+        patient = Patient.objects.get(id=patient_id)
+        
+        if not patient.is_deleted:
+            return JsonResponse({'message': 'Patient is not archived'}, status=400)
+        
+        # Set the patient as active (restore)
+        patient.is_deleted = False
+        patient.save()
+        
+        return JsonResponse({'message': 'Patient restored successfully'}, status=200)
+
+    except Patient.DoesNotExist:
+        return JsonResponse({'error': 'Patient not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+# List archived patients
+def archived_patients(request):
+    try:
+        archived_patients = Patient.objects.filter(is_deleted=True)
+
+        if not archived_patients.exists():
+            return JsonResponse({'message': 'No archived patients found'}, status=404)
+
+        patients_data = []
+        for patient in archived_patients:
+            patients_data.append({
+                'id': patient.id,
+                'first_name': patient.first_name,
+                'last_name': patient.last_name,
+                'email': patient.email,
+                'patient_type': patient.patient_type,
+                'is_deleted': patient.is_deleted,
+                'createdAt': patient.createdAt,
+            })
+        
+        return JsonResponse(patients_data, safe=False, status=200)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
