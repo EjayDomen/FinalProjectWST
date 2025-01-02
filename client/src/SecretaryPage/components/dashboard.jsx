@@ -167,11 +167,90 @@ useEffect(() => {
 }, [period]);
 
 
-// Function to prepare chart data based on the selected period
+// // Function to prepare chart data based on the selected period
+// const prepareChartData = (attendedData, period) => {
+//   // Prepare data for the chart based on period
+//   const groupedData = attendedData.reduce((acc, item) => {
+//     // Get the label based on the period (Month, Week, or Day)
+//     const label = period === 'monthly' ? item.month :
+//                   period === 'weekly' ? item.week :
+//                   item.date;
+
+//     if (!acc[label]) {
+//       acc[label] = { Missed: 0, Cancelled: 0, Completed: 0 }; // Initialize counts for each status
+//     }
+
+
+//      // Increment the count based on status
+//      if (item.status.toLowerCase()  === 'missed') acc[label].Missed += item.appointmentCount;
+//      if (item.status.toLowerCase() === 'cancelled') acc[label].Cancelled += item.appointmentCount;
+//      if (item.status.toLowerCase() === 'completed') acc[label].Completed += item.appointmentCount;
+
+//     return acc;
+//   }, {});
+
+//   // Convert grouped data into chart-compatible format
+//   const labels = Object.keys(groupedData); // X-axis labels (dates/weeks/months)
+//   const data = [
+//     // Patients with 'Missed' status
+//     labels.map(label => groupedData[label].Missed),
+//     // Patients with 'Cancelled' status
+//     labels.map(label => groupedData[label].Cancelled),
+//     // Patients with 'Completed' status
+//     labels.map(label => groupedData[label].Completed),
+//   ];
+
+//   return {
+//     labels,
+//     datasets: [
+//       {
+//         label: 'Missed',
+//         data: data[0],
+//         borderColor: 'rgba(255, 99, 132, 1)',
+//         backgroundColor: 'rgba(255, 99, 132, 0.2)',
+//         fill: true,
+//       },
+//       {
+//         label: 'Cancelled',
+//         data: data[1],
+//         borderColor: 'rgba(255, 159, 64, 1)',
+//         backgroundColor: 'rgba(255, 159, 64, 0.2)',
+//         fill: true,
+//       },
+//       {
+//         label: 'Completed',
+//         data: data[2],
+//         borderColor: 'rgba(75, 192, 192, 1)',
+//         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+//         fill: true,
+//       },
+//     ],
+//   };
+// };
+
+
 const prepareChartData = (attendedData, period) => {
+  // Sample data for demonstration
+  const sampleData = [
+    { date: '2024-01-01', status: 'completed', appointmentCount: 10 },
+    { date: '2024-01-01', status: 'missed', appointmentCount: 5 },
+    { date: '2024-01-01', status: 'cancelled', appointmentCount: 2 },
+    { date: '2024-01-02', status: 'completed', appointmentCount: 8 },
+    { date: '2024-01-02', status: 'missed', appointmentCount: 3 },
+    { date: '2024-01-02', status: 'cancelled', appointmentCount: 1 },
+    { week: 'Week 1', status: 'completed', appointmentCount: 50 },
+    { week: 'Week 1', status: 'missed', appointmentCount: 20 },
+    { week: 'Week 1', status: 'cancelled', appointmentCount: 10 },
+    { month: 'January', status: 'completed', appointmentCount: 200 },
+    { month: 'January', status: 'missed', appointmentCount: 80 },
+    { month: 'January', status: 'cancelled', appointmentCount: 40 },
+  ];
+
+  // Use sample data if no real data is provided
+  const dataSource = attendedData.length > 0 ? attendedData : sampleData;
+
   // Prepare data for the chart based on period
-  const groupedData = attendedData.reduce((acc, item) => {
-    // Get the label based on the period (Month, Week, or Day)
+  const groupedData = dataSource.reduce((acc, item) => {
     const label = period === 'monthly' ? item.month :
                   period === 'weekly' ? item.week :
                   item.date;
@@ -180,8 +259,7 @@ const prepareChartData = (attendedData, period) => {
       acc[label] = { Missed: 0, Cancelled: 0, Completed: 0 }; // Initialize counts for each status
     }
 
-    // Increment the count based on status
-    if (item.status.toLowerCase()  === 'missed') acc[label].Missed += item.appointmentCount;
+    if (item.status.toLowerCase() === 'missed') acc[label].Missed += item.appointmentCount;
     if (item.status.toLowerCase() === 'cancelled') acc[label].Cancelled += item.appointmentCount;
     if (item.status.toLowerCase() === 'completed') acc[label].Completed += item.appointmentCount;
 
@@ -191,11 +269,8 @@ const prepareChartData = (attendedData, period) => {
   // Convert grouped data into chart-compatible format
   const labels = Object.keys(groupedData); // X-axis labels (dates/weeks/months)
   const data = [
-    // Patients with 'Missed' status
     labels.map(label => groupedData[label].Missed),
-    // Patients with 'Cancelled' status
     labels.map(label => groupedData[label].Cancelled),
-    // Patients with 'Completed' status
     labels.map(label => groupedData[label].Completed),
   ];
 
@@ -226,6 +301,9 @@ const prepareChartData = (attendedData, period) => {
     ],
   };
 };
+
+
+
 
 // Calculate the maximum count dynamically
 const calculateMaxCount = (datasets) => {
@@ -409,7 +487,7 @@ const chartOptions = {
                 </tbody>
               </table>
             )}
-            <button className={styles.seeMoreBtn} onClick={() => navigate('../queuelist')}>See More</button>
+            <button className={styles.seeMoreBtn} onClick={() => navigate('../queue')}>See More</button>
           </div>
         
 

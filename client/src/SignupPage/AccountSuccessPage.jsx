@@ -90,7 +90,7 @@ const SuccessMessage = () => {
       <div style={cardStyle}>
         <img src={logoImage} alt="ACE Queue Logo" style={logoStyle} />
         <h2 style={titleStyle}>
-          GET STARTED WITH <span style={highlightStyle}>ACE QUEUE</span>
+          GET STARTED WITH <span style={highlightStyle}>Queue Care</span>
         </h2>
         <p style={messageStyle}>
           You've successfully created an account!

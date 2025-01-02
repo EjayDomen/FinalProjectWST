@@ -188,7 +188,7 @@ const PatientManagement = () => {
   };
   const saveChanges = async () => {
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/secretary/patients/update/${selectedPatient.id}`, selectedPatient, {
+      await axios.put(`${process.env.REACT_APP_API_URL}/api/admin/updatePatientDetails/${selectedPatient.id}/`, selectedPatient, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
       });
       setUpdateMessage('Patient information updated successfully');

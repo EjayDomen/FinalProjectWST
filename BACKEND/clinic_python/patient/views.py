@@ -105,8 +105,13 @@ def update_patient_details(request):
 
             # Decode JWT token to get patient ID
             try:
-                payload = jwt.decode(token, settings.JWT_SECRET, algorithms=['HS256'])
-                patient_id = payload.get('id')
+                auth_header = request.headers.get('Authorization', '')
+                if not auth_header or not auth_header.startswith('Bearer '):
+                    return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
+                    # Extract the token from the header
+                token = auth_header.split(' ')[1]
+                access_token = AccessToken(token)
+                patient_id = access_token['id']  # Retrieve the user ID from token claims
             except jwt.ExpiredSignatureError:
                 return JsonResponse({'error': 'Token has expired'}, status=401)
             except jwt.InvalidTokenError:
@@ -176,23 +181,13 @@ def update_patient_details(request):
 @csrf_exempt
 def soft_delete_patient(request):
     if request.method == 'PUT':
-        # Extract token from Authorization header
-         # Extract token from Authorization header
         auth_header = request.headers.get('Authorization', '')
-        token = auth_header.split(' ')[1] if 'Bearer ' in auth_header else None
-
-        if not token:
-            return JsonResponse({'error': 'Token not provided'}, status=401)
-
-
-        try:
-            # Decode JWT token to get patient ID
-            payload = jwt.decode(token, settings.JWT_SECRET, algorithms=['HS256'])
-            patient_id = payload.get('id')
-        except jwt.ExpiredSignatureError:
-            return JsonResponse({'error': 'Token has expired'}, status=401)
-        except jwt.InvalidTokenError:
-            return JsonResponse({'error': 'Invalid token'}, status=401)
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
+            # Extract the token from the header
+        token = auth_header.split(' ')[1]
+        access_token = AccessToken(token)
+        patient_id = access_token['id']
 
         # Find the patient
         try:
@@ -224,17 +219,16 @@ def UpdatePasswordView(request):
             if not email or not password:
                 return JsonResponse({'error': 'Email and password are required'}, status=400)
 
-            # Extract token from Authorization header
-            auth_header = request.headers.get('Authorization', '')
-            token = auth_header.split(' ')[1] if 'Bearer ' in auth_header else None
-
-            if not token:
-                return JsonResponse({'error': 'Token not provided'}, status=401)
 
             # Decode JWT token to get patient ID
             try:
-                payload = jwt.decode(token, settings.JWT_SECRET, algorithms=['HS256'])
-                patient_id = payload.get('id')
+                auth_header = request.headers.get('Authorization', '')
+                if not auth_header or not auth_header.startswith('Bearer '):
+                    return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
+                    # Extract the token from the header
+                token = auth_header.split(' ')[1]
+                access_token = AccessToken(token)
+                patient_id = access_token['id']
             except jwt.ExpiredSignatureError:
                 return JsonResponse({'error': 'Token has expired'}, status=401)
             except jwt.InvalidTokenError:

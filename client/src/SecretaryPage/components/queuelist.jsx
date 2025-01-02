@@ -152,13 +152,14 @@ const QueueList = () => {
           <p>Status: {queueDetails2?.status || 'N/A'}</p>
         </div>
       </div>
-      <div className={styles.searchAppointment}>
+      <div className={styles.searchAppointment} >
         <input
           type="text"
           placeholder="Search"
           value={searchTerm}
           onChange={handleSearchChange}
         />
+        <div style={{ height: '500px', width: '100%' }}>
         <DataGrid
           rows={rows}
           columns={columns}
@@ -166,6 +167,7 @@ const QueueList = () => {
           rowsPerPageOptions={[10, 20, 50]}
           onRowClick={(params) => handleRowClick(params.row)}
         />
+        </div>
       </div>
       <Modal open={isQRCodeModalOpen} onClose={closeQRCodeModal}>
         <Box>
