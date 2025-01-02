@@ -90,7 +90,7 @@ const QueueManagement = () => {
   // Function to manually trigger createQueuesForToda
 
   return (
-    <div className={styles.doctorsSection}>
+    <div className={styles.doctorsSection} style={{marginLeft:'0'}}>
       {/* Header */}
       <div className={styles.doctorsHeader}>
         <div>

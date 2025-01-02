@@ -12,6 +12,22 @@
     align-items: center;
   }
 
+  .iconButton {
+    background-color: transparent; /* No background for a clean icon look */
+  
+    cursor: pointer; /* Show pointer on hover */
+    display: inline-flex; /* Center align icon and text if any */
+    align-items: center;
+    justify-content: center;
+    padding: 0px 8px; /* Adjust padding for better clickability */
+    border-radius: 4px; /* Rounded corners */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+  }
+  
+  .iconButton:hover {
+    background-color: rgba(0, 0, 0, 0.1); /* Light hover effect */
+  }
+
   .modal {
     position: fixed;
     top: 0;

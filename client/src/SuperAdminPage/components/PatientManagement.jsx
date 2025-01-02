@@ -110,21 +110,29 @@ const PatientManagement = () => {
           <button
             className={styles.iconButton}
             onClick={(e) => {
-              e.stopPropagation();
-              handleDeleteClick(params.row.id);
-            }}
-          >
-            <Delete />
-          </button>
-          <button
-            className={styles.iconButton}
-            onClick={(e) => {
               e.stopPropagation(); // Prevent row click from triggering
               openMedicalRecordsModal(params.row.id);
             }}
           >
             View Medical Records
           </button>
+          <button
+            className={styles.iconButton}
+            style={{
+              marginLeft: '10px',
+              backgroundColor: 'red',
+              color: 'white',
+              border: 'none',
+              cursor: 'pointer',
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDeleteClick(params.row.id);
+            }}
+          >
+            <Delete />
+          </button>
+          
         </div>
       ),
     },
@@ -220,7 +228,7 @@ const PatientManagement = () => {
             </div>
             <div className="profile-icon-container">
               <FontAwesomeIcon icon={faBell} className="notification-icon" />
-              <NavLink to="/dashboard/userprofile" className="profile-nav">
+              <NavLink to="/superadmin/userprofile" className="profile-nav">
                 <img src={profileImage} alt="Profile" className="profile-image" />
                 <div className="user-avatar">Nick Gerblack</div>
               </NavLink>

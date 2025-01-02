@@ -208,7 +208,7 @@ const UserProfile = () => {
             />
           </label>
           {passwordError && <div className="error">{passwordError}</div>}
-          <button type="submit" className="btn update-btn">
+          <button type="submit" className="btn change-picture-btn" style={{marginLeft:'40%', marginTop:'0'}}>
             Update Profile
           </button>
         </form>
