@@ -33,12 +33,13 @@ def join_queue(request):
     EMAIL = data.get("EMAIL", "N/A")
     ADDRESS = data.get("ADDRESS", "N/A")
     TRANSACTION = data.get("TRANSACTION", "N/A")
-    IS_PRIORITY = data.get("IS_PRIORITY", "false") == "true"
+    ROLE = data.get("ROLE", "")
 
     # Appointment-related details
     # In the join_queue function, replace the line where DATE is set
     DATE = datetime.now().strftime("%Y-%m-%d")
     TYPE = data.get("TYPE", "walk-in")  # Can be "followup" or "walk-in"
+    IS_PRIORITY = ROLE.lower() in ["employee", "non_academic_personnel"]
 
     try:
         with transaction.atomic():
@@ -64,6 +65,7 @@ def join_queue(request):
                     email=EMAIL,
                     age=AGE,
                     sex=SEX,
+                    patient_type= ROLE.lower(),
                     password=hashed_password,
                     address=ADDRESS,
                     campus="N/A",

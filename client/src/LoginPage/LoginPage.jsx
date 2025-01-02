@@ -5,7 +5,7 @@ import buildingImage from './images/AceBldg.png';
 import logoImage from './images/logo.png';
 import { Add } from '@mui/icons-material';
 import doctorImage from '../SecretaryPage/images/doc.png'; // Adjust the path based on your component's location
-import { Autocomplete, Modal, FormControl, TextField, Box, Button, Checkbox, FormControlLabel, Radio, RadioGroup } from '@mui/material';
+import { Autocomplete, Modal, FormControl, TextField, Box, Button, Checkbox, FormControlLabel, Radio, RadioGroup, InputLabel, MenuItem, Select } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate from react-router-dom
 
 const LoginPage = () => {
@@ -43,7 +43,7 @@ const LoginPage = () => {
       email: '',
       contactNumber: '',
       address: '',
-      is_priority: '',
+      role: '',
     });
 
     const handleSelectPatient = (patient) => {
@@ -83,7 +83,7 @@ const LoginPage = () => {
           CONTACT_NUMBER: formData.contactNumber|| null,
           EMAIL: formData.email,
           TRANSACTION: finalPurpose,
-          IS_PRIORITY: formData.is_priority,
+          ROLE: formData.role,
         };
   
         // Send data to the backend to join the queue
@@ -322,6 +322,19 @@ const LoginPage = () => {
               style={{ width: '145px' }}
               disabled={patientType === 'existing'} // Disable if it's an existing patient
             />
+            <InputLabel id="role-select-label">Role</InputLabel>
+              <Select
+                labelId="role-select-label"
+                id="role-select"
+                value={formData.role}
+                onChange={handleChange}
+                label="Role"
+                name="role" // Make sure this corresponds to the correct field in your formValues
+              >
+                <MenuItem value="student">Student</MenuItem>
+                <MenuItem value="employee">Employee</MenuItem>
+                <MenuItem value="non_academic_personnel">Non-Academic Personnel</MenuItem>
+              </Select>
           </div>
 
           <div style={{ display: 'flex', gap: '10px', marginBottom: '10px' }}>
@@ -439,26 +452,6 @@ const LoginPage = () => {
     required
   />
 )}
-
-<h5>Is Priority:</h5>
-<FormControl component="fieldset" style={{ marginBottom: "20px" }}>
-  <RadioGroup
-    row
-    value={formData.is_priority}
-    onChange={(e) => setFormData({ ...formData, is_priority: e.target.value === 'true' })}
-  >
-    <FormControlLabel
-      value="true"
-      control={<Radio />}
-      label="Yes"
-    />
-    <FormControlLabel
-      value="false"
-      control={<Radio />}
-      label="No"
-    />
-  </RadioGroup>
-</FormControl>
 
           <div style={{ width: '100%', display: 'flex', justifyContent: 'flex-end', marginTop: '5px', marginBottom: '20px' }}>
             <Button

@@ -39,6 +39,8 @@ def create_appointment(request):
 
             patient = Patient.objects.get(id=patient_id)
 
+            # Determine IS_PRIORITY based on patient_type
+            IS_PRIORITY = patient.patient_type in ["employee", "non_academic_personnel"]
             # Check for duplicate appointments
             if Appointment.objects.filter(
                 appointment_date=data['appointment_date'],
@@ -93,13 +95,8 @@ def create_appointment(request):
 
             # Modify the prefix if IS_PRIORITY is True
             if IS_PRIORITY:
-                if queue_prefix == "CN":
-                    queue_prefix = "CP"
-                elif queue_prefix == "CEN":
-                    queue_prefix = "CEP"
-                elif queue_prefix == "ON":
-                    queue_prefix = "OP"
-            # Determine new queue number
+                queue_prefix = queue_prefix.replace("N", "P")  # Adjust priority prefix (e.g., CN -> CP)
+        # Determine new queue number
             last_queue = Queue.objects.filter(
                 qmid=queue_management.id,
                 transaction_type=TRANSACTION,
