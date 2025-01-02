@@ -14,7 +14,7 @@
 
   .iconButton {
     background-color: transparent; /* No background for a clean icon look */
-  
+    margin-top: 6px;
     cursor: pointer; /* Show pointer on hover */
     display: inline-flex; /* Center align icon and text if any */
     align-items: center;
@@ -187,10 +187,9 @@
     background-color: #6290C8;
     color: white;
     border: none;
-    padding: 8px;
     border-radius: 8px;
-    width: 150px;
-    margin-left: 40px;
+    width: 170px;
+    margin-left: 20px;
   }
   
   .queue-search .search-icon {
@@ -316,4 +315,18 @@ td {
 
 .MuiTablePagination-displayedRows, .MuiTablePagination-selectLabel {
     margin-top: auto;
+}
+
+/* Medium screens (tablets) */
+@media (max-width: 768px) {
+  .queue-content > div {
+      flex: 1 1 45%; /* Two items per row */
+  }
+}
+
+/* Small screens (mobile) */
+@media (max-width: 480px) {
+  .queue-content > div {
+      flex: 1 1 100%; /* One item per row */
+  }
 }

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/ManagePatient.css';
 import { NavLink } from 'react-router-dom';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faMagnifyingGlass, faFilter, faPlus, faBoxArchive } from '@fortawesome/free-solid-svg-icons';
 import { DataGrid } from '@mui/x-data-grid';
@@ -224,8 +226,11 @@ const handleRestore = async (staffId) => {
       width: 200,
       renderCell: (params) => (
         <div>
-          <button className="iconButton" onClick={() => handleEdit(params.row)}>
-            Edit
+          <button className="iconButton" onClick={() => handleEdit(params.row)}
+            style={{
+              backgroundColor: 'rgb(255, 193, 7)'
+            }}>
+            <EditIcon /> Edit
           </button>
           <button
             className="iconButton"
@@ -238,6 +243,7 @@ const handleRestore = async (staffId) => {
               cursor: 'pointer',
             }}
           >
+            <DeleteIcon />
             Delete
           </button>
         </div>
@@ -332,10 +338,18 @@ const handleRestore = async (staffId) => {
               <button className="filter-button">
                 <FontAwesomeIcon icon={faFilter} />
               </button>
-              <button className="staff-button" onClick={openModal}>
+              <button className="staff-button" onClick={openModal}
+              style={{
+                backgroundColor: '#198754',
+                padding: '4px'
+               }}>
                 <FontAwesomeIcon icon={faPlus} /> Add Staff
               </button>
-              <button className="staff-button" onClick={openArchiveModal}>
+              <button className="staff-button" onClick={openArchiveModal}
+              style={{
+               backgroundColor: '#ffc107',
+               padding: '4px'
+              }}>
                 <FontAwesomeIcon icon={faBoxArchive} /> Archive
               </button>
             </div>
@@ -371,7 +385,7 @@ const handleRestore = async (staffId) => {
               <input type="text" name="suffix" placeholder="Suffix" onChange={handleChange} />
               <input type="text" name="specialization" placeholder="Specialization" onChange={handleChange} required />
               <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
-              <button type="submit">Create</button>
+              <button type="submit" style={{backgroundColor: 'rgb(25, 135, 84)', color: 'white'}}>Create</button>
               <button type="button" onClick={closeModal}>Cancel</button>
             </form>
           </div>
@@ -390,7 +404,7 @@ const handleRestore = async (staffId) => {
               <input type="text" name="suffix" placeholder="Suffix" value={formData.suffix} onChange={handleChange} />
               <input type="text" name="specialization" placeholder="Specialization" value={formData.specialization} onChange={handleChange} required />
               <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
-              <button type="submit">Update</button>
+              <button type="submit" style={{backgroundColor: 'rgb(25, 135, 84)', color: 'white'}}>Update</button>
               <button type="button" onClick={closeModal}>Cancel</button>
             </form>
           </div>

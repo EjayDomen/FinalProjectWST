@@ -4,8 +4,10 @@ import { FilterAlt, Search, Add } from '@mui/icons-material';
 import { Button} from '@mui/material';
 import styles from '../../SecretaryPage/styles/queuesSecre.module.css';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import profileImage from '../images/pookie.jpeg';
+import { NavLink } from 'react-router-dom';
 
 
 
@@ -90,18 +92,34 @@ const QueueManagement = () => {
   // Function to manually trigger createQueuesForToda
 
   return (
-    <div className={styles.doctorsSection} style={{marginLeft:'0'}}>
+    <div className="patient">
+      <main className="patient-content">
+    <div className={styles.doctorsSection} style={{marginLeft:'0', padding: 0}}>
       {/* Header */}
-      <div className={styles.doctorsHeader}>
-        <div>
-          <h2 style={{fontSize:'35px'}}>Queue List</h2>
+      <div className="patient-header">
+          <div className="header-left">
+            <h1 className="queue-title">Queue</h1>
+          </div>
+          <div className="header-right">
+            <div className="search-container">
+              <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
+              <input type="text" placeholder="Search" className="search-input" />
+            </div>
+            <div className="profile-icon-container">
+              <FontAwesomeIcon icon={faBell} className="notification-icon" />
+              <NavLink to="/superadmin/userprofile" className="profile-nav">
+                <img src={profileImage} alt="Profile" className="profile-image" />
+                <div className="user-avatar">Nick Gerblack</div>
+              </NavLink>
+            </div>
+          </div>
+          </div>
+        <div className="queue-section">
+          <h2 className="queue-title" style={{fontSize:'35px'}}>Queue List</h2>
           <p style={{marginLeft: '10px', marginTop: '7px'}}>This is the list of doctors and their status. Check now!</p>
-        </div>
-                <div style={{gap:'10px', display:'flex'}}>
+          <div style={{gap:'10px', display:'flex'}}>
                 </div>
-      </div>
-
-      {/* Search, Filter, and Create Queue Section */}
+                {/* Search, Filter, and Create Queue Section */}
       <div className={styles.searchAppointment}>
         <div style={{
                 position: 'relative',
@@ -182,6 +200,10 @@ const QueueManagement = () => {
           ))}
         </div>
         </div>
+        </div>
+                
+    </div>
+    </main>
     </div>
   );
 };

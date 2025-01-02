@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/ManagePatient.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { faBell, faMagnifyingGlass, faFilter } from '@fortawesome/free-solid-svg-icons';
 import profileImage from '../images/pookie.jpeg';
 import { NavLink } from 'react-router-dom';
@@ -108,16 +109,19 @@ const PatientManagement = () => {
       renderCell: (params) => (
         <div style={{ display: 'flex', gap: '10px' }}>
           <button
-            className={styles.iconButton}
+            className="iconButton"
             onClick={(e) => {
               e.stopPropagation(); // Prevent row click from triggering
               openMedicalRecordsModal(params.row.id);
             }}
+            style={{
+              backgroundColor: '#6290C8'
+            }}
           >
-            View Medical Records
+            <VisibilityIcon />View Medical Records
           </button>
           <button
-            className={styles.iconButton}
+            className="iconButton"
             style={{
               marginLeft: '10px',
               backgroundColor: 'red',
@@ -130,7 +134,7 @@ const PatientManagement = () => {
               handleDeleteClick(params.row.id);
             }}
           >
-            <Delete />
+            <Delete /> Delete
           </button>
           
         </div>
@@ -255,7 +259,10 @@ const PatientManagement = () => {
               <button className="filter-button">
                 <FontAwesomeIcon icon={faFilter} />
               </button>
-              <button className={styles.iconButton}onClick={handleOpenArchiveModal}><Archive/> Archive</button>
+              <button className="staff-button"onClick={handleOpenArchiveModal}
+              style={{
+                backgroundColor: '#ffc107'
+              }}><Archive/> Archive</button>
             </div>
 
              {/* Archive Modal */}
