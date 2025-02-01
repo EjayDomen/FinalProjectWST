@@ -1,0 +1,49 @@
+Admin End ( Doctors, Admin)
+
+Log in, Sign up: If sign up
+DETAILS:
+    Adding profile picture
+    Username
+    Address
+    Phone Number
+    email
+    Marital Status
+    Name input Lastname, First Name, Middle name, Suffix 
+    Birthday
+    Work position ( Admin, Nurse, Physician)
+    Submit 
+    routed back to sign in page
+---------
+
+Buttons Log out, Edit Personal info
+
+View Messages (Concerns abt site or center will allow you to click done button that will erase the message)
+Requested by patient icon(Will show what was requested and who requested press done button To erase message)
+
+
+Patient list will also show number of patient
+
+Search patient by name
+
+
+Upon clicking name
+View Patients Biography and total number of treatment in month and year then below will have button that says Review Treatment records 
+(Also show Treatment record datea as list) Add Treatment Record
+
+
+Input add Treatment Records to each patients
+Just a page that allows to type and ask for the following:
+    Treatment record: date of treatment
+    Time treatment start, end
+    Medicine Used
+    Bp Before, Bp After
+    Weight before, Weight After
+    Temperature
+    Pulse before and After 
+    General Remarks
+    Upon submission, It will show Who uploaded treatment record for that patient
+
+
+Review will just show the treatment records uploaded
+
+Will also allow admin yo label patient as active and inactive (Inactive will not be included in patient list count)
