@@ -77,14 +77,14 @@ const SignupPage = () => {
       return passwordRegex.test(password);
     };
   
-    // Validate password complexity
-    if (!validatePassword(formValues.password)) {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        confirmPassword: 'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, and one number.',
-      }));
-      valid = false;
-    }
+    // // Validate password complexity
+    // if (!validatePassword(formValues.password)) {
+    //   setErrors((prevErrors) => ({
+    //     ...prevErrors,
+    //     confirmPassword: 'Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, and one number.',
+    //   }));
+    //   valid = false;
+    // }
   
     // Create an object excluding 'suffix' and 'middleName'
     const fieldsToCheck = { ...formValues };

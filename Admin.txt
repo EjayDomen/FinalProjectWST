@@ -17,7 +17,7 @@ DETAILS:
 
 Buttons Log out, Edit Personal info
 
-View Messages (Concerns abt site or center will allow you to click done button that will erase the message)
+View Messages (Concerns abt site or center will allow you to click done button that will erase the message) - resolve button only- no need to send feedback
 Requested by patient icon(Will show what was requested and who requested press done button To erase message)
 
 
@@ -28,7 +28,7 @@ Search patient by name
 
 Upon clicking name
 View Patients Biography and total number of treatment in month and year then below will have button that says Review Treatment records 
-(Also show Treatment record datea as list) Add Treatment Record
+(Also show Treatment record date as list) Add Treatment Record
 
 
 Input add Treatment Records to each patients

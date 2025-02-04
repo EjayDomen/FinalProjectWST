@@ -22,9 +22,9 @@ Home:
 
 Request medication/ Medical Abstract
     Button ask if medicine or medical abstract
-    If medicine, Type medicine then submit 
+    If medicine, Type medicine then submit
     If medical abstract just click then will be submitted
-    others: Type nila what ever req nila sa center 
+    others: Type nila what ever req nila sa center
 
     (Will show here if request was processed and given)
 
