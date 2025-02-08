@@ -13,7 +13,6 @@ urlpatterns = [
     path('api/auth/', include('clinic_python.authentication.urls')),
     path('api/register/', views.register_patient, name='register_patient'),
     path('api/login/', views.login_view, name='login_patient'),
-    path('demo/register/', views.register_patient_demo, name='register_patient_demo'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

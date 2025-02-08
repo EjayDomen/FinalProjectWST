@@ -8,15 +8,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "../styles/HomePatient.css"; // Assuming you have a custom CSS file
 
 const Home = () => {
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [newNotification, setNewNotification] = useState(false);
-  const [appointments, setAppointments] = useState([]);
+  const [requests, setRequests] = useState([]);
   const [queueList, setQueueList] = useState([]);
-  const [notifications, setNotifications] = useState([]);
   const [userId, setUserId] = useState(null);
   const [selectedAppointment, setSelectedAppointment] = useState(null);
   const [openAppointmentModal, setOpenAppointmentModal] = useState(false);
-  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
   const navigate = useNavigate();
 
   // Fetch user info
@@ -32,17 +28,17 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    const fetchAppointments = async () => {
+    const fetchRequests = async () => {
       try {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/patient/appointment/viewAppointments`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
-        setAppointments(response.data);
+        setRequests(response.data);
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
     };
-    fetchAppointments();
+    fetchRequests();
   }, []);
 
   const handleOpenAppointmentModal = (appointment) => {
@@ -83,11 +79,11 @@ const Home = () => {
           <img src={doctorImage} alt="Doctor Illustration" className="bannerImage" />
             <div className="bannerText">
             <p>
-              Schedule an Appointment in Queue Care to find the service you are looking for.
+              Make a Request in Queue Care to find the service you are looking for.
             </p>
             <div>
-              <Link to="/patient/appointment" className="findDoctorButton">
-                Check the List of Appoinments
+              <Link to="/patient/request" className="findDoctorButton">
+                Check the List of Request
               </Link>
             </div>
           </div>
@@ -99,25 +95,22 @@ const Home = () => {
     {/* Appointments Section */}
     <div className="col-lg-8">
       <div className="bg-white p-4 rounded shadow-sm">
-        <h2 className="fw-bold">Appointments</h2>
+        <h2 className="fw-bold">Requests</h2>
         <table className="table mt-3">
           <thead>
             <tr>
-              <th>AppId</th>
-              <th>Doctor Name</th>
+              <th>ReqId</th>
+              <th>Purpose</th>
               <th>Date</th>
-              <th>Time</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            {appointments.length > 0 ? (
-              appointments.map((appointment) => (
+            {requests.length > 0 ? (
+              requests.map((appointment) => (
                 <tr key={appointment.id}>
                   <td>{appointment.id}</td>
-                  <td>
-                    Dr. {appointment.doctor.FIRST_NAME} {appointment.doctor.LAST_NAME} (
-                    {appointment.doctor.EXPERTISE})
-                  </td>
+                  <td>{appointment.doctor.LAST_NAME}</td>
                   <td>{new Date(appointment.APPOINTMENT_DATE).toLocaleDateString()}</td>
                   <td>{convertToStandardTime(appointment.APPOINTMENT_TIME)}</td>  {/* Convert time to standard format */}
                 </tr>
@@ -125,7 +118,7 @@ const Home = () => {
             ) : (
               <tr>
                 <td colSpan="5" className="text-center">
-                  No appointments found.
+                  No Request found.
                 </td>
               </tr>
             )}
@@ -137,55 +130,7 @@ const Home = () => {
       </div>
     </div>
 
-    {/* Notifications Section */}
-    <div className="col-lg-4">
-      <div className="bg-white p-4 rounded shadow-sm">
-        <div className="d-flex align-items-center justify-content-between">
-          <h3 className="fw-bold">Notifications</h3>
-          <Notifications style={{ fontSize: '40px', color: 'gray' }} />
-        </div>
-        <p className="mt-3 text-muted">You have no new notifications.</p>
-      </div>
-    </div>
-  </div>
-
-  {/* Queue List and Date & Time */}
-<div className="row queue-and-time g-4 mt-4">
-  {/* Queue List */}
-  <div className="col-lg-8">
-    <div className="bg-white p-4 rounded shadow-sm">
-      <h2 className="fw-bold">Queue List</h2>
-      <table className="table queue-list">
-        <thead>
-          <tr>
-            <th>Queue Number</th>
-            <th>Doctor</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {queueList.length > 0 ? (
-            queueList.map((queueItem, index) => (
-              <tr key={index}>
-                <td>{queueItem.id}</td>
-                <td>
-                  Dr. {queueItem.doctor.FIRST_NAME} {queueItem.doctor.LAST_NAME}
-                </td>
-                <td>{queueItem.STATUS}</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="3" className="text-center">
-                No patients in queue.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  </div>
-
+  
   {/* Date & Time */}
   <div className="col-lg-4">
     <div className="bg-white p-4 rounded shadow-sm text-center">
@@ -193,7 +138,8 @@ const Home = () => {
       <p className="fs-4">{currentDate}</p>
     </div>
   </div>
-</div>
+  </div>
+
 
 
       {/* Appointment Modal */}

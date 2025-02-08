@@ -78,24 +78,17 @@ const ChangePasswordModal = ({ isOpen, onClose, formData, handleChange, handleSa
 const Profile = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    student_or_employee_no: "",
+    username: "",
     lastName: "",
     firstName: "",
     suffix: "",
     middleName: "",
     email: "",
     password: "",
-    campus: "",
+    birthday: "",
     age: "",
     sex: "",
-    emergency_contact_number: "",
-    emergency_contact_relation: "",
-    address: "",
-    bloodtype: "",
-    allergies: "",
-    college_office: "",
-    course_designation: "",
-    year: "",
+    maritalstatus: "",
   });
 
   const [isReadOnly, setIsReadOnly] = useState(true);
@@ -117,23 +110,16 @@ const Profile = () => {
 
         // Populate formData
         setFormData({
-          student_or_employee_no: patientData.student_or_employee_no ||"",
+          username: patientData.username ||"",
           lastName: patientData.last_name || "",
           firstName: patientData.first_name || "",
           suffix: patientData.suffix || "",
           middleName: patientData.middle_name || "",
           email: patientData.email || "",
-          campus: patientData.campus || "",
+          birthday: patientData.birthday || "",
           age: patientData.age || "",
           sex: patientData.sex || "",
-          emergency_contact_number: patientData.emergency_contact_number || "",
-          emergency_contact_relation: patientData.emergency_contact_relation || "",
-          address: patientData.address || "",
-          bloodtype: patientData.bloodtype || "",
-          allergies: patientData.allergies || "",
-          college_office: patientData.college_office || "",
-          course_designation: patientData.course_designation || "",
-          year: patientData.year || "",
+          maritalstatus: patientData.maritalstatus || "",
         });
 
         // If the patient is newly registered, activate the edit button
@@ -343,13 +329,13 @@ const Profile = () => {
   {/* Fields */}
   <div className="row">
     <div className="col-md-4 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Student or Employee Number:</label>
+      <label><span style={{ color: 'red' }}>*</span>Username:</label>
       <input
         type="text"
         className="form-control"
-        name="student_or_employee_no"
+        name="username"
         readOnly={isReadOnly}
-        value={formData.student_or_employee_no}
+        value={formData.username}
         onChange={handleChange}
         required
       />
@@ -440,9 +426,9 @@ const Profile = () => {
 
   <div className="row">
     <div className="col-md-3 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Address:</label>
+      <label><span style={{ color: 'red' }}>*</span>Birthday:</label>
       <input
-        type="text"
+        type="date"
         className="form-control"
         name="address"
         readOnly={isReadOnly}
@@ -452,7 +438,7 @@ const Profile = () => {
       />
     </div>
     <div className="col-md-4 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>College or Office:</label>
+      <label><span style={{ color: 'red' }}>*</span>Marital Status:</label>
       <input
         type="text"
         className="form-control"
@@ -463,105 +449,8 @@ const Profile = () => {
         required
       />
       </div>
-      <div className="col-md-3 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Course or Designation:</label>
-      <input
-        type="text"
-        className="form-control"
-        name="course_designation"
-        readOnly={isReadOnly}
-        value={formData.course_designation}
-        onChange={handleChange}
-        required
-      />
-      </div>
-      <div className="col-md-2 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Year :</label>
-      <input
-        type="text"
-        className="form-control"
-        name="year"
-        readOnly={isReadOnly}
-        value={formData.year}
-        onChange={handleChange}
-        required
-      />
-      </div>
   </div>
 
-
-
-  <div className="row">
-  <div className="col-md-6 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Emergency Contact Number:</label>
-      <div className="input-group">
-        <input
-          type="text"
-          className="form-control"
-          name="emergency_contact_number"
-          readOnly={isReadOnly}
-          value={formData.emergency_contact_number}
-          onChange={handleChange}
-          required
-        />
-      </div>
-    </div>
-    <div className="col-md-4 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Campus:</label>
-      <input
-        type="text"
-        className="form-control"
-        name="campus"
-        readOnly={isReadOnly}
-        value={formData.campus}
-        onChange={handleChange}
-        required
-      />
-    </div>
-    <div className="col-md-6 mb-3">
-      <label><span style={{ color: 'red' }}>*</span>Emergency Contact Relation:</label>
-      <div className="input-group">
-        <input
-          type="text"
-          className="form-control"
-          name="emergency_contact_relation"
-          readOnly={isReadOnly}
-          value={formData.emergency_contact_relation}
-          onChange={handleChange}
-          required
-        />
-      </div>
-    </div>
-  </div>
-
-
-  <h5 className="mb-4"><span style={{ color: 'red' }}>*</span>Medical Information</h5> 
-  <p style={{color:'red'}}>*N/A if none.</p>
-  <div className="row">
-    <div className="col-md-6 mb-3">
-      <label>Blood Type:</label>
-      <input
-        type="text"
-        className="form-control"
-        name="bloodtype"
-        readOnly={isReadOnly}
-        value={formData.bloodtype}
-        onChange={handleChange}
-        required
-      />
-    </div>
-    <div className="col-md-6 mb-3">
-      <label>Allergies:</label>
-      <input
-        type="text"
-        className="form-control"
-        name="allergies"
-        readOnly={isReadOnly}
-        value={formData.allergies}
-        onChange={handleChange}
-      />
-    </div>
-  </div>
 
   <div className="mt-4 d-flex justify-content-end">
     <button

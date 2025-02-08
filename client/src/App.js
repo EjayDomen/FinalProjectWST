@@ -13,8 +13,7 @@ import AccountSuccessPage from './SignupPage/AccountSuccessPage';
 // Patient components
 import SidebarPatient from './PatientPage/components/Sidebar';
 import HomePatient from './PatientPage/components/Home';
-import DoctorsPatient from './PatientPage/components/Doctors';
-import AppointmentPatient from './PatientPage/components/appointment';
+import requestPatient from './PatientPage/components/request.jsx';
 import ProfilePatient from './PatientPage/components/Profile';
 
 // Secretary components
@@ -97,8 +96,7 @@ function App() {
             <PatientLayout>
               <Routes>
                 <Route path="home" element={<HomePatient />} />
-                <Route path="doctors" element={<DoctorsPatient />} />
-                <Route path="appointment" element={<AppointmentPatient />} />
+                <Route path="request" element={<requestPatient />} />
                 <Route path="profile" element={<ProfilePatient />} />
               </Routes>
             </PatientLayout>

@@ -92,12 +92,12 @@ const Sidebar = () => {
                 <Home /> <span>Home</span>
               </NavLink>
               <NavLink
-                to="/patient/appointment"
+                to="/patient/request"
                 className={({ isActive }) =>
                   `dropdown-item-custom menuItem ${isActive ? "active" : ""}`
                 }
               >
-                <EventNote /> <span>Appointments</span>
+                <EventNote /> <span>Requests</span>
               </NavLink>
               <button
                 className="dropdown-item-custom text-danger"

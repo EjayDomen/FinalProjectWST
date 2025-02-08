@@ -10,26 +10,18 @@ import PrivacyPolicyModal from './PrivacyPolicyModal';
 const SignupPage = () => {
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({
-    student_or_employee_no: '',
+    username: '',
     firstName: '',
     middleName: '',
     lastName: '',
     suffix: '',
     email: '',
-    patient_type: '',
     password: '',
     confirmPassword: '',
-    campus: '',
-    college_office: '',
-    course_designation: '',
-    year: '',
-    emergency_contact_number: '',
-    emergency_contact_relation: '',
-    bloodtype: '',
-    allergies: '',
     age: '',
     sex: '',
-    address: '',
+    birthday: '',
+    maritalstatus:'',
   });
 
   const [errors, setErrors] = useState({
@@ -127,25 +119,17 @@ const SignupPage = () => {
   
         // Register the patient account
         const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/api/register/`, {
-          student_or_employee_no : formValues.student_or_employee_no,
+          username : formValues.username,
           first_name: formValues.firstName,
           middle_name: formValues.middleName,
           last_name: formValues.lastName,
           suffix: formValues.suffix,
           email: formValues.email,
-          patient_type: formValues.phoneNumber,
           password: formValues.password,
-          campus: formValues.campus,
-          college_office: formValues.college_office,
-          course_designation: formValues.course_designation,
-          year: formValues.year,
-          emergency_contact_number: formValues.emergency_contact_number,
-          emergency_contact_relation: formValues.emergency_contact_relation,
-          bloodtype: formValues.bloodtype,
-          allergies: formValues.allergies,
           age: formValues.age,
           sex: formValues.sex,
-          address: formValues.address,
+          birthday: formValues.birthday,
+          maritalstatus: formValues.maritalstatus
         });
   
         // Check if registration was successful
@@ -204,12 +188,12 @@ const SignupPage = () => {
 
             <div className={styles.inputGroup}>
               <TextField
-                label="Student or Employee Number: "
+                label="Username: "
                 variant="outlined"
                 fullWidth
                 className={styles.inputField}
-                name="student_or_employee_no"
-                value={formValues.student_or_employee_no}
+                name="username"
+                value={formValues.username}
                 onChange={handleInputChange}
                 required
               />
@@ -271,19 +255,6 @@ const SignupPage = () => {
                 required
                 type="email"
               />
-              <InputLabel id="role-select-label">Role</InputLabel>
-              <Select
-                labelId="role-select-label"
-                id="role-select"
-                value={formValues.role}
-                onChange={handleInputChange}
-                label="Role"
-                name="role" // Make sure this corresponds to the correct field in your formValues
-              >
-                <MenuItem value="student">Student</MenuItem>
-                <MenuItem value="employee">Employee</MenuItem>
-                <MenuItem value="non_academic_personnel">Non-Academic Personnel</MenuItem>
-              </Select>
             </div>
 
             <div className={styles.inputGroup}>
@@ -316,90 +287,31 @@ const SignupPage = () => {
 
             <div className={styles.inputGroup}>
             <TextField
-                label="Campus"
+                label="Birthday"
                 variant="outlined"
                 fullWidth
                 className={styles.inputField}
-                name="campus"
-                value={formValues.campus}
+                name="birthday"
+                type="date" // Set input type to date
+                InputLabelProps={{ shrink: true }} // Ensures label stays above the date picker
+                value={formValues.birthday}
                 onChange={handleInputChange}
                 required
               />
               <TextField
-                label="College or Office"
+                label="Marital Status"
                 variant="outlined"
                 fullWidth
                 className={styles.inputField}
-                name="college_office"
-                value={formValues.college_office}
-                onChange={handleInputChange}
-                required
-              />
-              <TextField
-                label="Course or Designation"
-                variant="outlined"
-                fullWidth
-                className={styles.inputField}
-                name="course_designation"
-                value={formValues.course_designation}
-                onChange={handleInputChange}
-                required
-              />
-              <TextField
-                label="Year"
-                variant="outlined"
-                fullWidth
-                className={styles.inputField}
-                name="year"
-                value={formValues.year}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className={styles.inputGroup}>
-            <TextField
-                label="Emergency Contact Number"
-                variant="outlined"
-                fullWidth
-                className={styles.inputField}
-                name="emergency_contact_number"
-                value={formValues.emergency_contact_number}
-                onChange={handleInputChange}
-                required
-              />
-              <TextField
-                label="Emergency Contact Relation"
-                variant="outlined"
-                fullWidth
-                className={styles.inputField}
-                name="emergency_contact_relation"
-                value={formValues.emergency_contact_relation}
+                name="maritalstatus"
+                value={formValues.maritalstatus}
                 onChange={handleInputChange}
                 required
               />
             </div>
 
+
             <div className={styles.inputGroup}>
-            <TextField
-                label="Blood Type"
-                variant="outlined"
-                fullWidth
-                className={styles.inputField}
-                name="bloodtype"
-                value={formValues.bloodtype}
-                onChange={handleInputChange}
-                required
-              />
-              <TextField
-                label="Allergies"
-                variant="outlined"
-                fullWidth
-                className={styles.inputField}
-                name="allergies"
-                value={formValues.allergies}
-                onChange={handleInputChange}
-                required
-              />
               <TextField
                 label="Sex"
                 variant="outlined"
@@ -423,18 +335,6 @@ const SignupPage = () => {
             </div>
 
 
-            <div className={styles.inputGroup}>
-              <TextField
-                label="Address"
-                variant="outlined"
-                fullWidth
-                className={styles.inputField}
-                name="address"
-                value={formValues.address}
-                onChange={handleInputChange}
-                required
-              />
-            </div>
 
             {/* Terms and Privacy Policy Modals */}
             <TermsModal isOpen={isTermsModalOpen} onClose={() => setIsTermsModalOpen(false)} />

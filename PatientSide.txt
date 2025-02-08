@@ -13,6 +13,7 @@ DETAILS:
 
 Upon sign in
     Buttons: Log out, About, Home, Account setting
+    missing About
 
 Account Setting:
     Edit Personal Info in sign up page

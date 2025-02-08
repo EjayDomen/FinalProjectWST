@@ -55,30 +55,14 @@ const Appointment = () => {
     last_name:'',
     suffix:'',
     age:'',
-    address:'',
-    sex:'',
-    contact_number:'',
-    purpose:'',
-    type:'',
+    birthday:'',
+    contactnumber:'',
+    requestpurpose:'',
     staff:'n/a',
-    appointmentDate: '',
+    requestdate: '',
   });
   const [addAppointmentModalOpen, setAddAppointmentModalOpen] = useState(false);
   
-  const handlePurposeChange = (e) => {
-    const selectedPurpose = e.target.value;
-
-    // If "others" is selected, keep the purpose as "others"
-    setNewAppointment({
-      ...newAppointment,
-      purpose: selectedPurpose,
-    });
-
-    if (selectedPurpose !== 'others') {
-      // If not "others", clear specificPurpose
-      setSpecificPurpose('');
-    }
-  };
 
   const handleSpecificPurposeChange = (e) => {
     const value = e.target.value;
@@ -95,16 +79,15 @@ const Appointment = () => {
   
   const filteredAppointments = appointments
   .filter((appointment) =>
-    appointment.appointment_details.purpose?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    appointment.appointment_details.appointment_date ?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    appointment.appointment_details.requestpurpose?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    appointment.appointment_details.requestdate ?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     appointment.appointment_details.status?.toLowerCase().includes(searchTerm.toLowerCase())
   )
   .map((appointment) => ({
     id: appointment.appointment_id, // Ensure this is unique for each row
     purpose: `${appointment.appointment_details.purpose}`,
-    APPOINTMENT_DATE: appointment.appointment_details.appointment_date,
-    Queue: appointment.queue_number || 'N/A',
-    STATUS: appointment.appointment_details.status,
+    requestdate: appointment.appointment_details.appointment_date,
+    status: appointment.appointment_details.status,
   }));
 
 
@@ -149,19 +132,6 @@ const Appointment = () => {
     }
   };
   
-  
-  
-
-  const [queueDetails, setQueueDetails] = useState({
-    queueList: [],
-    patientQueueNumber: 'N/A',
-    currentDoctorQueue: 'N/A',
-    department: 'N/A',
-    floor: 'N/A',
-    roomNumber: 'N/A',
-    date: 'N/A',
-    time: 'N/A',
-  });
   const navigate = useNavigate();
   const qrRef = useRef(null);
 
@@ -180,9 +150,7 @@ const Appointment = () => {
           middle_name: response.data.middle_name || '',
           last_name: response.data.last_name || '',
           suffix: response.data.suffix || '',
-          age: response.data.age || '',
-          address: response.data.address || '',
-          sex: response.data.sex || '',
+          contactnumber: response.data.contactnumber || '',
         }));
       } catch (error) {
         console.error('Error fetching user info:', error);
@@ -236,16 +204,6 @@ const Appointment = () => {
     setDropdownAnchor(null);
   };
 
-  // Open the queue modal
-  const handleOpenQueueModal = () => {
-    fetchQueue();
-    setQueueModalOpen(true);
-  };
-
-  // Close the queue modal
-  const handleCloseQueueModal = () => {
-    setQueueModalOpen(false);
-  };
 
   const handleDropdownAction = (action) => {
     if (action === 'view') {
@@ -262,20 +220,15 @@ const Appointment = () => {
   };
 
   const columns = [
-    { field: 'id', headerName: 'AppID', width: 100 },
+    { field: 'id', headerName: 'ID', width: 100 },
     {
-      field: 'purpose',
+      field: 'requestpurpose',
       headerName: 'Purpose',
       width: 350,
     },
-    { field: 'APPOINTMENT_DATE', headerName: 'Date', width: 200 },
+    { field: 'requestdate', headerName: 'Date', width: 200 },
     {
-      field: 'Queue',
-      headerName: 'Queue #',
-      width: 150,        
-    },
-    {
-      field: 'STATUS',
+      field: 'status',
       headerName: 'Status',
       width: 150,
     },
@@ -314,50 +267,6 @@ const Appointment = () => {
     },
   ];
   
-
-   // Fetch queue details
-   const fetchQueue = async () => {
-    try{
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/patient/queue/current-queue`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-      const currentDoctorQueue = response.data.queues?.find(queue => queue.queueStatus === 'In')?.queueNumber || 'N/A';
-      const department = response.data.queues?.length ? response.data.queues[0].department : 'N/A';
-      const floor = response.data.queues?.length ? response.data.queues[0].floor : 'N/A';
-      const roomNumber = response.data.queues?.length ? response.data.queues[0].roomNumber : 'N/A';
-      const date = response.data.queues?.length ? response.data.queues[0].appointmentDate : 'N/A';
-      const time = response.data.queues?.length ? response.data.queues[0].appointmentTime : 'N/A';
-
-
-      setQueueDetails({
-        ...queueDetails,
-        queueList: response.data.queueList || [],
-        currentDoctorQueue,
-        department,
-        floor,
-        roomNumber,
-        date,
-        time,
-        patientQueueNumber: response.data.patientQueueNumber,
-      });
-
-      if(response.data.patientQueueNumber == currentDoctorQueue){
-        setShowSuccessModal(true);
-      }
-    } catch(error){
-        console.error('Error fetching user info:', error);
-    }
-  };
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     fetchQueue();
-  //   }, POLLING_INTERVAL);
-  
-  //   return () => clearInterval(interval); // Clear the interval on cleanup
-  // }, []);
 
   return (
     
@@ -402,18 +311,16 @@ const Appointment = () => {
       <p><strong>Age:</strong> {selectedAppointment?.patient_details?.age || "N/A"}</p>
       <p><strong>Sex:</strong> {selectedAppointment?.patient_details?.sex || "N/A"}</p>
       <p><strong>Contact Number:</strong> {selectedAppointment?.patient_details?.contact_number || "N/A"}</p>
-      <p><strong>Address:</strong> {selectedAppointment?.patient_details?.address || "N/A"}</p>
+      <p><strong>birthday:</strong> {selectedAppointment?.patient_details?.birthday || "N/A"}</p>
     </div>
     <Divider />
     {/* Appointment Information */}
     <div style={{ marginTop: '15px', marginBottom: '15px' }}>
       <h5>Appointment Information</h5>
-      <p><strong>Appointment ID:</strong> {selectedAppointment?.appointment_id || "N/A"}</p>
-      <p><strong>Date:</strong> {selectedAppointment?.appointment_details?.appointment_date || "N/A"}</p>
-      <p><strong>Type:</strong> {selectedAppointment?.appointment_details?.type || "N/A"}</p>
+      <p><strong>Request ID:</strong> {selectedAppointment?.request_id || "N/A"}</p>
+      <p><strong>Date:</strong> {selectedAppointment?.appointment_details?.requestdate || "N/A"}</p>
       <p><strong>Status:</strong> {selectedAppointment?.appointment_details?.status || "N/A"}</p>
-      <p><strong>Purpose:</strong> {selectedAppointment?.appointment_details?.purpose || "N/A"}</p>
-      <p><strong>Queue Number:</strong> {selectedAppointment?.queue_number || "N/A"}</p>
+      <p><strong>Purpose:</strong> {selectedAppointment?.appointment_details?.requestpurpose || "N/A"}</p>
     </div>
   </Modal.Body>
   <Modal.Footer>
@@ -427,15 +334,6 @@ const Appointment = () => {
   <div className="modal show d-block" tabIndex="-1" role="dialog">
     <div className="modal-dialog" role="document">
       <div className="modal-content">
-        <div className="modal-header">
-          <h5 className="modal-title">Appointment QR</h5>
-          <button
-            type="button"
-            className="btn-close"
-            onClick={closeQrModal}
-            aria-label="Close"
-          ></button>
-        </div>
         <div
           className="modal-body"
           style={{
@@ -447,24 +345,6 @@ const Appointment = () => {
             padding: "20px",
           }}
         >
-          {/* QR Code Section */}
-          <div
-            ref={qrRef}
-            style={{
-              textAlign: "center",
-              flex: "1",
-              border: "1px solid #ddd",
-              padding: "10px",
-              borderRadius: "8px",
-              background: "#fff",
-            }}
-          >
-            <QRCode value={`${selectedAppointment.id}`} size={150} />
-            <p style={{ marginTop: "10px", fontWeight: "bold" }}>
-              Appointment Number: {selectedAppointment.id}
-            </p>
-          </div>
-
           {/* Details Section */}
           <div style={{ flex: "2" }}>
             <h5>DETAILS</h5>
@@ -482,13 +362,13 @@ const Appointment = () => {
               </p>
             )}
             <p>
-              <strong>Appointment Date:</strong>{" "}
-              {selectedAppointment.APPOINTMENT_DATE || "N/A"}
+              <strong>Request Date:</strong>{" "}
+              {selectedAppointment.REQUEST_DATE || "N/A"}
             </p>
-            <p>
+            {/* <p>
               <strong>Appointment Time:</strong>{" "}
               {selectedAppointment.APPOINTMENT_TIME || "N/A"}
-            </p>
+            </p> */}
           </div>
         </div>
         <div className="modal-footer" style={{ justifyContent: "space-between" }}>
@@ -520,71 +400,6 @@ const Appointment = () => {
           onClose={() => setShowSuccessModal(false)}
         />
       )}
-
-        {/* Queue Modal */}
-        <Modal show={queueModalOpen} onHide={handleCloseQueueModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Queue List</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', padding: '20px' }}>
-            <div style={{ marginBottom: '20px', width: '100%' }}>
-              <h5>Your Queue Number:</h5>
-              <div
-                style={{
-                  backgroundColor: '#aaf7be',
-                  color: '#006400',
-                  textAlign: 'center',
-                  padding: '10px',
-                  borderRadius: '8px',
-                  fontWeight: 'bold',
-                  marginBottom: '15px',
-                  width: '60%',
-                }}
-              >
-                {queueDetails.patientQueueNumber}
-              </div>
-              <h5>Currently with the Doctor:</h5>
-              <div
-                style={{
-                  backgroundColor: '#b0d4ff',
-                  color: '#0044cc',
-                  textAlign: 'center',
-                  padding: '10px',
-                  borderRadius: '8px',
-                  fontWeight: 'bold',
-                  width: '60%',
-                }}
-              >
-                {queueDetails.currentDoctorQueue}
-              </div>
-            </div>
-            <div style={{ width: '100%' }}>
-              <h5>Details:</h5>
-              <p>
-                <strong>Department:</strong> {queueDetails.department}
-              </p>
-              <p>
-                <strong>Floor:</strong> {queueDetails.floor}
-              </p>
-              <p>
-                <strong>Room Number:</strong> {queueDetails.roomNumber}
-              </p>
-              <p>
-                <strong>Date:</strong> {queueDetails.date}
-              </p>
-              <p>
-                <strong>Time:</strong> {queueDetails.time}
-              </p>
-            </div>
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseQueueModal}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal>
 
       <Modal
   show={addAppointmentModalOpen}
@@ -619,12 +434,12 @@ const Appointment = () => {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Address</Form.Label>
+            <Form.Label>Birthday</Form.Label>
             <Form.Control
               type="text"
               className="uniform-input"
-              value={newAppointment?.address || ''}
-              onChange={(e) => setNewAppointment({ ...newAppointment, address: e.target.value })}
+              value={newAppointment?.birthday || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, birthday: e.target.value })}
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -671,12 +486,12 @@ const Appointment = () => {
             />
           </Form.Group>
           <Form.Group className="mb-3">
-            <Form.Label>Appointment Date</Form.Label>
+            <Form.Label>Request Date</Form.Label>
             <Form.Control
               type="date"
               className="uniform-input"
-              value={newAppointment?.appointment_date || ''}
-              onChange={(e) => setNewAppointment({ ...newAppointment, appointment_date: e.target.value })}
+              value={newAppointment?.requestdate || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, requestdate: e.target.value })}
             />
           </Form.Group>
         </Col>
@@ -722,7 +537,7 @@ const Appointment = () => {
       )}
     </Form.Group>
         </Col>
-        <Col md={6}>
+        {/* <Col md={6}>
           <Form.Group className="mb-3">
             <Form.Label>Type</Form.Label>
             <Form.Control
@@ -732,7 +547,7 @@ const Appointment = () => {
               onChange={(e) => setNewAppointment({ ...newAppointment, type: e.target.value })}
             />
           </Form.Group>
-        </Col>
+        </Col> */}
       </Row>
     </Form>
   </Modal.Body>

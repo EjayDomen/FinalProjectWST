@@ -5,15 +5,12 @@ class Appointment(models.Model):
 
     APPOINTMENT_STATUS_CHOICES = [
         ("pending", "pending"),
-        ("in-queue", "in-queue"),
         ("completed", "completed"),
-        ("missed", "missed"),
-        ("cancelled", "cancelled"),
     ]
 
     TYPE_CHOICES=[
-        ("consultation ", "consultation "),
-        ("certificates", "certificates "),
+        ("medicine ", "medicine "),
+        ("medicalabstract", "medicalabstract "),
         ("others", "others"),
     ]
 
@@ -22,14 +19,10 @@ class Appointment(models.Model):
     middle_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     suffix = models.CharField(max_length=50)
-    age = models.CharField(max_length=50)
-    address = models.CharField(max_length=50)
-    sex = models.CharField(max_length=50)
-    contact_number = models.CharField(max_length=50)
-    appointment_date = models.DateField()
-    purpose = models.TextField()
-    status = models.CharField(max_length=50, choices=APPOINTMENT_STATUS_CHOICES, default="Pending")  # e.g., pending, confirmed, completed
-    type = models.CharField(max_length=50, choices=TYPE_CHOICES, default='none')
+    contactnumber = models.CharField(max_length=50)
+    requestdate = models.DateField()
+    status = models.CharField(max_length=50, choices=APPOINTMENT_STATUS_CHOICES, default="pending")  # e.g., pending, confirmed, completed
+    requestpurpose = models.CharField(max_length=50, choices=TYPE_CHOICES, default='medicine')
     staff = models.ForeignKey(
         'clinic_python.Staff', 
         on_delete=models.CASCADE, 

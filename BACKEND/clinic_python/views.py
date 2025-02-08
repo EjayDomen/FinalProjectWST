@@ -10,7 +10,6 @@ from clinic_python.models import Staff
 from clinic_python.models import Patient
 from clinic_python.models import SuperAdmin
 from clinic_python.models import Role
-from .forms import PatientRegistrationForm
 from django.contrib import messages
   # Make sure to import the models
 from django.views.decorators.csrf import csrf_exempt
@@ -25,32 +24,23 @@ def register_patient(request):
             body = json.loads(request.body)
 
             # Extract data from the request body
-            student_or_employee_no = body.get('student_or_employee_no')
+            username = body.get('username')
             first_name = body.get('first_name')
             middle_name = body.get('middle_name', '')
             last_name = body.get('last_name')
             suffix = body.get('suffix', '')
-            patient_type= body.get('patient_type','')
-            campus = body.get('campus')
-            college_office = body.get('college_office')
-            course_designation = body.get('course_designation')
-            year = body.get('year')
-            emergency_contact_number = body.get('emergency_contact_number')
-            emergency_contact_relation = body.get('emergency_contact_relation')
-            bloodtype = body.get('bloodtype')
-            allergies = body.get('allergies', '')
             email = body.get('email')
             age = body.get('age')
             sex = body.get('sex')
             password = body.get('password')
-            address = body.get('address')
+            birthday = body.get('birthday')
+            maritalstatus = body.get('maritalstatus')
             user_level_id = 3
 
             # Validate required fields
             required_fields = [
-                'first_name', 'last_name', 'campus', 'college_office', 'course_designation',
-                'year', 'emergency_contact_number', 'emergency_contact_relation', 'bloodtype',
-                'email', 'age', 'sex', 'password', 'address'
+                'first_name', 'last_name',
+                'email', 'age', 'sex', 'password', 'birthday', 'maritalstatus'
             ]
             for field in required_fields:
                 if not locals().get(field):
@@ -67,25 +57,17 @@ def register_patient(request):
 
             # Create and save the new patient
             new_patient = Patient.objects.create(
-                student_or_employee_no = student_or_employee_no,
+                username = username,
                 first_name=first_name,
                 middle_name=middle_name,
                 last_name=last_name,
                 suffix=suffix,
-                patient_type= patient_type,
-                campus=campus,
-                college_office=college_office,
-                course_designation=course_designation,
-                year=year,
-                emergency_contact_number=emergency_contact_number,
-                emergency_contact_relation=emergency_contact_relation,
-                bloodtype=bloodtype,
-                allergies=allergies,
                 email=email,
                 age=age,
                 sex=sex,
                 password= hashed_password,
-                address=address,
+                birthday = birthday,
+                maritalstatus = maritalstatus,
                 user_level_id=user_level
             )
 
@@ -99,24 +81,16 @@ def register_patient(request):
                 'message': 'Patient registered successfully!',
                 'patient': {
                     'id': new_patient.id,
-                    'student_or_employee_no': new_patient.student_or_employee_no,
+                    'username': new_patient.username,
                     'first_name': new_patient.first_name,
                     'middle_name': new_patient.middle_name,
                     'last_name': new_patient.last_name,
                     'suffix': new_patient.suffix,
-                    'patient_type': new_patient.patient_type,
-                    'campus': new_patient.campus,
-                    'college_office': new_patient.college_office,
-                    'course_designation': new_patient.course_designation,
-                    'year': new_patient.year,
-                    'emergency_contact_number': new_patient.emergency_contact_number,
-                    'emergency_contact_relation': new_patient.emergency_contact_relation,
-                    'bloodtype': new_patient.bloodtype,
-                    'allergies': new_patient.allergies,
                     'email': new_patient.email,
                     'age': new_patient.age,
                     'sex': new_patient.sex,
-                    'address': new_patient.address,
+                    'birthday': new_patient.birthday,
+                    'maritalstatus': new_patient.maritalstatus,
                     'user_level_id': role_data
                 }
             }, status=201)
@@ -188,18 +162,3 @@ def login_view(request):
     except Exception as e:
         return JsonResponse({'error': f'Error during login: {str(e)}'}, status=500)
 
-
-
-def register_patient_demo(request):
-    if request.method == 'POST':
-        form = PatientRegistrationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Your account has been created successfully!")
-            return redirect('http://localhost:3000/')  # Redirect to login page after successful registration
-        else:
-            messages.error(request, "Please correct the errors below.")
-    else:
-        form = PatientRegistrationForm()
-
-    return render(request, 'register_patient.html', {'form': form})

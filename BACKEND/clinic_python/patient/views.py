@@ -31,23 +31,16 @@ def get_patient_details(request):
             patient = Patient.objects.get(id=patient_id)
             patient_data = {
                 'id': patient.id,
-                'student_or_employee_no': patient.student_or_employee_no,
+                'username': patient.username,
                 'first_name': patient.first_name,
                 'middle_name': patient.middle_name,
                 'last_name': patient.last_name,
                 'suffix': patient.suffix,
-                'campus': patient.campus,
-                'college_office': patient.college_office,
-                'course_designation': patient.course_designation,
-                'year': patient.year,
-                'emergency_contact_number': patient.emergency_contact_number,
-                'emergency_contact_relation': patient.emergency_contact_relation,
-                'bloodtype': patient.bloodtype,
-                'allergies': patient.allergies,
                 'email': patient.email,
                 'age': patient.age,
                 'sex': patient.sex,
-                'address': patient.address,
+                'birthday': patient.birthday,
+                'maritalstatus' : patient.maritalstatus
             }
             return JsonResponse(patient_data, status=200)
         except Patient.DoesNotExist:
@@ -78,24 +71,16 @@ def update_patient_details(request):
             # Parse the JSON body of the request
             body = json.loads(request.body)
             # Extract fields from request body
-            student_or_employee_no = body.get('student_or_employee_no')
+            username = body.get('username')
             last_name = body.get('lastName')
             first_name = body.get('firstName')
             middle_name = body.get('middleName')
             suffix = body.get('suffix', '')
             email = body.get('email')
-            campus = body.get('campus')
             age = body.get('age')
             sex = body.get('sex')
-            emergency_contact_number = body.get('emergency_contact_number')
-            emergency_contact_relation = body.get('emergency_contact_relation')
-            address = body.get('address')
-            bloodtype = body.get('bloodtype')
-            allergies = body.get('allergies', '')
-            college_office = body.get('college_office')
-            course_designation = body.get('course_designation')
-            year = body.get('year')
-
+            birthday = body.get('birthday')
+            maritalstatus = body.get('maritalstatus')
             # Extract token from Authorization header
             auth_header = request.headers.get('Authorization', '')
             token = auth_header.split(' ')[1] if 'Bearer ' in auth_header else None
@@ -124,23 +109,17 @@ def update_patient_details(request):
                 return JsonResponse({'error': 'Patient not found'}, status=404)
 
             # Update only the provided fields
-            if student_or_employee_no: patient.student_or_employee_no = student_or_employee_no
+            if username: patient.username = username
             if first_name: patient.first_name = first_name
             if last_name: patient.last_name = last_name
             if middle_name: patient.middle_name = middle_name
             if suffix: patient.suffix = suffix
             if email: patient.email = email
-            if campus: patient.campus = campus
             if age: patient.age = age
             if sex: patient.sex = sex
-            if emergency_contact_number: patient.emergency_contact_number = emergency_contact_number
-            if emergency_contact_relation: patient.emergency_contact_relation = emergency_contact_relation
-            if address: patient.address = address
-            if bloodtype: patient.bloodtype = bloodtype
-            if allergies: patient.allergies = allergies
-            if college_office: patient.college_office = college_office
-            if course_designation: patient.course_designation = course_designation
-            if year: patient.year = year
+            if birthday : patient.birthday = birthday
+            if maritalstatus : patient.maritalstatus = maritalstatus
+
             if image: patient.image = image_url  # Add the image URL if provided
 
             # Save changes
@@ -149,23 +128,17 @@ def update_patient_details(request):
             # Return updated patient details
             patient_data = {
                 'id': patient.id,
-                'student_or_employee_no': student_or_employee_no,
+                'username': username,
                 'first_name': patient.first_name,
                 'middle_name': patient.middle_name,
                 'last_name': patient.last_name,
                 'suffix': patient.suffix,
                 'email': patient.email,
-                'campus': patient.campus,
                 'age': patient.age,
                 'sex': patient.sex,
-                'emergency_contact_number': patient.emergency_contact_number,
-                'emergency_contact_relation': patient.emergency_contact_relation,
-                'address': patient.address,
-                'bloodtype': patient.bloodtype,
-                'allergies': patient.allergies,
-                'college_office': patient.college_office,
-                'course_designation': patient.course_designation,
-                'year': patient.year,
+                'birthday': patient.birthday,
+                'maritalstatus': patient.maritalstatus,
+
                 'image': image_url if image else None  # Return the image URL if updated
             }
             return JsonResponse(patient_data, status=200)
@@ -284,23 +257,16 @@ def get_patient_details_by_student_or_employee_no(request):
         
         patient_data = {
             'id': patient.id,
-            'student_or_employee_no': patient.student_or_employee_no,
+            'username': patient.username,
             'first_name': patient.first_name,
             'middle_name': patient.middle_name,
             'last_name': patient.last_name,
             'suffix': patient.suffix,
-            'campus': patient.campus,
-            'college_office': patient.college_office,
-            'course_designation': patient.course_designation,
-            'year': patient.year,
-            'emergency_contact_number': patient.emergency_contact_number,
-            'emergency_contact_relation': patient.emergency_contact_relation,
-            'bloodtype': patient.bloodtype,
-            'allergies': patient.allergies,
             'email': patient.email,
             'age': patient.age,
             'sex': patient.sex,
-            'address': patient.address,
+            'birthday': patient.birthday,
+            'maritalstatus': patient.maritalstatus
         }
         
         return JsonResponse(patient_data, status=200)

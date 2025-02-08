@@ -3,11 +3,17 @@ from django.db import models
 class Staff(models.Model):
 
     profilepicture = models.ImageField(default="default.png", blank=True)
+    username = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100)
     suffix = models.CharField(max_length=10, blank=True)
-    specialization = models.CharField(max_length=255)
+    workPosition = models.CharField(max_length=255)
+    address = models.CharField(max_length=100)
+    phoneNumber = models.CharField(max_length=100)
+    maritalStatus = models.CharField(max_length=100)
+    sex = models.CharField(max_length=10)
+    birthday = models.DateTimeField()
     email = models.EmailField()
     password = models.CharField(max_length=255)
     user_level_id = models.ForeignKey(

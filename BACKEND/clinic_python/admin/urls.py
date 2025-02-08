@@ -2,9 +2,7 @@
 
 from django.urls import path
 from . import views
-from . import joinqueue
 from . import patients
-from . import queuemanagement
 from . import appointment
 from . import medicalrecord
 from django.conf.urls.static import static
@@ -21,10 +19,6 @@ urlpatterns = [
     path('get_archived_staff/', views.get_archived_staff, name='get_archived_staff'),
     path('restore_staff/<int:id>/', views.restore_staff, name='restore_staff'),
     
-    path('joinqueue/', joinqueue.join_queue, name='join_queue'),
-    path('viewqueue/', joinqueue.view_queue, name='view_queue'),
-    path('updatequeuestatus/', joinqueue.update_queue_status, name='update_queue_status'),
-    path('showtodayqueue/', joinqueue.get_first_5_waiting_queues , name='get_first_5_waiting_queues'),
     
     path('getallpatients/', patients.get_patients, name='get_patients'),
     path('deletepatient/<int:id>/', patients.delete_patient, name='delete_patient'),
@@ -33,12 +27,6 @@ urlpatterns = [
     path('updatePatientDetails/<int:id>/', patients.update_patient, name='get_queue_management_by_id'),
     path('viewArchivedPatient/', patients.archived_patients, name='archived_patients'),
      path('restorePatient/<int:patient_id>/', patients.restore_patient, name='restore_patient'),
-    
-    path('viewallqm/', queuemanagement.get_all_queue_management, name='get_all_queue_management'),
-    path('viewqmtoday/', queuemanagement.get_today_queue_management, name='get_today_queue_management'),
-    path('queues/<int:qmid>/', queuemanagement.get_queues_by_qmid, name='get_queues_by_qmid'),
-    path('update-queue-status/<int:queue_id>/', queuemanagement.update_queue_status, name='update_queue_status'),
-    path('queue-management/<int:queue_id>/', queuemanagement.get_queue_management_by_id, name='get_queue_management_by_id'),
     
     
     path('showallappointment/', appointment.get_all_appointments, name='get_all_appointments'),
