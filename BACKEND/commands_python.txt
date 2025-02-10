@@ -2,7 +2,7 @@ installing .venv
     python -m venv venv
 
 activating .venv
-    venv\Scripts\Activate
+    .venv\Scripts\Activate
 
 Create a New Django Project
 django-admin startproject "myproject" (variable)

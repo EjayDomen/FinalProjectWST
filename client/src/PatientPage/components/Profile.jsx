@@ -283,15 +283,10 @@ const Profile = () => {
           <h3 className="text-center">{`${formData.firstName} ${formData.middleName.charAt(0)}. ${formData.lastName} ${formData.suffix}`}</h3>
           <div style={{padding: '20px 0'}}>
             <p><strong>Age:</strong> {formData.age}</p>
-            <p><strong>Campus:</strong> {new Date(formData.campus).toLocaleDateString()}</p>
+            <p><strong>Birthday:</strong> {formData.birthday}</p>
             <p><strong>Sex:</strong> {formData.sex}</p>
-            <p><strong>Emergency Cont. No.:</strong> {formData.emergency_contact_number}</p>
-            <p><strong>Address:</strong> {formData.address}</p>
+            <p><strong>Marital Status:</strong> {formData.maritalstatus}</p>
           </div>
-          <hr />
-          <h4 style={{padding:'20px 0'}}>Medical Information:</h4>
-          <p><strong>Blood Type :</strong> {formData.bloodtype}</p>
-          <p><strong>Allergies :</strong> {formData.allergies} </p>
         </div>
 
         {/* Right Section */}
@@ -430,9 +425,9 @@ const Profile = () => {
       <input
         type="date"
         className="form-control"
-        name="address"
+        name="birthday"
         readOnly={isReadOnly}
-        value={formData.address}
+        value={formData.birthday}
         onChange={handleChange}
         required
       />
@@ -442,9 +437,9 @@ const Profile = () => {
       <input
         type="text"
         className="form-control"
-        name="college_office"
+        name="maritalstatus"
         readOnly={isReadOnly}
-        value={formData.college_office}
+        value={formData.maritalstatus}
         onChange={handleChange}
         required
       />

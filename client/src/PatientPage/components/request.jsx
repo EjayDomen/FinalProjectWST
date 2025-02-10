@@ -151,6 +151,8 @@ const Appointment = () => {
           last_name: response.data.last_name || '',
           suffix: response.data.suffix || '',
           contactnumber: response.data.contactnumber || '',
+          birthday: response.data.birthday || '',
+          age: response.data.age || '',
         }));
       } catch (error) {
         console.error('Error fetching user info:', error);
@@ -290,7 +292,7 @@ const Appointment = () => {
     width: '200px'
   }}
 >
-  + Add Appointment
+  + Add Request
 </button>
               </div>
       </div>
@@ -408,7 +410,7 @@ const Appointment = () => {
   dialogClassName="custom-modal-width"
 >
   <Modal.Header closeButton>
-    <Modal.Title>Appointment Details</Modal.Title>
+    <Modal.Title>Request Details</Modal.Title>
   </Modal.Header>
   <Modal.Body>
     <Form>

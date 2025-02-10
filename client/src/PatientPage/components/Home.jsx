@@ -30,7 +30,7 @@ const Home = () => {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/patient/appointment/viewAppointments`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patient/viewAppointment`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         setRequests(response.data);
