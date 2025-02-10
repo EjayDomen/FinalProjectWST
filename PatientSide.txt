@@ -1,4 +1,4 @@
-Patients:
+Patients::
 Sign In - DONE
 Sign Up (SIGN UP PAGE ASK IF ADMIN OR PATIENT (User Type) If patient sign up) it should be automatic
 Profile Picture - PENDING
