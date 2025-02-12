@@ -30,9 +30,13 @@ urlpatterns = [
     
     
     path('showallappointment/', appointment.get_all_appointments, name='get_all_appointments'),
+
     path('patients/<int:patient_id>/medical-records/', medicalrecord.create_medical_record , name='create_medical_record'),
     path('medical-records/<int:patient_id>/', medicalrecord.get_medical_records_by_patient, name='get_medical_records_by_patient'),
-    path('medical-records/<int:patient_id>/', medicalrecord.get_medical_records_by_patient, name='get_medical_records_by_patient'),
+    path('medicalrecordcount/', medicalrecord.count_medical_records, name='count_medical_records'),
+    path('getrecentmedicalrecord/', medicalrecord.get_recent_medical_records, name='get_recent_medical_records'),
+
+
     path('show-allstaff/', views.get_all_staff , name='get_all_staff'),
     path('countapp/', appointment.count_all_appointments , name='count_all_appointment'),
     path('countpatients/', patients.count_all_patients , name='count_all_patient'),

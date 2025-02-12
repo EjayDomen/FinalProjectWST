@@ -166,40 +166,54 @@ def create_staff(request):
         try:
             # Parse the request body
             body = json.loads(request.body)
+            username = body.get('username')
             first_name = body.get('first_name')
             middle_name = body.get('middle_name', '')
             last_name = body.get('last_name')
             suffix = body.get('suffix', '')
-            specialization = body.get('specialization')
+            workposition = body.get('workposition')  # Make sure the field matches your model
             email = body.get('email')
-            
+            address = body.get('address')
+            phonenumber = body.get('phonenumber')
+            maritalstatus = body.get('maritalstatus')
+            sex = body.get('sex')
+            birthday = body.get('birthday')  # Should be a valid datetime string
 
             # Check if all required fields are provided
-            if not first_name or not last_name or not specialization or not email:
+            if not first_name or not last_name or not workposition or not email or not birthday:
                 return JsonResponse({'error': 'All fields are required'}, status=400)
 
-            # Check if the user_level_id for Staff (2) exists in Role model
+            # Check if the user_level_id for Staff (2) exists in the Role model
             try:
                 role = Role.objects.get(id=2)  # Assuming 2 is for Staff
             except Role.DoesNotExist:
                 return JsonResponse({'error': 'Role with user_level_id 2 not found'}, status=400)
 
+
             # Create a predefined password: 'LastName123'
             predefined_password = f"{last_name}123"
 
-            # Hash the password using bcrypt
-            hashed_password = bcrypt.hashpw(predefined_password.encode('utf-8'), bcrypt.gensalt())
+            # Hash the password using Django's built-in password hashing
+            # Hash the password before saving
+            hashed_password = bcrypt.hashpw(predefined_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')  # Decode to string
 
             # Create the Staff instance
             staff = Staff.objects.create(
+                username=username,
                 first_name=first_name,
                 middle_name=middle_name,
                 last_name=last_name,
                 suffix=suffix,
-                specialization=specialization,
+                workposition=workposition,
                 email=email,
-                password=hashed_password.decode('utf-8'),  # Store hashed password
-                user_level_id=role
+                password=hashed_password,  # Store hashed password
+                user_level_id=role,
+                address=address,
+                phonenumber=phonenumber,
+                maritalstatus=maritalstatus,
+                sex=sex,
+                birthday=birthday,
+                is_deleted=False  # Ensure the staff isn't marked as deleted by default
             )
 
             # Return success response
@@ -212,6 +226,8 @@ def create_staff(request):
             return JsonResponse({'error': f'Error creating staff: {str(e)}'}, status=500)
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
 
 
 def get_staff_detail(request):
@@ -233,14 +249,20 @@ def get_staff_detail(request):
             staff = Staff.objects.get(id=staff_id, is_deleted=False)
             staff_data = {
                 'id': staff.id,
+                'username': staff.username,
                 'first_name': staff.first_name,
                 'middle_name': staff.middle_name,
                 'last_name': staff.last_name,
                 'suffix': staff.suffix,
-                'specialization': staff.specialization,
+                'specialization': staff.workposition,
                 'email': staff.email,
                 'user_level_id': staff.user_level_id.id if staff.user_level_id else None,
                 'profilePicture': staff.profilepicture.url if staff.profilepicture else None,
+                'address': staff.address,
+                'phonenumber': staff.phonenumber,
+                'sex': staff.sex,
+                'birthday': staff.birthday,
+                'maritalstatus': staff.maritalstatus,
                 'is_deleted': staff.is_deleted,
             }
             return JsonResponse(staff_data, status=200)

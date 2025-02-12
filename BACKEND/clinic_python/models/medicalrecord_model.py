@@ -16,6 +16,8 @@ class MedicalRecord(models.Model):
     pulseafter = models.CharField(max_length=50)
     generalremarks = models.TextField(default="N/A", blank=True)
     attendingstaff = models.ForeignKey('clinic_python.Staff', on_delete=models.CASCADE)  # Use string notation
+    createdAt = models.DateTimeField(auto_now_add=True)
+
 
     def __str__(self):
         return f'{self.patientid} appointment with {self.attendingstaff}'

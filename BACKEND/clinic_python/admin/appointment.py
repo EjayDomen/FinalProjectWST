@@ -84,8 +84,8 @@ def get_todays_appointments(request):
         # Fetch up to 5 appointments scheduled for today
         todays_appointments = (
             Appointment.objects.select_related('patientid', 'staff')
-            .filter(appointment_date=today)
-            .order_by('appointment_date')[:5]  # Limit to 5 records
+            .filter(requestdate=today)
+            .order_by('requestdate')[:5]  # Limit to 5 records
         )
 
         # Prepare the response data
@@ -99,14 +99,10 @@ def get_todays_appointments(request):
                         "suffix": appointment.patientid.suffix,
                     },
                     "patient_name": f"{appointment.first_name} {appointment.last_name} {appointment.suffix or ''}".strip(),
-                    "age": appointment.age,
-                    "address": appointment.address,
-                    "sex": appointment.sex,
-                    "contact_number": appointment.contact_number,
-                    "appointment_date": appointment.appointment_date.strftime("%Y-%m-%d"),
-                    "purpose": appointment.purpose,
+                    "contact_number": appointment.contactnumber,
+                    "appointment_date": appointment.requestdate.strftime("%Y-%m-%d"),
+                    "purpose": appointment.requestpurpose,
                     "status": appointment.status,
-                    "type": appointment.type,
                     "staff_id": appointment.staff.id if appointment.staff else None,
                     "created_at": (
                         appointment.createdAt.astimezone(manila_tz).strftime("%Y-%m-%d %H:%M:%S")

@@ -66,7 +66,7 @@ const Dashboard = () => {
 
     const fetchAppointmentCount = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/countapp`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/medicalrecordcount/`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
@@ -98,7 +98,7 @@ const Dashboard = () => {
 
     const fetchTodaysQueue = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/showtodayqueue/`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/getrecentmedicalrecord/`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
@@ -389,10 +389,10 @@ const chartOptions = {
             <img src={calendar} alt="calendar" className={styles.icon} />
           </div>
           <div className={styles.textContainer}>
-            <h3>Appointments</h3>
+            <h3>Medical Record</h3>
             <p className={styles.count}>
               {appointmentCount}
-              <span style={{ fontSize: '18px', color: '#777', marginLeft: '10px', fontWeight: 'normal' }}>Total Appointments</span>
+              <span style={{ fontSize: '18px', color: '#777', marginLeft: '10px', fontWeight: 'normal' }}>Total Medical Records</span>
             </p>
           </div>
         </div>
@@ -418,7 +418,7 @@ const chartOptions = {
       <div className={styles.patientAttended}>
         <div className={styles.tableRow}>
           
-        <h3><b>Today's Appointment</b></h3>
+        <h3><b>Today's Request</b></h3>
           {loading ? (
             <p>Loading...</p>
           ) : (
@@ -443,7 +443,7 @@ const chartOptions = {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" style={{ textAlign: 'center' }}>No appointments</td>
+                    <td colSpan="4" style={{ textAlign: 'center' }}>No Request</td>
                   </tr>
                 )}
               </tbody>
@@ -456,17 +456,16 @@ const chartOptions = {
 
 
           {/* Today's Queue List Table */}
-            <h3><b>Today's Queue List</b></h3>
+            <h3><b>Recent Medical Record</b></h3>
             {loadingQueue ? (
               <p>Loading...</p>
             ) : (
               <table className={styles.table}>
                 <thead>
                   <tr>
-                    <th>Queue No.</th>
                     <th>Patient Name</th>
-                    <th>Purpose</th>
-                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Time Treatment</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -496,7 +495,7 @@ const chartOptions = {
        {/* Third Row: Today's Appointment and Queue List */}
        
        <div className={styles.patientAttended2}>
-       <h1>Appointment Chart</h1>
+       <h1>Requested Chart</h1>
           <div>
             <button className={styles.chartBtn} onClick={() => setPeriod('daily')}>Daily</button>
             <button className={styles.chartBtn} onClick={() => setPeriod('weekly')}>Weekly</button>
