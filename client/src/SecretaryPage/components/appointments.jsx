@@ -15,7 +15,7 @@ import styles from '../styles/appointmentsSecre.module.css';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const ActionDropdown = ({ onReminder, onReschedule }) => {
+const ActionDropdown = ({ onReminder, onReschedule, ready, completed }) => {
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleOpenMenu = (event) => {
@@ -63,7 +63,7 @@ const Appointments = () => {
   const [selectedEvent, setSelectedEvent] = useState(null); // To store selected event details for rescheduling
 
 
-  const fetchDoctors = async () => {
+  const fetchRequest = async () => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/showallappointment/`, {
         headers: {
@@ -76,27 +76,14 @@ const Appointments = () => {
         console.log('Raw response data:', response.data); // Log raw response
   
           const eventData = response.data.map(event => {
-          const startTime = event.startTime ? formatTime(event.startTime) : '';
-          const endTime = event.endTime ? formatTime(event.endTime) : '';
-          const dow = event.dow ? [event.dow] : [];
-          const startRecur = new Date().toISOString().split('T')[0];
           return {
             ...event,
             id: event.id,
             title: `${event.patientid.first_name} ${event.patientid.last_name} ${event.patientid.suffix && event.patientid.suffix.toLowerCase() !== 'n/a' ? event.patientid.suffix : ''}`.trim(),
             backgroundColor: 'rgba(10, 193, 28, 0.5)',
-            daysOfWeek: dow,
-            startRecur,
             purpose: event.purpose,
-            type: event.type,
             date: event.appointment_date,
-            borderColor: event.borderColor || '#0056b3', // Default border color
-            extendedProps: {
-              specialization: event.specialization,
-              profilePicture: event.profilePicture,
-              schedCount: event.schedCount,
-              schedId: event.schedId,
-        },
+            status: event.status,
           };
         });
   
@@ -118,10 +105,8 @@ const Appointments = () => {
   
   
   
-  
-  
   useEffect(() => {
-    fetchDoctors();
+    fetchRequest();
     const today = new Date();
     const manilaDate = today.toLocaleDateString('en-CA', { timeZone: 'Asia/Manila' });
     // Set the default value for startDate and endDate to today's date
@@ -212,7 +197,7 @@ const Appointments = () => {
         alert(`Appointment for schedule ID ${selectedEvent.id} has been rescheduled to ${formData.newDate}.`);
         // Optionally refresh events or close modal here
         handleCloseModal(); // Close modal on success
-        fetchDoctors();
+        fetchRequest();
       } else {
         alert('Unexpected response. Please try again.');
       }
@@ -255,11 +240,10 @@ const Appointments = () => {
 
 const columns = [
   { field: 'rowNumber', headerName: '#', width: 100 },
-  { field: 'id', headerName: 'Appointment ID', width: 130 },
+  { field: 'id', headerName: 'Request ID', width: 130 },
   { field: 'title', headerName: 'Patient Name', width: 250 },
   { field: 'date', headerName: 'Date', width: 200 },
   { field: 'purpose', headerName: 'Purpose', width: 220 },
-  { field: 'type', headerName: 'Type', width: 150 },
   { field: 'status', headerName: 'Status', width: 150 },
   {
     field: 'actions',
@@ -332,20 +316,6 @@ return (
         onChange={(e) => setEndDate(e.target.value)}
         InputLabelProps={{ shrink: true }}
       />
-      {/* { <Button
-        onClick={toggleViewMode}
-        sx={{
-          padding: '10px 15px',
-          backgroundColor: '#4a4a4a',
-          color: 'white',
-          borderRadius: '8px',
-          '&:hover': {
-            backgroundColor: '#333333', // Set hover color here
-          },
-        }}
-      >
-        {viewMode === 'list' ? <CalendarMonth /> : <ContentPaste />}
-      </Button> } */}
       </div>
 
         {/* Reschedule Modal */}
@@ -382,7 +352,6 @@ return (
 
           {/* Conditional rendering for list or calendar view */}
           <div style={{height: '100%', width:'100%'}}>
-          {viewMode === 'list' ? (
              <Box sx={{ height: 600, width: '100%' }}>
        
              {/* Date Range Filter */}
@@ -419,180 +388,6 @@ return (
                 />
               </div>
            </Box>
-        ) : (
-          <div>
-          <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin, googleCalendarPlugin, interactionPlugin]}
-            themeSystem="none"
-            initialView="timeGridWeek"
-            headerToolbar={{
-              left: 'today',
-              center: 'prev,title,next',
-              right: 'timeGridWeek,dayGridMonth,timeGridDay',
-            }}
-            events={events}
-            eventClick={handleEventClickCalendar}
-            editable={false}
-            dayMaxEvents={true}
-            allDaySlot={false}
-            eventContent={(eventInfo) => (
-              <div
-                style={{
-                  borderLeft: `5px solid ${eventInfo.event.borderColor}`,
-                  borderRadius: '8px',
-                  padding: '8px',
-                  color: '#313b34', 
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '5px',
-                }}
-              >
-                {eventInfo.event.extendedProps.profilePicture && (
-                  <img
-                    src={eventInfo.event.extendedProps.profilePicture}
-                    alt="Doctor"
-                    style={{
-                      width: '24px',
-                      height: '24px',
-                      borderRadius: '50%',
-                      border: '1px solid #fff',
-                    }}
-                  />
-                )}
-                <div>
-                  <div style={{ fontWeight: 'bold', fontSize: '12px' }}>{eventInfo.event.title}</div>
-                  <div style={{ fontSize: '10px' }}>{eventInfo.timeText}</div>
-                  <div style={{ fontSize: '10px', color: '#ddd' }}>{eventInfo.event.extendedProps.specialization}</div>
-                </div>
-              </div>
-            )}
-            slotLabelFormat={{
-              hour: '2-digit',
-              minute: '2-digit',
-              meridiem: false,
-            }}
-            height="auto"
-          />
-        
-          {/* Adding inline styles for calendar elements */}
-          <style>
-            {`
-              /* Inline styles for FullCalendar components */
-              /* Remove All Grid Lines and Borders in Calendar */
-              .fc-timegrid {
-                background-color: #fff;
-              }
-              .fc-timegrid-slot-lane,
-              .fc-col-header-cell-cushion,
-              .fc-daygrid-day-number,
-              .fc-col-header-cell,
-              .fc-daygrid-day,
-              .fc-scrollgrid-sync-inner {
-                border-bottom: 1px solid black !important;
-              }
-              .fc-timegrid-event,
-              .fc-scrollgrid,
-              .fc-timegrid-divider,
-              .fc-timegrid-slot {
-                border: none !important; /* Remove all borders */
-                box-shadow: none !important; /* Remove any shadow effects */
-              }
-                /* Remove Underline from Header Cell Cushion */
-              .fc-col-header-cell-cushion {
-                font-weight: bold;
-                font-size: 18px;
-                color: #000;
-                text-align: center;
-                border: none !important; /* Remove any underline */
-                text-decoration: none !important;
-              }
-              .fc-col-header-cell-cushion::after {
-                content: attr(data-date);
-                display: block;
-                font-size: 12px;
-                color: #333;
-                margin-top: 3px;
-              }
-              .fc-header-toolbar {
-                margin-top: 2% !important;
-                margin-bottom: 1% !important;
-                display: flex !important;
-                justify-content: space-between !important; /* Centering toolbar content */
-                align-items: center !important;
-              }
-              .fc-toolbar-title {
-                font-size: 30px !important; /* Match previous design */
-                font-weight: bold !important;
-                color: #333 !important; /* Title color */
-              }
-              .fc-button {
-                background-color: #666 !important; /* Match previous black buttons */
-                color: white !important;
-                border: none !important;
-                border-radius: 5px !important;
-                padding: 5px 10px !important;
-                display: none; /* Hide all buttons */
-              }
-              .fc-button:hover {
-                background-color: #333 !important; /* Darker on hover */
-              }
-              .fc-timegrid-slot {
-                height: 40px !important; /* Reduced slot height */
-                padding: 2px 0 !important; /* Adjust padding to save space */
-              }
-                .fc-daygrid-day {
-                min-height: 30px !important; /* Lower day grid height */
-              }
-              .fc-prev-button,
-              .fc-next-button {
-                display: none; /* Hide left/right buttons */
-              }
-              .fc-today-button {
-                background-color: green !important; /* Persistent orange color from previous design */
-                color: #fff !important;
-                border-radius: 5px !important;
-                padding: 8px 12px !important;
-              }
-              .fc-today-button:hover {
-                background-color: #218838 !important; /* Darker orange on hover */
-              }
-              .fc-title {
-                font-size: 20px !important;
-                font-weight: bold !important;
-                color: #333 !important;
-              }
-              .fc-col-header-cell-cushion {
-                color: black !important; /* Change the text color of the column headers (weekdays) */
-                text-decoration: none;
-              }
-              .fc-toolbar-chunk {
-                display: flex;
-              }
-              .fc-toolbar-chunk div {
-                display: flex;
-                align-items: center; /* Align items vertically in the center */
-                justify-content: center; /* Align items horizontally in the center */
-                gap: 5px;
-              }
-              .fc .fc-daygrid-day-number {
-                text-decoration: none;
-                color: black; /* Maintain black color for day numbers */
-              }
-              .fc .fc-timegrid-col.fc-day-today {
-                background-color: #E9E9E9;
-              }
-              .fc .fc-daygrid-day.fc-day-today {
-                background-color: #E9E9E9;
-              }
-              .fc .fc-daygrid-event-harness {
-                background-color: rgba(10, 193, 28, 0.5);
-              }
-            `}
-          </style>
-        </div>
-        
-        
-          )}
           </div>
     </div>
     </div>

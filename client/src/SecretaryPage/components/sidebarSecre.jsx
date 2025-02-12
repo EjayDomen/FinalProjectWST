@@ -96,11 +96,11 @@ const Sidebar = () => {
           </NavLink>
           <NavLink to="/staff/appointments" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
             <EventNote />
-            <span>Appointments</span>
+            <span>Requests</span>
           </NavLink>
           <NavLink to="/staff/queue" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
             <Queue />
-            <span>Queue</span>
+            <span>Medical Records</span>
           </NavLink>
           
           <div>

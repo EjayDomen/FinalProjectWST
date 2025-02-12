@@ -43,7 +43,7 @@ urlpatterns = [
     path('showtodayappointment/', appointment.get_todays_appointments , name='show_today_appointment'),
     path('reports/appointments/', appointment.get_appointment_details_report , name='get_appointment_details_report'),
     path('appoinmentCounts/', appointment.count_completed_appointments , name='count_completed_appointments'),
-    
+    path('updaterequeststatus/<int:id>/', appointment.update_status, name='update_status'),
     
 
     # Add other paths for superadmin-related views here

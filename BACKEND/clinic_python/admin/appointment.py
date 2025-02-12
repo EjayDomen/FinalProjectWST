@@ -7,6 +7,7 @@ from django.utils.timezone import make_aware
 import pytz
 from django.db.models import Prefetch
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 @api_view(['GET'])
 def get_all_appointments(request):
@@ -28,14 +29,10 @@ def get_all_appointments(request):
                     "suffix": appointment.patientid.suffix,
                 },
                 "patient_name": f"{appointment.first_name} {appointment.last_name} {appointment.suffix or ''}".strip(),
-                "age": appointment.age,
-                "address": appointment.address,
-                "sex": appointment.sex,
-                "contact_number": appointment.contact_number,
-                "appointment_date": appointment.appointment_date.strftime("%Y-%m-%d"),
-                "purpose": appointment.purpose,
+                "contact_number": appointment.contactnumber,
+                "appointment_date": appointment.requestdate.strftime("%Y-%m-%d"),
+                "purpose": appointment.requestpurpose,
                 "status": appointment.status,
-                "type": appointment.type,
                 "staff": {
                     "id": appointment.staff.id if appointment.staff else None,  # Add only the serializable fields for staff
                     "name": f"{appointment.staff.first_name if appointment.staff else None} {appointment.staff.last_name if appointment.staff else None}",
@@ -205,3 +202,26 @@ def count_completed_appointments(request):
 
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@csrf_exempt
+@api_view(['PUT'])
+def update_status(request, id):
+    
+    try:
+        request = get_object_or_404(Appointment, id=id)
+        data = request.data
+        
+        request.status = data.get('status', request.status)
+        request.save
+
+        updated_status = {
+            'Request_Id': request.id,
+            'Status': request.status
+        }
+
+        return JsonResponse({"message": "Request status successfully updated to ", "request": updated_status}, status=200)
+
+    except Exception as e:
+        printf(f"error updating: {e}")
+        return JsonResponse({'message': 'Internal server error'}, status=500)
