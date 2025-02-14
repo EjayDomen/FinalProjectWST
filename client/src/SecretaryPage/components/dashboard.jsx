@@ -123,7 +123,7 @@ const Dashboard = () => {
         const secretary = response.data;
     
         
-        setSpecialization(secretary.specialization); // Use trim() to remove any extra spaces
+        setSpecialization(secretary.workposition); // Use trim() to remove any extra spaces
       } catch (error) {
         console.error('Error fetching profile:', error);
         // navigate('/');
@@ -427,7 +427,7 @@ const chartOptions = {
                 <tr>
                   <th>No.</th>
                   <th>Patient Name</th>
-                  <th>Appointment Date</th>
+                  <th>Request Date</th>
                   <th>Purpose</th>
                 </tr>
               </thead>
@@ -443,7 +443,7 @@ const chartOptions = {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="4" style={{ textAlign: 'center' }}>No Request</td>
+                    <td colSpan="4" style={{ textAlign: 'center' }}>No request</td>
                   </tr>
                 )}
               </tbody>
@@ -480,7 +480,7 @@ const chartOptions = {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="3" style={{ textAlign: 'center' }}>No queue entries</td>
+                      <td colSpan="3" style={{ textAlign: 'center' }}>No medical record</td>
                     </tr>
                   )}
                 </tbody>

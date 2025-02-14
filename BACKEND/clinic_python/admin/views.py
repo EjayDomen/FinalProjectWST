@@ -254,7 +254,7 @@ def get_staff_detail(request):
                 'middle_name': staff.middle_name,
                 'last_name': staff.last_name,
                 'suffix': staff.suffix,
-                'specialization': staff.workposition,
+                'workposition': staff.workposition,
                 'email': staff.email,
                 'user_level_id': staff.user_level_id.id if staff.user_level_id else None,
                 'profilePicture': staff.profilepicture.url if staff.profilepicture else None,
@@ -307,20 +307,34 @@ def update_logged_in_staff(request):
 
             # Parse the incoming JSON body to get the updated fields
             body = json.loads(request.body)
-            first_name = body.get('FIRST_NAME', staff.first_name)
-            middle_name = body.get('MIDDLE_NAME', staff.middle_name)
-            last_name = body.get('LAST_NAME', staff.last_name)
-            suffix = body.get('SUFFIX', staff.suffix)
-            specialization = body.get('DEPARTMENT', staff.specialization)
-            email = body.get('EMAIL', staff.email)
+            username = body.get('username', staff.username)
+            first_name = body.get('first_name', staff.first_name)
+            middle_name = body.get('middle_name', staff.middle_name)
+            last_name = body.get('last_name', staff.last_name)
+            suffix = body.get('suffix', staff.suffix)
+            workposition = body.get('workposition', staff.workposition)
+            email = body.get('email', staff.email)
+            address = body.get('address', staff.address)
+            phonenumber = body.get('phonenumber', staff.phonenumber)
+            maritalstatus = body.get('maritalstatus', staff.maritalstatus)
+            sex = body.get('sex', staff.sex)
+            birthday = body.get('birthday', staff.birthday)
+
+
 
             # Update fields only if they are provided in the request
+            staff.username = username
             staff.first_name = first_name
             staff.middle_name = middle_name
             staff.last_name = last_name
             staff.suffix = suffix
-            staff.specialization = specialization
+            staff.workposition = workposition
             staff.email = email
+            staff.address = address
+            staff.phonenumber = phonenumber
+            staff.maritalstatus = maritalstatus
+            staff.sex = sex
+            staff.birthday = birthday
 
             # Save the changes to the database
             staff.save()

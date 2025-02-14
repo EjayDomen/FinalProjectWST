@@ -17,6 +17,7 @@ const Profile = () => {
     const [showErrorModal, setShowErrorModal] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [profilePicture, setProfilePicture] = useState(null);
+
     const handleCloseSuccessModal = () => {
       setShowSuccessModal(false);
     };
@@ -126,12 +127,18 @@ const Profile = () => {
       return passwordRegex.test(password);
     };
   const [formData, setFormData] = useState({
+    username: "",
     lastName: "",
     firstName: "",
     suffix:"",
     middleName: "",
     email: "",
-    department: "",
+    workposition: "",
+    address: "",
+    phonenumber: "",
+    maritalstatus: "",
+    sex: "",
+    birthday: "",
     profilePicture: null,
   });
 
@@ -164,12 +171,18 @@ const Profile = () => {
       });
       const secretary = response.data;
       setFormData({
+        username: secretary.username || "",
         lastName: secretary.last_name || "",
         firstName: secretary.first_name || "",
         middleName: secretary.middle_name || "",
         suffix: secretary.suffix || "",
         email: secretary.email || "",
-        department: secretary.specialization || "",
+        workposition: secretary.workposition || "",
+        address: secretary.address || "",
+        phonenumber:secretary.phonenumber || "",
+        sex: secretary.sex || "",
+        birthday: secretary.birthday || "",
+        maritalstatus: secretary.maritalstatus || "",
         profilePicture: null,
       });
     } catch (error) {
@@ -177,16 +190,6 @@ const Profile = () => {
     }
   };
 
-  const calculateAge = (birthDate) => {
-    const today = new Date();
-    const birthDateObj = new Date(birthDate);
-    let age = today.getFullYear() - birthDateObj.getFullYear();
-    const monthDiff = today.getMonth() - birthDateObj.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDateObj.getDate())) {
-      age--;
-    }
-    return age;
-  };
 
   useEffect(() => {
     fetchProfile();
@@ -212,12 +215,18 @@ const Profile = () => {
       const formDataToSend = new FormData();
     
     // Append the profile data (including image, if updated)
-    formDataToSend.append('firstName', formData.firstName);
-    formDataToSend.append('middleName', formData.middleName);
-    formDataToSend.append('lastName', formData.lastName);
+    formDataToSend.append('username', formData.username);
+    formDataToSend.append('first_name', formData.firstName);
+    formDataToSend.append('middle_name', formData.middleName);
+    formDataToSend.append('last_name', formData.lastName);
     formDataToSend.append('suffix', formData.suffix);
     formDataToSend.append('email', formData.email);
-    formDataToSend.append('department', formData.department);
+    formDataToSend.append('workposition', formData.workposition);
+    formDataToSend.append('address', formData.address);
+    formDataToSend.append('phonenumber', formData.phonenumber);
+    formDataToSend.append('maritalstatus', formData.maritalstatus);
+    formDataToSend.append('sex', formData.sex);
+    formDataToSend.append('birthday', formData.birthday);
 
     if (profilePicture) {
       formDataToSend.append('profilePicture', profilePicture); // Append image file if updated
@@ -229,8 +238,8 @@ const Profile = () => {
       formDataToSend,
       {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data', // Set content type for FormData
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}` // Set content type for FormData
         },
       }
     );
@@ -348,7 +357,38 @@ const Profile = () => {
                )}
             </button>
           </div>
+          <div className={styles.formGroup}>
+            <label htmlFor="username">Username:</label>
+            <input
+              type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              disabled={!isEditable} // Block when not editable
+            />
+          </div>
           <div className={styles.row}>
+            <div className={styles.formGroup}>
+              <label htmlFor="firstName">First Name:</label>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                disabled={!isEditable} // Block when not editable
+              />
+            </div>
+            <div className={styles.row}>
+            <div className={styles.formGroup}>
+              <label htmlFor="middleName">Middle Name:</label>
+              <input
+                type="text"
+                name="middleName"
+                value={formData.middleName}
+                onChange={handleChange}
+                disabled={!isEditable} // Block when not editable
+              />
+            </div>
             <div className={styles.formGroup}>
               <label htmlFor="lastName">Last Name:</label>
               <input
@@ -359,15 +399,6 @@ const Profile = () => {
                 disabled={!isEditable} // Block when not editable
               />
             </div>
-            <div className={styles.formGroup}>
-              <label htmlFor="firstName">First Name:</label>
-              <input
-                type="text"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                disabled={!isEditable} // Block when not editable
-              />
             </div>
             <div className={styles.formGroup} style={{maxWidth:'min-content'}}>
               <label htmlFor="suffix">Suffix:</label>
@@ -383,17 +414,60 @@ const Profile = () => {
 
           <div className={styles.row}>
             <div className={styles.formGroup}>
-              <label htmlFor="middleName">Middle Name:</label>
+              <label htmlFor="firstName">Phone Number:</label>
               <input
                 type="text"
-                name="middleName"
-                value={formData.middleName}
+                name="phonenumber"
+                value={formData.phonenumber}
+                onChange={handleChange}
+                disabled={!isEditable} // Block when not editable
+              />
+            </div>
+            <div className={styles.row}>
+            <div className={styles.formGroup}>
+              <label htmlFor="middleName">Birthday:</label>
+              <input
+                type="date"
+                name="birthday"
+                value={formData.birthday}
+                onChange={handleChange}
+                disabled={!isEditable} // Block when not editable
+              />
+            </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="lastName">Marital Status:</label>
+              <input
+                type="text"
+                name="maritalstatus"
+                value={formData.maritalstatus}
                 onChange={handleChange}
                 disabled={!isEditable} // Block when not editable
               />
             </div>
             </div>
+            <div className={styles.formGroup}>
+              <label htmlFor="suffix">Sex:</label>
+              <input
+                type="text"
+                name="sex"
+                value={formData.sex}
+                onChange={handleChange}
+                disabled={!isEditable} // Block when not editable
+              />
+            </div>
+          </div>
 
+          
+          <div className={styles.formGroup}>
+            <label htmlFor="email">Address:</label>
+            <input
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              disabled={!isEditable} // Block when not editable
+            />
+          </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="email">Email:</label>
@@ -410,13 +484,13 @@ const Profile = () => {
           <div className={styles.sectionTitle}>Clinic Details:</div>
           <div className={styles.row}>
             <div className={styles.formGroup}>
-              <label htmlFor="department">Specialization:</label>
+              <label htmlFor="department">Work Position:</label>
               <input
                 type="text"
-                name="department"
-                value={formData.department}
+                name="workposition"
+                value={formData.workposition}
                 onChange={handleChange}
-                disabled={!isEditable} // Block when not editable
+                disabled={!isEditable} // Blsock when not editable
               />
             </div>
           </div>

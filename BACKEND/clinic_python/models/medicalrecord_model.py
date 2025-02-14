@@ -6,7 +6,7 @@ class MedicalRecord(models.Model):
     date = models.DateField()
     timetreatment = models.CharField(max_length=100)  #start, end time
     transactiondetails = models.CharField(max_length=100)
-    medicineused = models.TextField(default="N/A", blank=True)
+    medicineused = models.TextField(default="N/A", blank=True) #term will be use in ui Medicine given during treatment
     bpbefore = models.CharField(max_length=50)
     bpafter = models.CharField(max_length=50)
     weightbefore = models.CharField(max_length=50)

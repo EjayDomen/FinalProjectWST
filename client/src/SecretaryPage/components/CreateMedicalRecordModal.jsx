@@ -5,18 +5,17 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
   const [formData, setFormData] = useState({
     transactionType: '',
     date: '',
+    timetreatment: '',
     transactionDetails: '',
-    height: '',
-    weight: '',
-    age: '',
-    hr: '',
-    rr: '',
+    medicineused: '',
+    bpbefore: '',
+    bpafter: '',
+    weightbefore: '',
+    weightafter: '',
     temperature: '',
-    bloodPressure: '',
-    painScale: '',
-    otherSymptoms: '',
-    initialDiagnosis: '',
-    notes: '',
+    pulsebefore: '',
+    pulseafter: '',
+    generalremarks: '',
     attendingStaff: '',
   });
 
@@ -88,6 +87,18 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </label>
+        
+        <label style={{ display: 'flex', flexDirection: 'column' }}>
+          Time Treatment:
+          <input
+            type="text"
+            name="timetreatment"
+            value={formData.timetreatment}
+            onChange={handleInputChange}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+          />
+        </label>
+
         <label style={{ display: 'flex', flexDirection: 'column' }}>
           Transaction Details:
           <input
@@ -98,56 +109,60 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </label>
+
         <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Height:
+          Medicine given during treatment(seperated by comma):
           <input
             type="text"
-            name="height"
-            value={formData.height}
+            name="medicineused"
+            value={formData.medicineused}
+            onChange={handleInputChange}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
+          />
+        </label>
+
+
+        <label style={{ display: 'flex', flexDirection: 'column' }}>
+          bp before:
+          <input
+            type="text"
+            name="bpbefore"
+            value={formData.bpbefore}
             onChange={handleInputChange}
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </label>
         <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Weight:
+          bp after:
           <input
             type="text"
-            name="weight"
-            value={formData.weight}
+            name="bpafter"
+            value={formData.bpafter}
             onChange={handleInputChange}
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </label>
         <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Age:
+          Weight Before:
           <input
             type="text"
-            name="age"
-            value={formData.age}
+            name="weightbefore"
+            value={formData.weightbefore}
             onChange={handleInputChange}
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </label>
         <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Heart Rate (HR):
+          Weight After:
           <input
             type="text"
-            name="hr"
-            value={formData.hr}
+            name="weightafter"
+            value={formData.weightafter}
             onChange={handleInputChange}
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </label>
-        <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Respiratory Rate (RR):
-          <input
-            type="text"
-            name="rr"
-            value={formData.rr}
-            onChange={handleInputChange}
-            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-          />
-        </label>
+
         <label style={{ display: 'flex', flexDirection: 'column' }}>
           Temperature:
           <input
@@ -159,48 +174,30 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
           />
         </label>
         <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Blood Pressure:
+          Pulse Before:
           <input
             type="text"
-            name="bloodPressure"
-            value={formData.bloodPressure}
+            name="pulsebefore"
+            value={formData.pulsebefore}
             onChange={handleInputChange}
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </label>
         <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Pain Scale:
+          Pulse After:
           <input
             type="text"
-            name="painScale"
-            value={formData.painScale}
+            name="pulseafter"
+            value={formData.pulseafter}
             onChange={handleInputChange}
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
         </label>
         <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Other Symptoms:
+          General Remarks:
           <textarea
             name="otherSymptoms"
             value={formData.otherSymptoms}
-            onChange={handleInputChange}
-            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
-          ></textarea>
-        </label>
-        <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Initial Diagnosis:
-          <textarea
-            name="initialDiagnosis"
-            value={formData.initialDiagnosis}
-            onChange={handleInputChange}
-            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
-          ></textarea>
-        </label>
-        <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Notes:
-          <textarea
-            name="notes"
-            value={formData.notes}
             onChange={handleInputChange}
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
           ></textarea>
