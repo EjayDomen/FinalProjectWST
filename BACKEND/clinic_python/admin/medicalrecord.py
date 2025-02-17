@@ -100,11 +100,20 @@ def get_recent_medical_records(request):
     if request.method == 'GET':
         try:
             recent_records = MedicalRecord.objects.order_by('-createdAt')[:5]
-            
-            records_list = [
-                {
+
+            records_list = []
+            for record in recent_records:
+                try:
+                    patient = Patient.objects.get(id=record.patientid.id)
+                    patient_name = f"{patient.first_name} {patient.last_name}"
+                except Patient.DoesNotExist:
+                    patient_name = "Unknown"
+
+                records_list.append({
                     'id': record.id,
                     'transactiontype': record.transactiontype,
+                    'patientid': record.patientid.id if record.patientid else None,
+                    'patientname': patient_name,
                     'date': record.date,
                     'timetreatment': record.timetreatment,
                     'transactiondetails': record.transactiondetails,
@@ -118,12 +127,34 @@ def get_recent_medical_records(request):
                     'pulseafter': record.pulseafter,
                     'generalremarks': record.generalremarks,
                     'attendingstaff': record.attendingstaff.id if record.attendingstaff else None,
+                })
+
+            return JsonResponse({'recent_medical_records': records_list}, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method. Use GET.'}, status=405)
+
+
+def get_medical_records_summary(request):
+    if request.method == 'GET':
+        try:
+            medical_records = MedicalRecord.objects.select_related('patientid').values(
+                'id', 'transactiontype', 'date', 'patientid__first_name', 'patientid__last_name'
+            )
+            
+            records_list = [
+                {
+                    'id': record['id'],
+                    'name': f"{record['patientid__first_name']} {record['patientid__last_name']}",
+                    'date': record['date'],
+                    'generalremarks': record['generalremarks']
                 }
-                for record in recent_records
+                for record in medical_records
             ]
             
-            return JsonResponse({'recent_medical_records': records_list}, status=200)
-        
+            return JsonResponse({'medical_records': records_list}, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     

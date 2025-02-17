@@ -23,7 +23,7 @@ import DoctorSecre from './SecretaryPage/components/doctors';
 import PatientSecre from './SecretaryPage/components/patient';
 import PatientListSecre from './SecretaryPage/components/patientlist';
 import AppointmentSecre from './SecretaryPage/components/appointments';
-import QueueSecre from './SecretaryPage/components/queue';
+import QueueSecre from './SecretaryPage/components/medicalrecord';
 //import ViewQueueSecre from './SecretaryPage/components/viewQueue.jsx';
 import QueueListSecre from './SecretaryPage/components/queuelist.jsx';
 //import ViewQueueListSecre from './SecretaryPage/components/viewQueueList.jsx';

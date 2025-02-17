@@ -34,19 +34,6 @@ const Dashboard = () => {
   const navigate = useNavigate(); // To navigate to other pages
 
 
-  //try errorModal
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const handleSeeMoreClick = () => {
-    // Simulate an error or trigger the modal
-    setShowErrorModal(true);
-};
-
-  // Function to count unread notifications
-  const countUnreadNotifications = (notifications) => {
-    return notifications.filter(notification => notification.status !== 'read').length; // Adjust the condition based on your status field
-  };
-
-
   // Fetch doctor and appointment count from the backend
   useEffect(() => {
     const fetchDoctorCount = async () => {
@@ -73,7 +60,7 @@ const Dashboard = () => {
         });
 
         const data = response.data;
-        setAppointmentCount(data.total_appointments); // Update the state with the count
+        setAppointmentCount(data.total_medical_records); // Update the state with the count
       } catch (error) {
         console.error('Error fetching appointment count:', error);
       } 
@@ -101,8 +88,7 @@ const Dashboard = () => {
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/getrecentmedicalrecord/`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          },
-          params: { limit: 5 }
+          }
         });
         setTodaysQueue(response.data);
       } catch (error) {
@@ -167,205 +153,6 @@ useEffect(() => {
 }, [period]);
 
 
-// // Function to prepare chart data based on the selected period
-// const prepareChartData = (attendedData, period) => {
-//   // Prepare data for the chart based on period
-//   const groupedData = attendedData.reduce((acc, item) => {
-//     // Get the label based on the period (Month, Week, or Day)
-//     const label = period === 'monthly' ? item.month :
-//                   period === 'weekly' ? item.week :
-//                   item.date;
-
-//     if (!acc[label]) {
-//       acc[label] = { Missed: 0, Cancelled: 0, Completed: 0 }; // Initialize counts for each status
-//     }
-
-
-//      // Increment the count based on status
-//      if (item.status.toLowerCase()  === 'missed') acc[label].Missed += item.appointmentCount;
-//      if (item.status.toLowerCase() === 'cancelled') acc[label].Cancelled += item.appointmentCount;
-//      if (item.status.toLowerCase() === 'completed') acc[label].Completed += item.appointmentCount;
-
-//     return acc;
-//   }, {});
-
-//   // Convert grouped data into chart-compatible format
-//   const labels = Object.keys(groupedData); // X-axis labels (dates/weeks/months)
-//   const data = [
-//     // Patients with 'Missed' status
-//     labels.map(label => groupedData[label].Missed),
-//     // Patients with 'Cancelled' status
-//     labels.map(label => groupedData[label].Cancelled),
-//     // Patients with 'Completed' status
-//     labels.map(label => groupedData[label].Completed),
-//   ];
-
-//   return {
-//     labels,
-//     datasets: [
-//       {
-//         label: 'Missed',
-//         data: data[0],
-//         borderColor: 'rgba(255, 99, 132, 1)',
-//         backgroundColor: 'rgba(255, 99, 132, 0.2)',
-//         fill: true,
-//       },
-//       {
-//         label: 'Cancelled',
-//         data: data[1],
-//         borderColor: 'rgba(255, 159, 64, 1)',
-//         backgroundColor: 'rgba(255, 159, 64, 0.2)',
-//         fill: true,
-//       },
-//       {
-//         label: 'Completed',
-//         data: data[2],
-//         borderColor: 'rgba(75, 192, 192, 1)',
-//         backgroundColor: 'rgba(75, 192, 192, 0.2)',
-//         fill: true,
-//       },
-//     ],
-//   };
-// };
-
-
-const prepareChartData = (attendedData, period) => {
-  // Sample data for demonstration
-  const sampleData = [
-    { date: '2024-01-01', status: 'completed', appointmentCount: 10 },
-    { date: '2024-01-01', status: 'missed', appointmentCount: 5 },
-    { date: '2024-01-01', status: 'cancelled', appointmentCount: 2 },
-    { date: '2024-01-02', status: 'completed', appointmentCount: 8 },
-    { date: '2024-01-02', status: 'missed', appointmentCount: 3 },
-    { date: '2024-01-02', status: 'cancelled', appointmentCount: 1 },
-    { week: 'Week 1', status: 'completed', appointmentCount: 50 },
-    { week: 'Week 1', status: 'missed', appointmentCount: 20 },
-    { week: 'Week 1', status: 'cancelled', appointmentCount: 10 },
-    { month: 'January', status: 'completed', appointmentCount: 200 },
-    { month: 'January', status: 'missed', appointmentCount: 80 },
-    { month: 'January', status: 'cancelled', appointmentCount: 40 },
-  ];
-
-  // Use sample data if no real data is provided
-  const dataSource = attendedData.length > 0 ? attendedData : sampleData;
-
-  // Prepare data for the chart based on period
-  const groupedData = dataSource.reduce((acc, item) => {
-    const label = period === 'monthly' ? item.month :
-                  period === 'weekly' ? item.week :
-                  item.date;
-
-    if (!acc[label]) {
-      acc[label] = { Missed: 0, Cancelled: 0, Completed: 0 }; // Initialize counts for each status
-    }
-
-    if (item.status.toLowerCase() === 'missed') acc[label].Missed += item.appointmentCount;
-    if (item.status.toLowerCase() === 'cancelled') acc[label].Cancelled += item.appointmentCount;
-    if (item.status.toLowerCase() === 'completed') acc[label].Completed += item.appointmentCount;
-
-    return acc;
-  }, {});
-
-  // Convert grouped data into chart-compatible format
-  const labels = Object.keys(groupedData); // X-axis labels (dates/weeks/months)
-  const data = [
-    labels.map(label => groupedData[label].Missed),
-    labels.map(label => groupedData[label].Cancelled),
-    labels.map(label => groupedData[label].Completed),
-  ];
-
-  return {
-    labels,
-    datasets: [
-      {
-        label: 'Missed',
-        data: data[0],
-        borderColor: 'rgba(255, 99, 132, 1)',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        fill: true,
-      },
-      {
-        label: 'Cancelled',
-        data: data[1],
-        borderColor: 'rgba(255, 159, 64, 1)',
-        backgroundColor: 'rgba(255, 159, 64, 0.2)',
-        fill: true,
-      },
-      {
-        label: 'Completed',
-        data: data[2],
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        fill: true,
-      },
-    ],
-  };
-};
-
-
-
-
-// Calculate the maximum count dynamically
-const calculateMaxCount = (datasets) => {
-  let maxCount = 0;
-  datasets.forEach((dataset) => {
-    const maxValue = Math.max(...dataset.data);
-    if (maxValue > maxCount) {
-      maxCount = maxValue;
-    }
-  });
-  return maxCount;
-};
-
-
-
-
-// Use the function to generate the chart data
-const chartData = prepareChartData(attendedData, period);
-// Use the function to compute maxCount
-const maxCount = calculateMaxCount(chartData.datasets);
-
-const chartOptions = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: `Number of Patients Attended (${period.charAt(0).toUpperCase() + period.slice(1)})`,
-    },
-    datalabels: {
-      color: '#000',
-      font: {
-        size: 12,
-        weight: 'bold',
-      },
-      anchor: 'end',
-      align: 'end',
-      offset: -10,
-      formatter: (value) => value,
-    },
-  },
-  scales: {
-    y: {
-      display: true,
-      beginAtZero: true,
-      min: 0,
-      max: maxCount, // Set max value dynamically based on maxCount
-      ticks: {
-        stepSize: Math.ceil(maxCount / 10), // Dynamically calculate stepSize
-        callback: function (value) {
-          return value % 5 === 0 ? value : ''; // Adjust this logic if needed
-        },
-      },
-      title: {
-        display: true,
-        text: 'Appointment Count',
-      },
-    },
-  },
-};
 
 
 
@@ -469,13 +256,12 @@ const chartOptions = {
                   </tr>
                 </thead>
                 <tbody>
-                  {todaysQueue && todaysQueue.queues && todaysQueue.queues.length > 0 ? (
-                    todaysQueue.queues.map((queue, index) => (
-                      <tr key={`${todaysQueue.qmid}-${index}`}>
-                        <td>{queue.queue_number}</td>
-                        <td>{queue.patient.first_name}</td>
-                        <td>{queue.transaction_type}</td>
-                        <td>{queue.status}</td>
+                  {todaysQueue && todaysQueue.recent_medical_records && todaysQueue.recent_medical_records.length > 0 ? (
+                    todaysQueue.recent_medical_records.map((records_list, index) => (
+                      <tr key={`${todaysQueue.id}-${index}`}>
+                        <td>{records_list.patientname}</td>
+                        <td>{records_list.date}</td>
+                        <td>{records_list.timetreatment}</td>
                       </tr>
                     ))
                   ) : (
@@ -492,17 +278,6 @@ const chartOptions = {
 
       </div>
 
-       {/* Third Row: Today's Appointment and Queue List */}
-       
-       <div className={styles.patientAttended2}>
-       <h1>Requested Chart</h1>
-          <div>
-            <button className={styles.chartBtn} onClick={() => setPeriod('daily')}>Daily</button>
-            <button className={styles.chartBtn} onClick={() => setPeriod('weekly')}>Weekly</button>
-            <button className={styles.chartBtn} onClick={() => setPeriod('monthly')}>Monthly</button>
-          </div>
-          <Line data={chartData} options={chartOptions} />
-      </div>
     </div>
   );
 };
