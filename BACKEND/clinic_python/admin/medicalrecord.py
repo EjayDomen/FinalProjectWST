@@ -24,10 +24,10 @@ def create_medical_record(request, patient_id):
             
             medical_record = MedicalRecord.objects.create(
                 patientid=patient,
-                transactiontype=data.get('transactiontype', ''),
+                transactiontype=data.get('transactionType', ''),
                 date=data.get('date'),
                 timetreatment=data.get('timetreatment', ''),
-                transactiondetails=data.get('transactiondetails', ''),
+                transactiondetails=data.get('transactionDetails', ''),
                 medicineused=data.get('medicineused', 'N/A'),
                 bpbefore=data.get('bpbefore', ''),
                 bpafter=data.get('bpafter', ''),
@@ -36,7 +36,7 @@ def create_medical_record(request, patient_id):
                 temperature=data.get('temperature', ''),
                 pulsebefore=data.get('pulsebefore', ''),
                 pulseafter=data.get('pulseafter', ''),
-                generalremarks=data.get('generalremarks', 'N/A'),
+                generalremarks=data.get('generalRemarks', 'N/A'),
                 attendingstaff=attending_staff
             )
 
@@ -149,7 +149,7 @@ def get_medical_records_summary(request):
                     'id': record['id'],
                     'name': f"{record['patientid__first_name']} {record['patientid__last_name']}",
                     'date': record['date'],
-                    'generalremarks': record['generalremarks']
+                    'generalremarks': 'N/A' #record['generalremarks']
                 }
                 for record in medical_records
             ]
@@ -158,4 +158,41 @@ def get_medical_records_summary(request):
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
     
+    return JsonResponse({'error': 'Invalid request method. Use GET.'}, status=405)
+
+
+def get_medical_record_details(request, record_id):
+    if request.method == 'GET':
+        try:
+            record = get_object_or_404(MedicalRecord, id=record_id)
+
+            record_details = {
+                'id': record.id,
+                'transactiontype': record.transactiontype,
+                'date': record.date,
+                'timetreatment': record.timetreatment,
+                'transactiondetails': record.transactiondetails,
+                'medicineused': record.medicineused,
+                'bpbefore': record.bpbefore,
+                'bpafter': record.bpafter,
+                'weightbefore': record.weightbefore,
+                'weightafter': record.weightafter,
+                'temperature': record.temperature,
+                'pulsebefore': record.pulsebefore,
+                'pulseafter': record.pulseafter,
+                'generalremarks': record.generalremarks,
+                'attendingstaff': {
+                    'id': record.attendingstaff.id,
+                    'name': f"{record.attendingstaff.first_name} {record.attendingstaff.last_name}"
+                } if record.attendingstaff else None,
+                'patient': {
+                    'id': record.patientid.id,
+                    'name': f"{record.patientid.first_name} {record.patientid.last_name}"
+                } if record.patientid else None,
+            }
+
+            return JsonResponse(record_details, status=200)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
     return JsonResponse({'error': 'Invalid request method. Use GET.'}, status=405)

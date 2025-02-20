@@ -8,11 +8,6 @@ class Appointment(models.Model):
         ("completed", "completed"),
     ]
 
-    TYPE_CHOICES=[
-        ("medicine ", "medicine "),
-        ("medicalabstract", "medicalabstract "),
-        ("others", "others"),
-    ]
 
     patientid = models.ForeignKey('clinic_python.Patient', on_delete=models.CASCADE)  # Use string notation
     first_name = models.CharField(max_length=50)
@@ -22,7 +17,7 @@ class Appointment(models.Model):
     contactnumber = models.CharField(max_length=50)
     requestdate = models.DateField()
     status = models.CharField(max_length=50, choices=APPOINTMENT_STATUS_CHOICES, default="pending")  # e.g., pending, confirmed, completed
-    requestpurpose = models.CharField(max_length=100, choices=TYPE_CHOICES, default='medicine')
+    requestpurpose = models.CharField(max_length=100, default='medicine')
     staff = models.ForeignKey(
         'clinic_python.Staff', 
         on_delete=models.CASCADE, 

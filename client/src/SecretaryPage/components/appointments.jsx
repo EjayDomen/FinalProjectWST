@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ContentPaste, CalendarMonth, Opacity } from '@mui/icons-material';
-import { TextField, Box, Button, IconButton, Menu, MenuItem } from '@mui/material';
+import { TextField, Box, Button, IconButton, Menu, MenuItem, Select } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import FullCalendar from '@fullcalendar/react';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import googleCalendarPlugin from '@fullcalendar/google-calendar';
-import interactionPlugin from '@fullcalendar/interaction';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Modal from '@mui/material/Modal';
@@ -15,53 +10,40 @@ import styles from '../styles/appointmentsSecre.module.css';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const ActionDropdown = ({ onReminder, onReschedule, ready, completed }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleOpenMenu = (event) => {
-    event.stopPropagation(); // Prevent row click event
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
-
-  return (
-    <div>
-      <IconButton onClick={handleOpenMenu}>
-        <ArrowDropDownIcon />
-      </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleCloseMenu}
-        onClick={(e) => e.stopPropagation()} // Prevent row click when selecting menu items
-      >
-        <MenuItem onClick={() => { onReminder(); handleCloseMenu(); }}>Reminder</MenuItem>
-        <MenuItem onClick={() => { onReschedule(); handleCloseMenu(); }}>Reschedule</MenuItem>
-      </Menu>
-    </div>
-  );
-};
-
 const Appointments = () => {
   const [searchTerm, setSearchTerm] = useState(''); // State for storing search input
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [startDate, setStartDate] = useState(''); // Date range filter start
   const [endDate, setEndDate] = useState(''); // Date range filter end
-  const [viewMode, setViewMode] = useState('list'); // 'list' or 'calendar'
   const [events, setEvents] = useState([]); // State to hold schedule events
-  const [openModal, setOpenModal] = useState(false); // State for modal visibility
-  const [dropdownOpen, setDropdownOpen] = useState(null); // State for managing the dropdown per row
-  const [formData, setFormData] = useState({
-    newDate: '', // New date field
-    scheduleId: '', // Add this line
-    oldDate:''
-  });
   const navigate = useNavigate();
-  const [selectedEvent, setSelectedEvent] = useState(null); // To store selected event details for rescheduling
 
+
+  const StatusDropdown = ({ rowId, currentStatus, updateRequestStatus }) => {
+    const [selectedStatus, setSelectedStatus] = useState(currentStatus.toLowerCase());
+  
+    const handleStatusChange = async (event) => {
+      const newStatus = event.target.value;
+      setSelectedStatus(newStatus);
+  
+      try {
+        await updateRequestStatus(rowId, newStatus);
+        alert("Status updated successfully!");
+      } catch (error) {
+        alert("Failed to update status. Please try again.");
+      }
+    };
+  
+    return (
+      <Select value={selectedStatus} onChange={handleStatusChange} variant="outlined" size="small">
+        {Object.entries(REQUEST_STATUSES).map(([key, { label }]) => (
+          <MenuItem key={key} value={key}>
+            {label}
+          </MenuItem>
+        ))}
+      </Select>
+    );
+  };
 
   const fetchRequest = async () => {
     try {
@@ -148,69 +130,6 @@ const Appointments = () => {
   };
   
 
-  const toggleViewMode = () => {
-    setViewMode((prevMode) => (prevMode === 'list' ? 'calendar' : 'list'));
-  };
-
-  const handleOpenModal = (event) => {
-    console.log("Event object:", event); // Check what properties are available on the event
-    setSelectedEvent(event); // Store selected event details
-    setOpenModal(true);
-    setFormData({
-      scheduleId: event.schedId || '', // Safeguard if id is undefined
-      oldDate: event.date || '', // Safeguard if date is undefined
-    });
-  };
-  
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedEvent(null); // Clear selected event
-    setFormData({ newDate: '',
-      oldDate:''
-     }); // Reset form data
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-
-   const handleSubmit = async () => {
-    if (!selectedEvent || !formData.newDate) {
-      alert("Please fill out all fields.");
-      return;
-    }
-    try {
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/secretary/appointments/rescheduleAppointments/resched`, {
-        scheduleId: formData.scheduleId,
-        newDate: formData.newDate,
-        oldDate: formData.oldDate
-      }, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      if (response.status === 200) {
-        alert(`Appointment for schedule ID ${selectedEvent.id} has been rescheduled to ${formData.newDate}.`);
-        // Optionally refresh events or close modal here
-        handleCloseModal(); // Close modal on success
-        fetchRequest();
-      } else {
-        alert('Unexpected response. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error rescheduling appointment:', error);
-      alert(error.response?.data?.error || 'Failed to reschedule appointment. Please try again.');
-    }
-  };
-
-  const toggleDropdown = (id) => {
-    setDropdownOpen(dropdownOpen === id ? null : id);
-  };
-
   
   const filterEvents = () => {
     const filteredData = events
@@ -219,7 +138,7 @@ const Appointments = () => {
           String(value).toLowerCase().includes(searchTerm.toLowerCase())
         );
   
-        const eventDate = new Date(event.date);
+        const eventDate = new Date(event.appointment_date);
         const isWithinDateRange =
           (!startDate || new Date(startDate) <= eventDate) &&
           (!endDate || eventDate <= new Date(endDate));
@@ -238,40 +157,94 @@ const Appointments = () => {
   }, [searchTerm, startDate, endDate, events]);
     // Define columns for the DataGrid
 
-const columns = [
-  { field: 'rowNumber', headerName: '#', width: 100 },
-  { field: 'id', headerName: 'Request ID', width: 130 },
-  { field: 'title', headerName: 'Patient Name', width: 250 },
-  { field: 'date', headerName: 'Date', width: 200 },
-  { field: 'purpose', headerName: 'Purpose', width: 220 },
-  { field: 'status', headerName: 'Status', width: 150 },
-  {
-    field: 'actions',
-    headerName: 'Actions',
-    sortable: false,
-    width: 100,
-    renderCell: (params) => (
-      <ActionDropdown
-        onReminder={() => console.log(`Reminder action for ID ${params.row.id}`)}
-        onReschedule={() => handleOpenModal(params.row)}
-      />
-    ),
-  },
-];
-const handleEventClickCalendar = (info) => {
-  const event = info.event; // Extract the clicked event
-  console.log("Clicked Event Details:", event);
+    const columns = [
+      { field: 'rowNumber', headerName: '#', width: 100 },
+      { field: 'id', headerName: 'Request ID', width: 130 },
+      { field: 'title', headerName: 'Patient Name', width: 250 },
+      { field: 'date', headerName: 'Date', width: 200 },
+      { field: 'purpose', headerName: 'Purpose', width: 220 },
+      {
+        field: "status",
+        headerName: "Status",
+        width: 150,
+        renderCell: (params) => {
+          const status = REQUEST_STATUSES[params.value?.toLowerCase()] || {
+            label: params.value,
+            color: "#000"
+          };
+    
+          return (
+            <span
+              style={{
+                backgroundColor: status.color,
+                color: "#fff",
+                padding: "5px 10px",
+                borderRadius: "5px",
+                textAlign: "center",
+                fontWeight: "bold"
+              }}
+            >
+              {status.label}
+            </span>
+          );
+        }
+      },
+      {
+        field: "actions",
+        headerName: "Actions",
+        sortable: false,
+        width: 180,
+        renderCell: (params) => (
+          <StatusDropdown rowId={params.row.id} currentStatus={params.row.status} />
+        )
+      }
+    ];
+    
 
-  // Prepare the necessary data for navigation
-  const doctorName = event.title || 'Unknown Doctor';
-  const appDate = event.startStr.split('T')[0] || 'Unknown Date'; // Extract date from ISO string
-  const time = `${event.start?.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })} - ${event.end?.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}`;
 
-  // Navigate to the desired page with state
-  navigate(`/staff/appointments/patientList/${event.extendedProps.schedId}`, {
-    state: { doctorName, appDate, time },
-  });
+const updateRequestStatus = async (id, newStatus) => {
+  try {
+    const token = localStorage.getItem('token'); // Get auth token if required
+    const response = await axios.put(
+      `${process.env.REACT_APP_API_URL}/api/admin/updaterequeststatus/${id}/`,
+      { status: newStatus },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+
+    const handleStatusChange = async (id, status) => {
+      try {
+        const result = await updateRequestStatus(id, status);
+        alert(`Request ID: ${id} updated to ${status}`);
+        console.log(result); // Do something with the response
+      } catch (error) {
+        alert('Failed to update request status');
+      }
+    };
+
+    console.log('Status Update Response:', response.data);
+    return response.data; // Return response if needed
+
+  } catch (error) {
+    console.error('Error updating request status:', error.response ? error.response.data : error.message);
+    throw error; // Rethrow error for handling in the UI
+  }
 };
+
+
+const REQUEST_STATUSES = {
+  pending: { label: "Pending", color: "#FFC107" }, // Yellow
+  approved: { label: "Approved", color: "#4CAF50" }, // Green
+  rejected: { label: "Rejected", color: "#F44336" }, // Red
+  in_progress: { label: "In Progress", color: "#2196F3" }, // Blue
+  completed: { label: "Completed", color: "#673AB7" }, // Purple
+  cancelled: { label: "Cancelled", color: "#9E9E9E" } // Grey
+};
+
 
 
 return (
@@ -318,37 +291,6 @@ return (
       />
       </div>
 
-        {/* Reschedule Modal */}
-        <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="reschedule-modal-title">
-            <div className={styles.modalContainer}>
-              <h2 id="reschedule-modal-title">Reschedule Appointment</h2>
-              <hr />
-              {selectedEvent && (
-                <>
-                  <p>Doctor: {selectedEvent.title}</p>
-                  <p>Time: {selectedEvent.time}</p>
-                  <p>Date: {selectedEvent.date || 'N/A'}</p>
-                  
-                  <input
-                    type="date"
-                    name="newDate"
-                    value={formData.newDate}
-                    onChange={handleChange}
-                  />
-                  {/* Hidden input for schedule ID */}
-                  <input
-                    type="hidden"
-                    name="scheduleId"
-                    value={formData.scheduleId} // Pass the scheduleId here
-                  />
-                  <div className={styles.modalButtons}>
-                    <button onClick={handleCloseModal} className={styles.cancelButton}>Cancel</button>
-                    <button onClick={handleSubmit} className={styles.submitButton}>Submit</button>
-                  </div>
-                </>
-              )}
-            </div>
-          </Modal>
 
           {/* Conditional rendering for list or calendar view */}
           <div style={{height: '100%', width:'100%'}}>
@@ -381,9 +323,6 @@ return (
                   columns={columns}
                   pageSize={10} // Default rows per page
                   rowsPerPageOptions={[10, 20, 50]} // Row count options
-                  getRowClassName={(params) =>
-                    params.index % 2 === 0 ? styles.evenRow : styles.oddRow
-                  }
                   onRowClick={handleEventClick}
                 />
               </div>

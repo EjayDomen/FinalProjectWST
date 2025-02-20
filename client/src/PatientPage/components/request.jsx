@@ -224,7 +224,7 @@ const Appointment = () => {
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
     {
-      field: 'requestpurpose',
+      field: 'purpose',
       headerName: 'Purpose',
       width: 350,
     },
@@ -329,7 +329,6 @@ const Appointment = () => {
     <Button variant="secondary" onClick={() => setIsModalOpen(false)}>Close</Button>
   </Modal.Footer>
 </Modal>
-
 
        {/* QR Modal */}
        {qrModalOpen && selectedAppointment && (

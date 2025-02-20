@@ -196,8 +196,8 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
         <label style={{ display: 'flex', flexDirection: 'column' }}>
           General Remarks:
           <textarea
-            name="otherSymptoms"
-            value={formData.otherSymptoms}
+            name="generalRemarks"
+            value={formData.generalRemarks}
             onChange={handleInputChange}
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
           ></textarea>

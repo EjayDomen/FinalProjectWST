@@ -36,6 +36,7 @@ urlpatterns = [
     path('medicalrecordcount/', medicalrecord.count_medical_records, name='count_medical_records'),
     path('getrecentmedicalrecord/', medicalrecord.get_recent_medical_records, name='get_recent_medical_records'),
     path('medicalrecordlist/', medicalrecord.get_medical_records_summary, name='get_medical_records_summary'),
+    path('medical-record/<int:record_id>/', medicalrecord.get_medical_record_details, name='medical-record-detail'),
 
 
 

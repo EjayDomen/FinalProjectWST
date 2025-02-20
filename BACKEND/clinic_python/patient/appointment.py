@@ -55,9 +55,9 @@ def create_request(request):
                 last_name=data.get('lastName', 'N/A'),
                 suffix=data.get('suffix', 'N/A'),
                 contactnumber=data.get('contactnumber', 'N/A'),
-                requestpurpose=data.get('requestpurpose', 'N/A'),
+                requestpurpose = data.get('purpose', data.get('otherPurpose', 'N/A')),
                 status='pending',  # Ensure this field is in the data
-                requestdate=data['appointmentdate'],
+                requestdate=data['requestdate'],
                 staff_id=None
             )
 
@@ -85,8 +85,6 @@ def view_appointments(request):
     data = []
     for appointment in appointments:
         staff = appointment.staff
-        doctor_name = f"{staff.first_name} {staff.last_name}" if staff else "N/A"
-        
         
         data.append({
             "appointment_id": appointment.id,

@@ -295,3 +295,95 @@
 .dropdownItem:hover {
   background-color: #f0f0f0;
 }
+
+
+.modalOverlay {
+  background: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.modalTitle {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  color: #777;
+}
+
+.closeButton:hover {
+  color: #000;
+}
+
+.modalDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modalDetails p {
+  font-size: 16px;
+  color: #444;
+}
+
+.modalDetails strong {
+  color: #000;
+}
+
+.closeModalButton {
+  margin-top: 20px;
+  background: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+}
+
+.closeModalButton:hover {
+  background: #0056b3;
+}

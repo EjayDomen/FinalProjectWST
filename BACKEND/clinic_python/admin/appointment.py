@@ -133,14 +133,10 @@ def get_appointment_details_report(request):
             response.append({
                 "id": appointment.id,
                 "patientFullName": f"{appointment.first_name} {appointment.middle_name} {appointment.last_name} {appointment.suffix}".strip(),
-                "age": appointment.age,
-                "address": appointment.address,
-                "sex": appointment.sex,
                 "contactNumber": appointment.contact_number,
-                "appointmentDate": appointment.appointment_date.strftime('%Y-%m-%d'),
-                "purpose": appointment.purpose,
+                "appointmentDate": appointment.request_date.strftime('%Y-%m-%d'),
+                "purpose": appointment.requestpurpose,
                 "status": appointment.status.lower(),
-                "type": appointment.type,
                 "staffFullName": f"{appointment.staff.first_name} {appointment.staff.last_name}" if appointment.staff else None,
                 "createdAt": appointment.createdAt.strftime('%Y-%m-%d %H:%M:%S'),
             })

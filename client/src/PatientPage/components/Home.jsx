@@ -109,10 +109,10 @@ const Home = () => {
             {requests.length > 0 ? (
               requests.map((appointment) => (
                 <tr key={appointment.id}>
-                  <td>{appointment.id}</td>
+                  {/* <td>{appointment.id}</td>
                   <td>{appointment.doctor.LAST_NAME}</td>
                   <td>{new Date(appointment.APPOINTMENT_DATE).toLocaleDateString()}</td>
-                  <td>{convertToStandardTime(appointment.APPOINTMENT_TIME)}</td>  {/* Convert time to standard format */}
+                  <td>{convertToStandardTime(appointment.APPOINTMENT_TIME)}</td>  Convert time to standard format */}
                 </tr>
               ))
             ) : (
