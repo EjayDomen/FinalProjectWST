@@ -52,18 +52,17 @@ const MedicalRecordsModal = ({ isOpen, onClose, patientId, patientName }) => {
               <h3>Record {index + 1}</h3>
               <p><strong>Transaction Type:</strong> {record.transactiontype}</p>
               <p><strong>Date:</strong> {record.date}</p>
+              <p><strong>Time Treatment:</strong> {record.timetreatment}</p>
               <p><strong>Transaction Details:</strong> {record.transactiondetails}</p>
-              <p><strong>Height:</strong> {record.height}</p>
-              <p><strong>Weight:</strong> {record.weight}</p>
-              <p><strong>Age:</strong> {record.age}</p>
-              <p><strong>Heart Rate:</strong> {record.heart_rate}</p>
-              <p><strong>Respiratory Rate:</strong> {record.respiratory_rate}</p>
+              <p><strong>Medicine given during Treatment:</strong> {record.medicineused}</p>
+              <p><strong>Blood Pressure Before:</strong> {record.bpbefore}</p>
+              <p><strong>Blood Pressure After:</strong> {record.bpafter}</p>
+              <p><strong>Weight Before:</strong> {record.weightbefore}</p>
+              <p><strong>Weight After:</strong> {record.weightafter}</p>
               <p><strong>Temperature:</strong> {record.temperature}</p>
-              <p><strong>Blood Pressure:</strong> {record.bloodpressure}</p>
-              <p><strong>Pain Scale:</strong> {record.painscale}</p>
-              <p><strong>Other Symptoms:</strong> {record.othersymptoms}</p>
-              <p><strong>Initial Diagnosis:</strong> {record.initialdiagnosis}</p>
-              <p><strong>Notes:</strong> {record.notes}</p>
+              <p><strong>Pulse Before:</strong> {record.pulsebefore}</p>
+              <p><strong>Pulse After:</strong> {record.pulseafter}</p>
+              <p><strong>General Remarks:</strong> {record.notes}</p>
               <p><strong>Attending Staff:</strong> {record.attendingstaff}</p>
             </div>
           ))

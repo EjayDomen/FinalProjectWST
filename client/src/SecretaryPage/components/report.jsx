@@ -13,6 +13,7 @@ const Report = () => {
   const [selectedMonth, setSelectedMonth] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [appointments, setAppointments] = useState([]);
+  const [username, setUserName] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -30,14 +31,41 @@ const Report = () => {
       }
     };
     fetchAppointments();
+    fetchProfile()
   }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/me/`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`  // Assuming token-based authentication
+        }
+      });
+      const staff = response.data;
+  
+      // Extract and handle optional fields
+      const firstName = staff.first_name || "";
+      const middleInitial = staff.middle_name ? `${staff.middle_name.charAt(0)}.` : ""; // Get first letter + "."
+      const lastName = staff.last_name || "";
+      const suffix = staff.suffix ? ` ${staff.suffix}` : ""; // Add space before suffix if it exists
+  
+      // Construct full name properly
+      const fullName = `${firstName} ${middleInitial} ${lastName}${suffix}`.trim().replace(/\s+/g, ' '); // Remove extra spaces
+  
+      setUserName(fullName);
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      // navigate('/');
+    }
+  };
+  
 
   const handleSearchChange = (event) => setSearchTerm(event.target.value);
   const handleStartDateChange = (event) => setStartDate(event.target.value);
   const handleEndDateChange = (event) => setEndDate(event.target.value);
 
   const filteredAppointments = appointments.filter(appointment => {
-    const appointmentDate = new Date(appointment.date);
+    const appointmentDate = new Date(appointment.appointmentDate);
     const start = startDate ? new Date(startDate) : null;
     const end = endDate ? new Date(endDate) : null;
 
@@ -46,7 +74,6 @@ const Report = () => {
       (!end || appointmentDate <= end) &&
       ((appointment.id && appointment.id.toString().includes(searchTerm.toLowerCase())) ||
         (appointment.fullName && appointment.fullName.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (appointment.doctor && appointment.doctor.fullName && appointment.doctor.fullName.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (appointment.contactNumber && appointment.contactNumber.toString().includes(searchTerm.toLowerCase())) ||
         (appointment.age && appointment.age.toString().includes(searchTerm.toLowerCase())) ||
         (appointment.address && appointment.address.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -71,18 +98,14 @@ const Report = () => {
       return appointment.appointmentDate === today;
     });
 
-    const tableColumn = ["ID", "Patient Name", "Staff Name", "Contact Number", "Age", "Address", "Sex", "Appointment Date", "Purpose"];
+    const tableColumn = ["ID", "Patient Name", "Staff Name", "Contact Number", "Request Date", "Purpose"];
     const tableRows = [];
 
     todayAppointments.forEach(appointment => {
       const appointmentData = [
-        appointment.appointmentId,
+        appointment.id,
         appointment.patientFullName,
-        appointment.staffFullName,
-        appointment.contactNumber,
-        appointment.age,
-        appointment.address,
-        appointment.sex,
+        appointment.contactnumber,
         appointment.appointmentDate,
         appointment.purpose
       ];
@@ -120,7 +143,7 @@ const Report = () => {
       // Add header only to the first page
       if (i === 1) {
         // Add header background
-        pdf.setFillColor(29, 52, 96); // Green color
+        pdf.setFillColor(37, 99, 235);
         pdf.rect(0, 0, pageWidth, headerHeight, "F"); // Filled rectangle for the header
 
         // Add header logo
@@ -136,7 +159,7 @@ const Report = () => {
         pdf.setFont("bold");
         pdf.setFontSize(30); // Font size
         pdf.setTextColor(255, 255, 255); // White text color
-        pdf.text("Appointment Report", pageWidth / 2, 18, { align: "center" }); // Centered title
+        pdf.text("Clinic Report", pageWidth / 2, 18, { align: "center" }); // Centered title
       }
 
       // Add footer to every page
@@ -191,20 +214,16 @@ const Report = () => {
 
 
     // Table content
-    const tableColumn = ["ID", "Patient Name", "Staff Name", "Contact Number", "Age", "Address", "Sex", "Appointment Date", "Purpose"];
+    const tableColumn = ["ID", "Patient Name", "Contact Number", "Appointment Date", "Purpose"];
     const tableRows = [];
 
     filteredAppointments.forEach(appointment => {
       const appointmentData = [
         appointment.id,
-        appointment.fullName,
-        appointment.doctorFullName,
-        appointment.contactNumber,
-        appointment.age,
-        appointment.address,
-        appointment.sex,
-        appointment.date,
-        appointment.time
+        appointment.patientFullName,
+        appointment.contactnumber,
+        appointment.appointmentDate,
+        appointment.purpose
       ];
       tableRows.push(appointmentData);
     });
@@ -266,7 +285,7 @@ const Report = () => {
         pdf.setFont("bold");
         pdf.setFontSize(30); // Font size
         pdf.setTextColor(255, 255, 255); // White text color
-        pdf.text("Appointment Report", pageWidth / 2, 18, { align: "center" }); // Centered title
+        pdf.text("Clinic Report", pageWidth / 2, 18, { align: "center" }); // Centered title
       }
 
       // Add footer to every page
@@ -279,7 +298,7 @@ const Report = () => {
       pdf.setFontSize(10);
       pdf.text(`Page ${i} of ${pageCount}`, 14, pageHeight - 10); // Footer page number
       pdf.text(
-        "Room 420 Outpatient Department - Confidential Report",
+        "Clinic Report - Confidential Report",
         pageWidth / 2,
         pageHeight - 10,
         { align: "center" }
@@ -297,7 +316,7 @@ const Report = () => {
     pdf.setFontSize(7);
     pdf.setTextColor(255, 255, 255); // BlacWhitek text color
     // Right-aligned text
-    pdf.text(`Generated by: Catherine Dela Cruz`, pageWidth - rightMargin, contentStartY, { align: "right" });
+    pdf.text(`Generated by: ${username}`, pageWidth - rightMargin, contentStartY, { align: "right" });
     pdf.text(`Total Appointments: ${totalAppointments}`, pageWidth - rightMargin, contentStartY + 5, { align: "right" });
     pdf.text(`Date: ${startDate} - ${endDate}`, pageWidth - rightMargin, contentStartY + 5 + 5, { align: "right" });
 
@@ -320,17 +339,13 @@ const Report = () => {
     const dateRangeInfo = `Appointment Date Range: ${startDate} - ${endDate}`;
 
     // Define headers and rows
-    const headers = ["ID", "Patient Name", "Staff Name", "Contact Number", "Age", "Address", "Sex", "Appointment Date", "Purpose"];
+    const headers = ["ID", "Patient Name", "Contact Number", "Appointment Date", "Purpose"];
     const rows = filteredAppointments.map(appointment => [
       appointment.id,
-      appointment.fullName,
-      appointment.doctorFullName,
+      appointment.patientFullName,
       appointment.contactNumber,
-      appointment.age,
-      appointment.address,
-      appointment.sex,
-      appointment.date,
-      appointment.time
+      appointment.appointmentDate,
+      appointment.purpose
     ]);
 
     // Construct CSV content with title, date range, headers, and rows
@@ -362,10 +377,8 @@ const Report = () => {
       headerName: 'Purpose',
       width: 220,
     },
-    { field: 'contactNumber', headerName: 'Contact Number', width: 150 },
-    { field: 'age', headerName: 'Age', width: 70 },
-    { field: 'address', headerName: 'Address', width: 250 },
-    { field: 'sex', headerName: 'Sex', width: 90 },
+    { field: 'status', headerName: 'Status', width: 150 },
+    { field: 'contactnumber', headerName: 'Contact Number', width: 90 },
     { field: 'appointmentDate', headerName: 'Appointment Date', width: 200 },
   ];
 

@@ -482,8 +482,8 @@ const Appointment = () => {
             <Form.Control
               type="text"
               className="uniform-input"
-              value={newAppointment?.contact_number || ''}
-              onChange={(e) => setNewAppointment({ ...newAppointment, contact_number: e.target.value })}
+              value={newAppointment?.contactnumber || ''}
+              onChange={(e) => setNewAppointment({ ...newAppointment, contactnumber: e.target.value })}
             />
           </Form.Group>
           <Form.Group className="mb-3">
@@ -538,17 +538,7 @@ const Appointment = () => {
       )}
     </Form.Group>
         </Col>
-        {/* <Col md={6}>
-          <Form.Group className="mb-3">
-            <Form.Label>Type</Form.Label>
-            <Form.Control
-              type="text"
-              className="uniform-input"
-              value={newAppointment?.type || ''}
-              onChange={(e) => setNewAppointment({ ...newAppointment, type: e.target.value })}
-            />
-          </Form.Group>
-        </Col> */}
+
       </Row>
     </Form>
   </Modal.Body>

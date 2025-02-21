@@ -9,9 +9,6 @@ import axios from 'axios';
 
 const Dashboard = () => {
   const [patientCounts, setPatientCounts] = useState({
-    studentCount: 0,
-    employeeCount: 0,
-    nonAcademicCount: 0,
     activePatientCount: 0,
     deletedPatientCount: 0,
   });
@@ -21,24 +18,17 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        const [patientTypeResponse, patientStatusResponse] = await Promise.all([
-          axios.get(`${process.env.REACT_APP_API_URL}/api/superadmin/countPatient/`, {
+        const patientStatusResponse = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/superadmin/activePatient/`,
+          {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
-          }),
-          axios.get(`${process.env.REACT_APP_API_URL}/api/superadmin/activePatient/`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-          }),
-        ]);
+          }
+        );
 
         // Update state with fetched data
         setPatientCounts({
-          studentCount: patientTypeResponse.data.student_count,
-          employeeCount: patientTypeResponse.data.employee_count,
-          nonAcademicCount: patientTypeResponse.data.non_academic_count,
           activePatientCount: patientStatusResponse.data.active_patient_count,
           deletedPatientCount: patientStatusResponse.data.deleted_patient_count,
         });
@@ -109,18 +99,6 @@ const Dashboard = () => {
           <div className="stats-card" id="stat1" style={{ color: 'white' }}>
             <h3>Appointments</h3>
             <h1>21</h1>
-          </div>
-          <div className="stats-card" id="stat2" style={{ color: 'white' }}>
-            <h3>Students</h3>
-            <h1>{patientCounts.studentCount}</h1>
-          </div>
-          <div className="stats-card" id="stat3">
-            <h3>Employees</h3>
-            <h1>{patientCounts.employeeCount}</h1>
-          </div>
-          <div className="stats-card" id="stat4">
-            <h3>Non-Academic Personnel</h3>
-            <h1>{patientCounts.nonAcademicCount}</h1>
           </div>
         </div>
 

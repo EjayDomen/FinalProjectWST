@@ -19,7 +19,7 @@ const Appointments = () => {
   const navigate = useNavigate();
 
 
-  const StatusDropdown = ({ rowId, currentStatus, updateRequestStatus }) => {
+  const StatusDropdown = ({ rowId, currentStatus }) => {
     const [selectedStatus, setSelectedStatus] = useState(currentStatus.toLowerCase());
   
     const handleStatusChange = async (event) => {

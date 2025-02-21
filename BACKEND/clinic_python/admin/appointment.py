@@ -8,6 +8,8 @@ import pytz
 from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+
 
 @api_view(['GET'])
 def get_all_appointments(request):
@@ -28,7 +30,7 @@ def get_all_appointments(request):
                     "last_name": appointment.patientid.last_name,
                     "suffix": appointment.patientid.suffix,
                 },
-                "patient_name": f"{appointment.first_name} {appointment.last_name} {appointment.suffix or ''}".strip(),
+                "patient_name": f"{appointment.patientid.first_name} {appointment.patientid.last_name} {appointment.patientid.suffix or ''}".strip(),
                 "contact_number": appointment.contactnumber,
                 "appointment_date": appointment.requestdate.strftime("%Y-%m-%d"),
                 "purpose": appointment.requestpurpose,
@@ -132,10 +134,10 @@ def get_appointment_details_report(request):
         for appointment in appointments:
             response.append({
                 "id": appointment.id,
-                "patientFullName": f"{appointment.first_name} {appointment.middle_name} {appointment.last_name} {appointment.suffix}".strip(),
-                "contactNumber": appointment.contact_number,
-                "appointmentDate": appointment.request_date.strftime('%Y-%m-%d'),
+                "patientFullName":  f"{appointment.patientid.first_name} {appointment.patientid.middle_name or ''} {appointment.patientid.last_name} {appointment.patientid.suffix or ''}".strip(),
+                "appointmentDate": appointment.requestdate.strftime('%Y-%m-%d'),
                 "purpose": appointment.requestpurpose,
+                "contactnumber": appointment.contactnumber,
                 "status": appointment.status.lower(),
                 "staffFullName": f"{appointment.staff.first_name} {appointment.staff.last_name}" if appointment.staff else None,
                 "createdAt": appointment.createdAt.strftime('%Y-%m-%d %H:%M:%S'),
@@ -205,19 +207,19 @@ def count_completed_appointments(request):
 def update_status(request, id):
     
     try:
-        request = get_object_or_404(Appointment, id=id)
+        requeststatus = get_object_or_404(Appointment, id=id)
         data = request.data
         
-        request.status = data.get('status', request.status)
-        request.save
+        requeststatus.status = data.get('status', requeststatus.status)
+        requeststatus.save()
 
         updated_status = {
-            'Request_Id': request.id,
-            'Status': request.status
+            'Request_Id': requeststatus.id,
+            'Status': requeststatus.status
         }
 
         return JsonResponse({"message": "Request status successfully updated to ", "request": updated_status}, status=200)
 
     except Exception as e:
-        printf(f"error updating: {e}")
+        print(f"error updating: {e}")
         return JsonResponse({'message': 'Internal server error'}, status=500)
