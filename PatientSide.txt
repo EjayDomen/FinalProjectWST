@@ -58,3 +58,15 @@ FeedBack:
 
 ejay@a.com
 Ejay123
+
+
+SUPERADMIN ACCOUNT:
+{
+  "first_name": "Juan",
+  "middle_name": "Dela",  
+  "last_name": "Cruz",
+  "suffix": "Jr.",
+  "email": "juan.delacruz@example.com",
+  "password": "SecurePass123!",
+  "user_level_id": 1
+}
