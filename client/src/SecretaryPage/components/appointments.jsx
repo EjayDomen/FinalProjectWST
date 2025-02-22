@@ -238,7 +238,6 @@ const updateRequestStatus = async (id, newStatus) => {
 
 const REQUEST_STATUSES = {
   pending: { label: "Pending", color: "#FFC107" }, // Yellow
-  approved: { label: "Approved", color: "#4CAF50" }, // Green
   rejected: { label: "Rejected", color: "#F44336" }, // Red
   in_progress: { label: "In Progress", color: "#2196F3" }, // Blue
   completed: { label: "Completed", color: "#673AB7" }, // Purple
