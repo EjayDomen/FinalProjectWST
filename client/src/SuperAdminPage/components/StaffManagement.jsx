@@ -22,7 +22,7 @@ const StaffManagement = () => {
     middleName: '',
     lastName: '',
     suffix: '',
-    specialization: '',
+    workposition: '',
     email: '',
   });
 
@@ -47,7 +47,7 @@ const StaffManagement = () => {
         id: index + 1,
         staffId: staff.id,
         name: `${staff.first_name} ${staff.last_name}`,
-        specialty: staff.specialization,
+        specialty: staff.workposition,
         email: staff.email,
       }));
       setArchivedRows(archivedData);
@@ -88,7 +88,7 @@ const handleRestore = async (staffId) => {
       middleName: '',
       lastName: '',
       suffix: '',
-      specialization: '',
+      workposition: '',
       email: '',
     });
     setSelectedStaff("");
@@ -108,7 +108,7 @@ const handleRestore = async (staffId) => {
         id: index + 1,
         staffId: staff.id,
         name: `${staff.first_name} ${staff.last_name}`,
-        specialty: staff.specialization,
+        specialty: staff.workposition,
         email: staff.email,
       }));
       setRows(staffData);
@@ -139,7 +139,7 @@ const handleRestore = async (staffId) => {
           middle_name: formData.middleName,
           last_name: formData.lastName,
           suffix: formData.suffix,
-          specialization: formData.specialization,
+          workposition: formData.workposition,
           email: formData.email,
           password: predefinedPassword,
         },
@@ -159,7 +159,7 @@ const handleRestore = async (staffId) => {
           id: prevRows.length + 1,
           staffId: response.data.staff_id,
           name: `${formData.firstName} ${formData.lastName}`,
-          specialty: formData.specialization,
+          specialty: formData.workposition,
           email: formData.email,
         },
       ]);
@@ -178,7 +178,7 @@ const handleRestore = async (staffId) => {
       lastName: row.name.split(' ')[1],
       middleName: '', // Assuming no middle name is available
       suffix: '',
-      specialization: row.specialty,
+      workposition: row.specialty,
       email: row.email,
     });
     openModal();
@@ -195,7 +195,7 @@ const handleRestore = async (staffId) => {
           middle_name: formData.middleName,
           last_name: formData.lastName,
           suffix: formData.suffix,
-          specialization: formData.specialization,
+          workposition: formData.workposition,
           email: formData.email,
         },
         {
@@ -383,7 +383,7 @@ const handleRestore = async (staffId) => {
               <input type="text" name="middleName" placeholder="Middle Name" onChange={handleChange} />
               <input type="text" name="lastName" placeholder="Last Name" onChange={handleChange} required />
               <input type="text" name="suffix" placeholder="Suffix" onChange={handleChange} />
-              <input type="text" name="specialization" placeholder="Specialization" onChange={handleChange} required />
+              <input type="text" name="workposition" placeholder="workposition" onChange={handleChange} required />
               <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
               <button type="submit" style={{backgroundColor: 'rgb(25, 135, 84)', color: 'white'}}>Create</button>
               <button type="button" onClick={closeModal}>Cancel</button>
@@ -402,7 +402,7 @@ const handleRestore = async (staffId) => {
               <input type="text" name="middleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
               <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
               <input type="text" name="suffix" placeholder="Suffix" value={formData.suffix} onChange={handleChange} />
-              <input type="text" name="specialization" placeholder="Specialization" value={formData.specialization} onChange={handleChange} required />
+              <input type="text" name="workposition" placeholder="worposition" value={formData.workposition} onChange={handleChange} required />
               <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
               <button type="submit" style={{backgroundColor: 'rgb(25, 135, 84)', color: 'white'}}>Update</button>
               <button type="button" onClick={closeModal}>Cancel</button>

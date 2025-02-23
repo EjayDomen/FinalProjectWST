@@ -225,7 +225,6 @@ def archived_patients(request):
                 'first_name': patient.first_name,
                 'last_name': patient.last_name,
                 'email': patient.email,
-                'patient_type': patient.patient_type,
                 'is_deleted': patient.is_deleted,
                 'createdAt': patient.createdAt,
             })

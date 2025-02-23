@@ -49,7 +49,7 @@ const PatientManagement = () => {
 
   const handleConfirmDelete = async () => {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/deletepatient/${patientToDelete}`, {
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/admin/deletepatient/${patientToDelete}/`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
       });
       setPatients((prevPatients) => prevPatients.filter((patient) => patient.id !== patientToDelete));
@@ -383,17 +383,6 @@ const PatientManagement = () => {
                {/* Birthday, Age, and Sex Fields */}
                <div className={styles.formGroup}>
                  <div style={{ display: 'flex', gap: '20px' }}>
-                   <div style={{ flex: 1 }}>
-                     <label><strong>Patient Type</strong></label>
-                     <input
-                       type="text"
-                       name="patient_type"
-                       value={selectedPatient.patient_type || ''} // Use the raw date format
-                       onChange={handleInputChange}
-                       readOnly={!isEditing}
-                       style={{ width: '100%' }} // Full width input
-                     />
-                   </div>
                    <div style={{ flex: 1 }}>
                      <label><strong>Age:</strong></label>
                      <input

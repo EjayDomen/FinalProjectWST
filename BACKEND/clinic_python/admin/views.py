@@ -7,31 +7,18 @@ from django.views.decorators.csrf import csrf_exempt
 from clinic_python.models import Staff
 from rest_framework_simplejwt.tokens import AccessToken
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET
 
+@require_GET
 def get_all_staff(request):
-    if request.method == 'GET':
-        try:
-            # Query all staff members that are not deleted
-            staff_members = Staff.objects.filter(is_deleted=False).values(
-                'id', 
-                'first_name', 
-                'middle_name', 
-                'last_name', 
-                'suffix', 
-                'specialization', 
-                'email'
-            )
-
-            # Create a list of staff members
-            staff_list = list(staff_members)
-
-            # Return success response
-            return JsonResponse({'staff': staff_list}, status=200)
-
-        except Exception as e:
-            return JsonResponse({'error': f'Error fetching staff members: {str(e)}'}, status=500)
-    else:
-        return JsonResponse({'error': 'Invalid request method'}, status=405)
+    try:
+        staff_members = Staff.objects.filter(is_deleted=False).values(
+            'id', 'first_name', 'middle_name', 'last_name', 
+            'suffix', 'workposition', 'email'
+        )
+        return JsonResponse({'staff': list(staff_members)}, status=200)
+    except DatabaseError as e:
+        return JsonResponse({'error': f'Database error: {str(e)}'}, status=500)
 
 def get_archived_staff(request):
     if request.method == 'GET':
@@ -127,7 +114,7 @@ def edit_staff(request, id):
             middle_name = body.get('middle_name', staff.middle_name)
             last_name = body.get('last_name', staff.last_name)
             suffix = body.get('suffix', staff.suffix)
-            specialization = body.get('specialization', staff.specialization)
+            workposition = body.get('workposition', staff.workposition)
             email = body.get('email', staff.email)
 
             # Update fields only if they are provided in the request
@@ -135,7 +122,7 @@ def edit_staff(request, id):
             staff.middle_name = middle_name
             staff.last_name = last_name
             staff.suffix = suffix
-            staff.specialization = specialization
+            staff.workposition = workposition
             staff.email = email
 
             # Save the changes to the database
