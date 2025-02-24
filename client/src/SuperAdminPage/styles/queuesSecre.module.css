@@ -1,0 +1,390 @@
+/* General Layout */
+.doctorsSection {
+    padding: 20px;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    height: 100%;
+    width: 100%;
+  }
+  
+  .addDoctorBtn {
+    padding: 6px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .addDoctorBtn2 {
+    padding: 6px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+  }
+  
+  .addDoctorBtn2:hover {
+    background-color: #1a416c;
+  }
+  
+  
+  .addDoctorBtn:hover {
+    color: rgb(239, 239, 239);
+    background-color: #218838;
+  }
+  
+  /* Doctors Header */
+  .doctorsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .doctorsHeader h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bolder;
+  }
+  
+  .doctorsHeader p {
+    color: gray;
+    font-size: 14px;
+  }
+  
+  .createQueueButton{
+    padding: 12px 18px;
+    background-color: #28a745;
+    color: rgb(239, 239, 239);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  .addDoctorBtn:hover {
+    background-color: #218838;
+    color: rgb(239, 239, 239);
+  }
+  
+  /* Search and Filter Section */
+  .searchAppointment {
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .searchAppointment input {
+    padding: 15px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 90.5%;
+  }
+  
+  .filterBtn {
+    padding: 11px 13px;
+    background-color: #3691ff; /* Button background color */
+    border: none; /* Remove default button border */
+    border-radius: 8px; /* Rounded edges */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Light shadow for 3D effect */
+    cursor: pointer; /* Pointer on hover */
+    color: white;
+  }
+  
+  .filterBtn:hover {
+    background-color: #1574e8;
+  }
+  
+  /* Header */
+  .header {
+    margin-left: -10px;
+    width: 102%;
+    height: 80px;
+    margin-top: -20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  /* Greeting */
+  .greeting {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .greeting h1 {
+    margin: 0;
+    font-size: 1.4em;
+    font-weight: bold;
+    color: #000;
+  }
+  
+  .greeting p {
+    margin: 0;
+    font-size: 0.85em;
+    color: #666;
+  }
+  
+  /* Header Actions */
+  .headerActions {
+    display: flex;
+    align-items: center;
+  }
+  
+  .searchIcon {
+    color: #666;
+    margin-right: 15px;
+    cursor: pointer;
+    font-size: 1.5em;
+  }
+  
+  .headerIcon,
+  .profileIcon {
+    color: #666;
+    margin-right: 15px;
+    cursor: pointer;
+    font-size: 1.5em;
+  }
+  
+  .userInfo {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+    color: #333;
+  }
+  
+  .userName {
+    font-weight: 500;
+    font-style: italic;
+    font-size: 25px;
+    margin-right: 20px;
+    color: #333;
+  }
+  
+  /* Table Header */
+  .tableHeader {
+    margin-top: 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    background-color: #f0f0f0;
+    padding: 15px;
+    border-bottom: 2px solid #eaeaea;
+    font-weight: bold;
+    color: black;
+    font-size: 16px;
+    text-align: center; /* Center-align header text */
+  }
+  
+  .tableHeader span {
+    flex: 1;
+    text-align: center; /* Center-align each header cell */
+  }
+  
+  
+  .tableRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    color: #757373;
+    font-weight: 600;
+    text-align: center;
+    background-color: #ffffff; /* Default background color */
+  }
+  
+  /* Zebra striping for rows */
+  .tableRow:nth-child(even) {
+    background-color: #f7f7f7;
+  }
+  
+  .tableRow:nth-child(odd) {
+    background-color: #ffffff;
+  }
+  
+  .tableRow:hover {
+    background-color: #f0f8ff;
+  }
+  
+  .tableRow span {
+    flex: 1;
+    text-align: center; /* Center-align each cell */
+  }
+  
+  /* Center-align the date column */
+  .dateColumn {
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  /* View Button */
+  .viewButton {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .viewButton:hover {
+    background-color: #0056b3;
+  }
+  
+  
+  /* Dropdown button styling */
+  .dropdownWrapper {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdownToggle {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    z-index: 10;
+  }
+  
+  .dropdownItem {
+    padding: 10px 15px;
+    cursor: pointer;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  
+  .dropdownItem:last-child {
+    border-bottom: none;
+  }
+  
+  .dropdownItem:hover {
+    background-color: #f0f0f0;
+  }
+  
+  
+  .modalOverlay {
+    background: rgba(0, 0, 0, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modalContent {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .modalTitle {
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 22px;
+    color: #777;
+  }
+  
+  .closeButton:hover {
+    color: #000;
+  }
+  
+  .modalDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .modalDetails p {
+    font-size: 16px;
+    color: #444;
+  }
+  
+  .modalDetails strong {
+    color: #000;
+  }
+  
+  .closeModalButton {
+    margin-top: 20px;
+    background: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+  }
+  
+  .closeModalButton:hover {
+    background: #0056b3;
+  }
+  

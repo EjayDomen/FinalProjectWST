@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 import json
 import bcrypt
-from clinic_python.models import SuperAdmin, Patient
+from clinic_python.models import SuperAdmin, Patient, MedicalRecord, Appointment, Staff
 from clinic_python.models import Role  # Adjust this import based on your project structure
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.tokens import AccessToken
@@ -191,15 +191,22 @@ def count_patient_types(request):
     """
     try:
         # Count the number of patients for each patient type
-        student_count = Patient.objects.filter(patient_type='student').count()
-        employee_count = Patient.objects.filter(patient_type='employee').count()
-        non_academic_count = Patient.objects.filter(patient_type='non_academic_personnel').count()
+        patient_count = Patient.objects.filter(is_deleted=False).count()
+
+        # Assuming Staff is a separate model, otherwise adjust accordingly
+        staffs_count = Staff.objects.filter(is_deleted=False).count()  
+
+        medicalrecord_count = MedicalRecord.objects.count()
+
+        request_count = Appointment.objects.exclude(status='completed').count()
+
 
         # Prepare the data to return
         data = {
-            'student_count': student_count,
-            'employee_count': employee_count,
-            'non_academic_count': non_academic_count
+            'patient_count': patient_count,
+            'staffs_count': staffs_count,
+            'medicalrecord_count': medicalrecord_count,
+            'request_count': request_count,
         }
 
         return JsonResponse(data, status=200)
@@ -214,6 +221,7 @@ def count_patient_status(request):
     try:
         # Count active (not deleted) patients
         active_patient_count = Patient.objects.filter(is_deleted=False).count()
+        request_count = Appointment.objects.exclude(status='completed').count()
 
         # Count inactive (deleted) patients
         deleted_patient_count = Patient.objects.filter(is_deleted=True).count()

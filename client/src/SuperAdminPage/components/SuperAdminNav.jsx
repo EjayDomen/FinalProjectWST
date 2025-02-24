@@ -21,7 +21,7 @@ export const SuperAdminNav = () => {
                     className={({ isActive }) => (isActive ? 'active' : '')}
                     end
                 >
-                    <Queue /> <span>Queue</span>
+                    <Queue /> <span>Medical Record</span>
                 </NavLink>
                 <NavLink 
                     to="/superadmin/patientmanage" 

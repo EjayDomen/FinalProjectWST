@@ -9,6 +9,9 @@ import axios from 'axios';
 
 const Dashboard = () => {
   const [patientCounts, setPatientCounts] = useState({
+    studentCount: 0,
+    employeeCount: 0,
+    nonAcademicCount: 0,
     activePatientCount: 0,
     deletedPatientCount: 0,
   });
@@ -18,17 +21,25 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchCounts = async () => {
       try {
-        const patientStatusResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/superadmin/activePatient/`,
-          {
+        const [patientTypeResponse, patientStatusResponse] = await Promise.all([
+          axios.get(`${process.env.REACT_APP_API_URL}/api/superadmin/countPatient/`, {
             headers: {
               Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
-          }
-        );
+          }),
+          axios.get(`${process.env.REACT_APP_API_URL}/api/superadmin/activePatient/`, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+          }),
+        ]);
 
         // Update state with fetched data
         setPatientCounts({
+          patientCount: patientTypeResponse.data.patient_count,
+          staffsCount: patientTypeResponse.data.staffs_count,
+          medicalrecordCount: patientTypeResponse.data.medicalrecord_count,
+          requestCount: patientTypeResponse.data.request_count,
           activePatientCount: patientStatusResponse.data.active_patient_count,
           deletedPatientCount: patientStatusResponse.data.deleted_patient_count,
         });
@@ -79,7 +90,7 @@ const Dashboard = () => {
           <div className="header-left">
             <h1 className="dashboard-title">Dashboard</h1>
           </div>
-          <div className="header-right">
+          {/* <div className="header-right">
             <div className="search-container">
               <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
               <input type="text" placeholder="Search" className="search-input" />
@@ -91,14 +102,26 @@ const Dashboard = () => {
                 <div className="user-avatar">Nick Gerblack</div>
               </NavLink>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Stats */}
         <div className="stats-container">
           <div className="stats-card" id="stat1" style={{ color: 'white' }}>
-            <h3>Appointments</h3>
-            <h1>21</h1>
+            <h3>Request</h3>
+            <h1>{patientCounts.requestCount}</h1>
+          </div>
+          <div className="stats-card" id="stat2" style={{ color: 'white' }}>
+            <h3>Medical Records</h3>
+            <h1>{patientCounts.medicalrecordCount}</h1>
+          </div>
+          <div className="stats-card" id="stat3" style={{ color: 'white' }}>
+            <h3>Patients</h3>
+            <h1>{patientCounts.patientCount}</h1>
+          </div>
+          <div className="stats-card" id="stat4" style={{ color: 'white' }}s>
+            <h3>Staffs</h3>
+            <h1>{patientCounts.staffsCount}</h1>
           </div>
         </div>
 
@@ -117,3 +140,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

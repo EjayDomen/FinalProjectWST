@@ -1,212 +1,150 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FilterAlt, Search, Add } from '@mui/icons-material';
-import { Button} from '@mui/material';
-import styles from '../../SecretaryPage/styles/queuesSecre.module.css';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import { faBell, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { DataGrid } from '@mui/x-data-grid';
+import { Button, Menu, MenuItem } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import profileImage from '../images/pookie.jpeg';
-import { NavLink } from 'react-router-dom';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import Modal from 'react-modal';
+import styles from '../styles/queuesSecre.module.css';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
+Modal.setAppElement('#root');
 
-
-const QueueManagement = () => {
+const Queue = () => {
   const [queueManagements, setQueueManagements] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [dropdownOpen, setDropdownOpen] = useState(null); // State to track open dropdown
-  const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedQueue, setSelectedQueue] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedMedicalRecord, setSelectedMedicalRecord] = useState(null);
 
-  const fetchQueueManagements = async () => {
+  useEffect(() => {
+    const fetchQueueManagements = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/medicalrecordlist/`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        setQueueManagements(response.data || {});
+      } catch (error) {
+        console.error('Error fetching queue management details:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchQueueManagements();
+  }, []);
+
+  const fetchMedicalRecordDetails = async (recordId) => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/viewqmtoday/`, {
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/medical-record/${recordId}/`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      setQueueManagements(response.data);
-      setLoading(false);
+      setSelectedMedicalRecord(response.data);
+      setModalIsOpen(true);
     } catch (error) {
-      console.error('Error fetching queue management details:', error);
-      setLoading(false);
+      console.error('Error fetching medical record details:', error);
     }
   };
 
-  useEffect(() => {
-    fetchQueueManagements();
-  }, []);
+  const filteredMedicalRecords = queueManagements?.medical_records?.filter((medicalRecord) =>
+    Object.values(medicalRecord).some((value) => 
+      value !== null && value !== undefined && value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+    )
+  ) || [];
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-
-  const handleEventClick = ({ queue }) => {
-
-
-    navigate(`/staff/queueList/${queue.id}`, {
-      state: {
-        purpose: queue.transaction_type,
-        date: queue.date,
-        status: queue.status, // Optional: add any other details if needed
-      }
-    });
-  };
-
-
-  const toggleDropdown = (id, event) => {
-    event.stopPropagation();
-    setDropdownOpen(dropdownOpen === id ? null : id); // Toggle dropdown
-  };
-
-  const handleDropdownAction = async (action, queueId) => { // Mark function as async
-    if (action === 'completed') {
-      try {
-        const payload = { status: "completed" };
-        console.log("Sending payload:", payload); // Debugging line
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/admin/update-queue-status/${queueId}/`,
-          {
-            method: "POST",
-            headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: JSON.stringify(payload),
-          }
-        );
-  
-        if (response.ok) {
-          const data = await response.json();
-          alert(data.message); // Show success message
-        } else {
-          const errorData = await response.json();
-          alert(`Error: ${errorData.error}`); // Show error message
-        }
-      } catch (error) {
-        alert(`Failed to update status: ${error.message}`); // Handle network errors
-      }
-    }
-    setDropdownOpen(null); // Close dropdown after action
-  };
-  
-  // Function to manually trigger createQueuesForToda
+  const columns = [
+    { field: 'id', headerName: 'Id', width: 150 },
+    { field: 'name', headerName: 'Name', width: 360 },
+    { field: 'date', headerName: 'Date', width: 300 },
+    { field: 'generalremarks', headerName: 'General Remarks', width: 350 },
+    {
+      field: 'action',
+      headerName: 'Action',
+      width: 150,
+      renderCell: (params) => (
+        <Button onClick={() => fetchMedicalRecordDetails(params.row.id)}>View</Button>
+      ),
+    },
+  ];
 
   return (
-    <div className="patient">
-      <main className="patient-content">
-    <div className={styles.doctorsSection} style={{marginLeft:'0', padding: 0}}>
-      {/* Header */}
-      <div className="patient-header">
-          <div className="header-left">
-            <h1 className="queue-title">Queue</h1>
-          </div>
-          <div className="header-right">
-            <div className="search-container">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
-              <input type="text" placeholder="Search" className="search-input" />
-            </div>
-            <div className="profile-icon-container">
-              <FontAwesomeIcon icon={faBell} className="notification-icon" />
-              <NavLink to="/superadmin/userprofile" className="profile-nav">
-                <img src={profileImage} alt="Profile" className="profile-image" />
-                <div className="user-avatar">Nick Gerblack</div>
-              </NavLink>
-            </div>
-          </div>
-          </div>
-        <div className="queue-section">
-          <h2 className="queue-title" style={{fontSize:'35px'}}>Queue List</h2>
-          <p style={{marginLeft: '10px', marginTop: '7px'}}>This is the list of doctors and their status. Check now!</p>
-          <div style={{gap:'10px', display:'flex'}}>
-                </div>
-                {/* Search, Filter, and Create Queue Section */}
+    <div className={styles.doctorsSection}>
+      <div className={styles.doctorsHeader}>
+        <h2 style={{ fontSize: '35px' }}>Medical Records</h2>
+        <p style={{ marginLeft: '10px', marginTop: '7px' }}>
+          This is the list of medical records. Check now!
+        </p>
+      </div>
+      
       <div className={styles.searchAppointment}>
-        <div style={{
-                position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center', /* Center the content horizontally */
-                margin: 0, /* Remove default margin */
-                gap: '12px',
-                width: '90%'
-              }}>
-        <FontAwesomeIcon icon={faMagnifyingGlass} style={{
-                    position: 'absolute',
-                    left: '22px',
-                    color: '#aaa'
-                  }} />
-        <input type="text" placeholder="Search Appointment" style={{
-          paddingLeft: '50px'
-        }}/>
-        <button className={styles.filterBtn}><Search /></button>
-        <button className={styles.filterBtn}><FilterAlt /></button>
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '90%' }}>
+          <FontAwesomeIcon icon={faMagnifyingGlass} style={{ position: 'absolute', left: '22px', color: '#aaa' }} />
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ paddingLeft: '60px' }}
+          />
+        </div>
+      </div>
+    
+      <div style={{ height: 400, width: '100%', marginTop: '20px' }}>
+        <DataGrid
+          rows={filteredMedicalRecords}
+          columns={columns}
+          pageSize={5}
+          loading={loading}
+        />
+      </div>
 
-        </div>
+      <Modal
+      isOpen={modalIsOpen}
+      onRequestClose={() => setModalIsOpen(false)}
+      contentLabel="Medical Record Details"
+      className={styles.modalContent}
+      overlayClassName={styles.modalOverlay}
+    >
+      <div className={styles.modalHeader}>
+        <h2 className={styles.modalTitle}>Medical Record Details</h2>
+        <button className={styles.closeButton} onClick={() => setModalIsOpen(false)}>
+          <FontAwesomeIcon icon={faTimes} />
+        </button>
+      </div>
 
-        {/* Table Headers */}
-        <div className={styles.tableHeader}>
-          <span>No.</span>
-          <span>QID</span>
-          <span>Purpose</span>
-          <span>Date</span>
-          <span>Status</span>
-          <span>Action</span>
+      {selectedMedicalRecord ? (
+        <div className={styles.modalDetails}>
+          <p><strong>Transaction Type:</strong> {selectedMedicalRecord.transactiontype}</p>
+          <p><strong>Date:</strong> {selectedMedicalRecord.date}</p>
+          <p><strong>Time of Treatment:</strong> {selectedMedicalRecord.timetreatment}</p>
+          <p><strong>Transaction Details:</strong> {selectedMedicalRecord.transactiondetails}</p>
+          <p><strong>Medicine Used:</strong> {selectedMedicalRecord.medicineused}</p>
+          <p><strong>BP Before:</strong> {selectedMedicalRecord.bpbefore}</p>
+          <p><strong>BP After:</strong> {selectedMedicalRecord.bpafter}</p>
+          <p><strong>Weight Before:</strong> {selectedMedicalRecord.weightbefore}</p>
+          <p><strong>Weight After:</strong> {selectedMedicalRecord.weightafter}</p>
+          <p><strong>Temperature:</strong> {selectedMedicalRecord.temperature}</p>
+          <p><strong>Pulse Before:</strong> {selectedMedicalRecord.pulsebefore}</p>
+          <p><strong>Pulse After:</strong> {selectedMedicalRecord.pulseafter}</p>
+          <p><strong>General Remarks:</strong> {selectedMedicalRecord.generalremarks}</p>
+          <p><strong>Attending Staff:</strong> {selectedMedicalRecord.attendingstaff?.name}</p>
+          <p><strong>Patient:</strong> {selectedMedicalRecord.patient?.name}</p>
         </div>
+      ) : (
+        <p>Loading...</p>
+      )}
 
-        {/* Table Body */}
-        <div className={styles.tableBody}>
-          {queueManagements.map((queue, index) => (
-            <div className={styles.tableRow} key={queue.id}
-              onClick={() => handleEventClick({queue})}
-              style={{ cursor: 'pointer'}}>
-              <span>{index + 1}</span>
-              <span>{queue.id}</span>
-              <span>{queue.transaction_type}</span>
-              <span>{queue.date}</span>
-              <span>{queue.status}</span>
-              <span>
-                <div className={styles.dropdownWrapper}>
-                  <button
-                    className={styles.dropdownToggle}
-                    onClick={(event) => toggleDropdown(queue.id, event)}
-                  >
-                    &#9662;
-                  </button>
-                  {dropdownOpen === queue.id && (
-                    <div className={styles.dropdown}>
-                      <div
-                        className={styles.dropdownItem}
-                        onClick={() => handleDropdownAction('cancel', queue.id)}
-                      >
-                        Cancel
-                      </div>
-                      <div
-                        className={styles.dropdownItem}
-                        onClick={() => handleDropdownAction('reschedule', queue.id)}
-                      >
-                        Reschedule
-                      </div>
-                      <div
-                        className={styles.dropdownItem}
-                        onClick={() => handleDropdownAction('completed', queue.id)}
-                      >
-                        Completed
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </span>
-            </div>
-          ))}
-        </div>
-        </div>
-        </div>
-                
-    </div>
-    </main>
+      <Button className={styles.closeModalButton} onClick={() => setModalIsOpen(false)}>
+        Close
+      </Button>
+    </Modal>
     </div>
   );
 };
 
-
-export default QueueManagement;
+export default Queue;
