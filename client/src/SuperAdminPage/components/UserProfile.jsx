@@ -9,7 +9,9 @@ const UserProfile = () => {
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     first_name: "",
+    middle_name: "",
     last_name: "",
+    suffix: "",
     email: "",
     old_password: "",
     new_password: "",
@@ -35,7 +37,9 @@ const UserProfile = () => {
         setFormData({
           ...formData,
           first_name: response.data.first_name,
+          middle_name: response.data.middle_name,
           last_name: response.data.last_name,
+          suffix: response.data.suffix,
           email: response.data.email,
         });
       } catch (err) {

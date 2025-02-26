@@ -8,13 +8,26 @@ from clinic_python.models import Staff
 from rest_framework_simplejwt.tokens import AccessToken
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
+from django.db import DatabaseError
+
 
 @require_GET
 def get_all_staff(request):
     try:
         staff_members = Staff.objects.filter(is_deleted=False).values(
-            'id', 'first_name', 'middle_name', 'last_name', 
-            'suffix', 'workposition', 'email'
+                'id',
+                'username',
+                'first_name',
+                'middle_name',
+                'last_name',
+                'suffix',
+                'workposition',
+                'address',
+                'phonenumber',
+                'maritalstatus',
+                'sex',
+                'birthday',
+                'email'
         )
         return JsonResponse({'staff': list(staff_members)}, status=200)
     except DatabaseError as e:
@@ -26,11 +39,17 @@ def get_archived_staff(request):
             # Fetch staff that are soft-deleted
             archived_staff = Staff.objects.filter(is_deleted=True).values(
                 'id',
+                'username',
                 'first_name',
                 'middle_name',
                 'last_name',
                 'suffix',
-                'specialization',
+                'workposition',
+                'address',
+                'phonenumber',
+                'maritalstatus'
+                'sex',
+                'birthday',
                 'email'
             )
 
@@ -161,14 +180,23 @@ def create_staff(request):
             workposition = body.get('workposition')  # Make sure the field matches your model
             email = body.get('email')
             address = body.get('address')
-            phonenumber = body.get('phonenumber')
-            maritalstatus = body.get('maritalstatus')
+            phonenumber = body.get('phone_number')
+            maritalstatus = body.get('marital_status')
             sex = body.get('sex')
             birthday = body.get('birthday')  # Should be a valid datetime string
 
             # Check if all required fields are provided
             if not first_name or not last_name or not workposition or not email or not birthday:
                 return JsonResponse({'error': 'All fields are required'}, status=400)
+
+
+            # Check if username already exists (case insensitive)
+            if Staff.objects.filter(username__iexact=username).exists():
+                return JsonResponse({'error': 'Username already exists'}, status=400)
+
+            # Check if email already exists (case insensitive)
+            if Staff.objects.filter(email__iexact=email).exists():
+                return JsonResponse({'error': 'Email already exists'}, status=400)
 
             # Check if the user_level_id for Staff (2) exists in the Role model
             try:
