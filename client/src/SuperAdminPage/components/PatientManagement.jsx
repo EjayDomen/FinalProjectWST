@@ -226,10 +226,6 @@ const PatientManagement = () => {
             <p className="current-date">August 30, 2024</p>
           </div>
           <div className="header-right">
-            <div className="search-container">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
-              <input type="text" placeholder="Search" className="search-input" />
-            </div>
             <div className="profile-icon-container">
               <FontAwesomeIcon icon={faBell} className="notification-icon" />
               <NavLink to="/superadmin/userprofile" className="profile-nav">
@@ -256,9 +252,6 @@ const PatientManagement = () => {
                   className="search-appointment-input"
                 />
               </div>
-              <button className="filter-button">
-                <FontAwesomeIcon icon={faFilter} />
-              </button>
               <button className="staff-button"onClick={handleOpenArchiveModal}
               style={{
                 backgroundColor: '#ffc107'

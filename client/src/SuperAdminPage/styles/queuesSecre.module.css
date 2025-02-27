@@ -388,3 +388,33 @@
     background: #0056b3;
   }
   
+  
+  .tableContainer {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .searchBar {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .searchIcon {
+    position: absolute;
+    margin-left: 10px;
+    color: #aaa;
+  }
+  
+  .searchInput {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+  }
+  

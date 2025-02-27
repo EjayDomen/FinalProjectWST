@@ -81,26 +81,32 @@ const Queue = () => {
         </p>
       </div>
       
-      <div className={styles.searchAppointment}>
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '90%' }}>
-          <FontAwesomeIcon icon={faMagnifyingGlass} style={{ position: 'absolute', left: '22px', color: '#aaa' }} />
+      {/* Search Bar & Table Container */}
+      <div className={styles.tableContainer}>
+        {/* Search Bar */}
+        <div className={styles.searchBar}>
+          <FontAwesomeIcon
+            icon={faMagnifyingGlass}
+            className={styles.searchIcon}
+          />
           <input
             type="text"
             placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ paddingLeft: '60px' }}
+            className={styles.searchInput}
           />
         </div>
-      </div>
-    
-      <div style={{ height: 400, width: '100%', marginTop: '20px' }}>
-        <DataGrid
-          rows={filteredMedicalRecords}
-          columns={columns}
-          pageSize={5}
-          loading={loading}
-        />
+
+        {/* Data Grid */}
+        <div style={{ height: 400, width: "100%", marginTop: "20px" }}>
+          <DataGrid
+            rows={filteredMedicalRecords}
+            columns={columns}
+            pageSize={5}
+            loading={loading}
+          />
+        </div>
       </div>
 
       <Modal

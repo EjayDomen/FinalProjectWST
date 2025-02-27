@@ -180,7 +180,7 @@
     border-radius: 4px;
     font-size: 14px;
     flex: 1; /* Make it responsive */
-    width: 900px;
+    width: 1150px;
   }
 
   .staff-button{
@@ -329,4 +329,36 @@ td {
   .queue-content > div {
       flex: 1 1 100%; /* One item per row */
   }
+}
+
+.input-container {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.input-container input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  outline: none;
+  background: transparent;
+}
+
+.input-container label {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  transition: all 0.3s ease-in-out;
+  color: #888;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.input-container input:focus + label,
+.input-container input:not(:placeholder-shown) + label {
+  top: 5px;
+  font-size: 12px;
+  color: #000;
 }

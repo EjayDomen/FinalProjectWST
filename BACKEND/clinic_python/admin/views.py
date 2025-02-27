@@ -47,7 +47,7 @@ def get_archived_staff(request):
                 'workposition',
                 'address',
                 'phonenumber',
-                'maritalstatus'
+                'maritalstatus',
                 'sex',
                 'birthday',
                 'email'

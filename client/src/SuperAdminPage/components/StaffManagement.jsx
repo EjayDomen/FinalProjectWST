@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faMagnifyingGlass, faFilter, faPlus, faBoxArchive } from '@fortawesome/free-solid-svg-icons';
+import { faBell, faMagnifyingGlass, faPlus, faBoxArchive } from '@fortawesome/free-solid-svg-icons';
 import { DataGrid } from '@mui/x-data-grid';
 import profileImage from '../images/pookie.jpeg';
 import axios from 'axios';
@@ -17,6 +17,7 @@ const StaffManagement = () => {
   const [isArchiveModal, setIsArchiveModal] = useState(false); // Archive modal state
   const [currentStaff, setCurrentStaff] = useState(null); // To store the staff being edited
   const [selectedStaff,setSelectedStaff] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({
     username: '',
     firstName: '',
@@ -181,7 +182,7 @@ const handleRestore = async (staffId) => {
       setRows((prevRows) => [
         ...prevRows,
         {
-          id: prevRows.length + 1,
+          id: prevRows.length + 1,  
           staffId: response.data.staff_id,
           name: `${formData.firstName} ${formData.lastName}`,
           workposition: formData.workposition,
@@ -249,6 +250,19 @@ const handleRestore = async (staffId) => {
       alert(error.response?.data?.error || 'Error updating staff.');
     }
   };
+
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  // Filter rows based on search query
+  const filteredRows = rows.filter(
+    (row) =>
+      row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.workposition.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      row.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
 
   // Columns configuration for DataGrid
   const columns = [
@@ -348,10 +362,6 @@ const handleRestore = async (staffId) => {
             <p className="current-date">August 30, 2024</p>
           </div>
           <div className="header-right">
-            <div className="search-container">
-              <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
-              <input type="text" placeholder="Search" className="search-input" />
-            </div>
             <div className="profile-icon-container">
               <FontAwesomeIcon icon={faBell} className="notification-icon" />
               <NavLink to="/superadmin/userprofile" className="profile-nav">
@@ -370,11 +380,12 @@ const handleRestore = async (staffId) => {
             <div className="queue-search">
               <div className="queue-search-container">
                 <FontAwesomeIcon icon={faMagnifyingGlass} className="search-icon" />
-                <input type="text" placeholder="Search Appointment" className="search-appointment-input2" />
+                <input type="text" 
+                  placeholder="Search Appointment" 
+                  className="search-appointment-input2" 
+                  value={searchQuery}
+                  onChange={handleSearch}/>
               </div>
-              <button className="filter-button">
-                <FontAwesomeIcon icon={faFilter} />
-              </button>
               <button className="staff-button" onClick={openModal}
               style={{
                 backgroundColor: '#198754',
@@ -393,7 +404,7 @@ const handleRestore = async (staffId) => {
 
             {/* DataGrid */}
             <div className="queue-table" style={{ height: 500, width: '100%' }}>
-              <DataGrid rows={rows} columns={columns} pageSize={5} />
+              <DataGrid rows={filteredRows} columns={columns} pageSize={5} />
             </div>
           </div>
         </div>
@@ -416,10 +427,15 @@ const handleRestore = async (staffId) => {
           <div className="modal-content">
             <h2>Create Staff</h2>
             <form onSubmit={handleSubmit}>
-            <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
+              <label>Username:</label>
+              <input type="text" name="username" placeholder="Username" onChange={handleChange} required />
+              <label>First Name:</label>
               <input type="text" name="firstName" placeholder="First Name" onChange={handleChange} required />
+              <label>Middle Name:</label>
               <input type="text" name="middleName" placeholder="Middle Name" onChange={handleChange} />
+              <label>Last Name:</label>
               <input type="text" name="lastName" placeholder="Last Name" onChange={handleChange} required />
+              <label>Suffix:</label>
               <select name="suffix" onChange={handleChange}>
               <option value="" disabled selected>Suffix</option>
               <option value="Jr.">Jr.</option>
@@ -431,8 +447,11 @@ const handleRestore = async (staffId) => {
               <option value="V">V</option>
             </select>
 
+              <label>Work Position: </label>
               <input type="text" name="workposition" placeholder="Work Position" onChange={handleChange} required />
+              <label>Address: </label>
               <input type="text" name="address" placeholder="Address" onChange={handleChange} required />
+              <label>Marital Status: </label>
               <select name="marital_status" onChange={handleChange} required>
                 <option value="" disabled selected>Marital Status</option>
                 <option value="single">Single</option>
@@ -441,6 +460,7 @@ const handleRestore = async (staffId) => {
                 <option value="divorced">Divorced</option>
                 <option value="separated">Separated</option>
               </select>
+              <label>Sex: </label>
               <select name="sex" onChange={handleChange} required>
               <option value="" disabled selected>Sex</option>
               <option value="male">Male</option>
@@ -449,8 +469,11 @@ const handleRestore = async (staffId) => {
               <option value="prefer_not_to_say">Prefer not to say</option>
             </select>
 
+              <label>Birthday:</label>
               <input type="date" name="birthday" placeholder="Birthday " onChange={handleChange} required />
+              <label>Phone Number: </label>
               <input type="text" name="phone_number" placeholder="Phone Number" onChange={handleChange} required />
+              <label>Email:</label>
               <input type="email" name="email" placeholder="Email" onChange={handleChange} required />
               <button type="submit" style={{backgroundColor: 'rgb(25, 135, 84)', color: 'white'}}>Create</button>
               <button type="button" onClick={closeModal}>Cancel</button>
@@ -465,10 +488,15 @@ const handleRestore = async (staffId) => {
           <div className="modal-content">
             <h2>Edit Staff</h2>
             <form onSubmit={handleUpdate}>
-            <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
+              <label>Username:</label>
+              <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
+              <label>First Name: </label>
               <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange} required />
+              <label>Middle Name:</label>
               <input type="text" name="middleName" placeholder="Middle Name" value={formData.middleName} onChange={handleChange} />
+              <label>Last Name: </label>
               <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} required />
+              <label>Suffix:</label>
               <select name="suffix" value={formData.suffix} onChange={handleChange}>
               <option value="" disabled selected>Suffix</option>
               <option value="Jr.">Jr.</option>
@@ -480,8 +508,11 @@ const handleRestore = async (staffId) => {
               <option value="V">V</option>
             </select>
 
+              <label>Work Position:</label>
               <input type="text" name="workposition" placeholder="Work Position" value={formData.workposition} onChange={handleChange} required />
+              <label>Address: </label>
               <input type="text" name="address" placeholder="Address" value={formData.address} onChange={handleChange} required />
+              <label>Marital Status: </label>
               <select name="marital_status" value={formData.marital_status} onChange={handleChange} required>
                 <option value="" disabled selected>Marital Status</option>
                 <option value="single">Single</option>
@@ -490,6 +521,7 @@ const handleRestore = async (staffId) => {
                 <option value="divorced">Divorced</option>
                 <option value="separated">Separated</option>
               </select>
+              <label>Sex: </label>
               <select name="sex" value={formData.sex} onChange={handleChange} required>
               <option value="" disabled selected>Sex</option>
               <option value="male">Male</option>
@@ -498,8 +530,11 @@ const handleRestore = async (staffId) => {
               <option value="prefer_not_to_say">Prefer not to say</option>
             </select>
 
+              <label>Birthday: </label>
               <input type="date" name="birthday" placeholder="Birthday" value={formData.birthday} onChange={handleChange} required />
+              <label>Phone Number: </label>
               <input type="text" name="phone_number" placeholder="Phone Number" value={formData.phone_number}  onChange={handleChange} required />
+              <label>Email: </label>
               <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
               <button type="submit" style={{backgroundColor: 'rgb(25, 135, 84)', color: 'white'}}>Update</button>
               <button type="button" onClick={closeModal}>Cancel</button>
