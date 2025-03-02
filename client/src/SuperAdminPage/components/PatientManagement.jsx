@@ -238,9 +238,9 @@ const PatientManagement = () => {
 
         {/* Queue List */}
         <div className="queue-section">
-          <h1 className="queue-title">Queue List</h1>
+          <h1 className="queue-title">Patient List</h1>
           <p className="queue-subtitle">
-            This is the list of patients and their status & queue. Check now.
+            This is the list of patients and their status. Check now.
           </p>
           <div className="queue-content">
             <div className="queue-search">

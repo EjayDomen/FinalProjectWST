@@ -136,17 +136,6 @@ const UserProfile = () => {
     <div className="user-profile">
       <h1 className="user-profile-header">User Profile</h1>
       <div className="profile-container">
-        <div className="profile-picture-section">
-          <img
-            src={profileImage} // Replace with actual profile picture URL if available
-            alt="Profile"
-            className="profile-picture"
-          />
-          <div className="profile-btn">
-            <button className="btn change-picture-btn">Change Picture</button>
-            <button className="btn delete-picture-btn">Delete Picture</button>
-          </div>
-        </div>
         <form
           className="profile-form"
           onSubmit={(e) => {

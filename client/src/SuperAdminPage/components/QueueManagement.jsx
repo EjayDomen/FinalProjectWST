@@ -7,6 +7,8 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-modal';
 import styles from '../styles/queuesSecre.module.css';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { NavLink } from 'react-router-dom';
+import profileImage from '../images/pookie.jpeg';
 
 Modal.setAppElement('#root');
 
@@ -73,10 +75,28 @@ const Queue = () => {
   ];
 
   return (
+    <div>
+    <div className="patient-header">
+                <div className="header-left">
+                  <p className="current-time">10:00 AM</p>
+                  <p className="current-date">August 30, 2024</p>
+                </div>
+                <div className="header-right">
+                  <div className="profile-icon-container">
+                    <NavLink to="/superadmin/userprofile" className="profile-nav">
+                      <img src={profileImage} alt="Profile" className="profile-image" />
+                      <div className="user-avatar">Nick Gerblack</div>
+                    </NavLink>
+                  </div>
+                </div>
+              </div>
     <div className={styles.doctorsSection}>
+      {/* Header Section */}
+
+
       <div className={styles.doctorsHeader}>
-        <h2 style={{ fontSize: '35px' }}>Medical Records</h2>
-        <p style={{ marginLeft: '10px', marginTop: '7px' }}>
+        <h2 style={{ fontSize: '24px' }}>Medical Records</h2>
+        <p style={{ marginLeft: '0px', marginTop: '7px' }}>
           This is the list of medical records. Check now!
         </p>
       </div>
@@ -149,6 +169,7 @@ const Queue = () => {
         Close
       </Button>
     </Modal>
+    </div>
     </div>
   );
 };

@@ -1,11 +1,11 @@
 /* General Layout */
 .doctorsSection {
-    padding: 20px;
-    background-color: #f9fafb;
+    background-color: #E4E4E4;
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     height: 100%;
     width: 100%;
+    padding: 20px;
   }
   
   .addDoctorBtn {
@@ -28,29 +28,19 @@
     color: white;
     background-color: #007bff;
   }
-  
-  .addDoctorBtn2:hover {
-    background-color: #1a416c;
-  }
-  
-  
-  .addDoctorBtn:hover {
-    color: rgb(239, 239, 239);
-    background-color: #218838;
-  }
+
   
   /* Doctors Header */
   .doctorsHeader {
-    display: flex;
+    background-color: #E4E4E4;
     justify-content: space-between;
     align-items: center;
-    margin-top: 20px;
   }
   
   .doctorsHeader h2 {
     margin: 0;
     font-size: 24px;
-    font-weight: bolder;
+    font-weight: bold;
   }
   
   .doctorsHeader p {
@@ -394,6 +384,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    
   }
   
   .searchBar {
