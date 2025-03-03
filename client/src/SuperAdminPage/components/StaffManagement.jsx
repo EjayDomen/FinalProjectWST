@@ -8,8 +8,12 @@ import { faBell, faMagnifyingGlass, faPlus, faBoxArchive } from '@fortawesome/fr
 import { DataGrid } from '@mui/x-data-grid';
 import profileImage from '../images/pookie.jpeg';
 import axios from 'axios';
+import {  AccountCircle} from '@mui/icons-material';
 
 const StaffManagement = () => {
+  const [currentTime, setCurrentTime] = useState('');
+  const [currentDate, setCurrentDate] = useState('');
+  const [userName, setUserName] = useState('');
   const [rows, setRows] = useState([]); // Staff data
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
   const [archivedRows, setArchivedRows] = useState([]); // Archived staff data
@@ -138,6 +142,34 @@ const handleRestore = async (staffId) => {
   };
 
   useEffect(() => {
+    const updateDateTime = () => {
+      const now = new Date();
+      setCurrentTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+      setCurrentDate(now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })); // Updated date format
+    };
+
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/superadmin/me/`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`  // Assuming token-based authentication
+          }
+        });
+        const secretary = response.data;
+    
+        // Safely construct the full name
+        const firstName = secretary.first_name || "";
+        const lastName = secretary.last_name || "";
+        
+        setUserName(`${firstName} ${lastName}`.trim()); // Use trim() to remove any extra spaces
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+        // navigate('/');
+      }
+    };
+
+    updateDateTime();
+    fetchProfile();
     fetchStaff();
   }, []); // Empty dependency array, fetches on mount
 
@@ -358,15 +390,14 @@ const handleRestore = async (staffId) => {
         {/* Header Section */}
         <div className="patient-header">
           <div className="header-left">
-            <p className="current-time">10:00 AM</p>
-            <p className="current-date">August 30, 2024</p>
+            <p className="current-time">{currentTime}</p>
+            <p className="current-date">{currentDate}</p>
           </div>
           <div className="header-right">
             <div className="profile-icon-container">
-              <FontAwesomeIcon icon={faBell} className="notification-icon" />
               <NavLink to="/superadmin/userprofile" className="profile-nav">
-                <img src={profileImage} alt="Profile" className="profile-image" />
-                <div className="user-avatar">Nick Gerblack</div>
+                <AccountCircle style={{ fontSize: '60px', padding: '10px', cursor: 'pointer', color: 'gray' }} />
+                <div className="user-avatar">{userName}</div>
               </NavLink>
             </div>
           </div>

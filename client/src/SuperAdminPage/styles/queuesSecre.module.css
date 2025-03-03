@@ -409,3 +409,14 @@
     outline: none;
   }
   
+
+  .stats-section{
+    padding: 20px;
+    background-color: #E4E4E4;
+  }
+
+  .dashboard-title{
+    font-size: 30px;
+    padding: 20px;
+    font-weight: bold;
+  }

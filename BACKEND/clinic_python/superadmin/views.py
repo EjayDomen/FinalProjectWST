@@ -7,6 +7,11 @@ from clinic_python.models import SuperAdmin, Patient, MedicalRecord, Appointment
 from clinic_python.models import Role  # Adjust this import based on your project structure
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.tokens import AccessToken
+from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
+from datetime import date, timedelta
+from django.db.models import Count
+
+
 
 
 def is_superadmin(user):
@@ -236,3 +241,51 @@ def count_patient_status(request):
 
     except Exception as e:
         return JsonResponse({'error': f'Error counting patient status: {str(e)}'}, status=500)
+
+
+
+def get_request_counts(request):
+    """Fetch appointment counts grouped by day, week, or month."""
+    
+    # Get the filter type (day, week, month) from the request
+    filter_type = request.GET.get("filter", "day")  # Default to 'day'
+
+    # Set truncation based on filter type
+    if filter_type == "day":
+        trunc_function = TruncDay("requestdate")
+    elif filter_type == "week":
+        trunc_function = TruncWeek("requestdate")
+    elif filter_type == "month":
+        trunc_function = TruncMonth("requestdate")
+    else:
+        return JsonResponse({"error": "Invalid filter type"}, status=400)
+
+    # Query the database and group by the selected time period
+    appointments = (
+        Appointment.objects
+        .filter(requestdate__gte=date.today() - timedelta(days=30))  # Last 30 days
+        .annotate(period=trunc_function)
+        .values("period")
+        .annotate(count=Count("id"))
+        .order_by("period")
+    )
+
+    # Convert data for the frontend chart
+    labels = [str(entry["period"]) for entry in appointments]
+    data = [entry["count"] for entry in appointments]
+
+    response_data = {
+        "labels": labels,
+        "datasets": [
+            {
+                "label": f"Appointments ({filter_type})",
+                "data": data,
+                "borderColor": "#2563EB",
+                "backgroundColor": "rgba(37, 99, 235, 0.2)",
+                "tension": 0.3,
+                "fill": True,
+            }
+        ],
+    }
+
+    return JsonResponse(response_data)
