@@ -4,10 +4,11 @@ from . import views
 from . import appointment
 from django.conf.urls.static import static
 from django.conf import settings
+from .views import UpdatePatientDetails
 
 urlpatterns = [
     path('me/', views.get_patient_details, name='Profile'),
-    path('updateProfile/', views.update_patient_details, name= 'UpdateProfile'),
+    path('update-patient/', UpdatePatientDetails.as_view(), name='update-patient'),
     path('deleteAcc/', views.soft_delete_patient, name= 'Delete'),
     path('update-password/', views.UpdatePasswordView, name='update-password'),
     path('createAppointment/', appointment.create_request, name='create-request'),

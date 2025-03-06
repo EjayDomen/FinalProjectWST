@@ -6,6 +6,11 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from clinic_python.models.patient_model import Patient
 from rest_framework_simplejwt.tokens import AccessToken
+from django.core.files.storage import FileSystemStorage
+from django.utils.decorators import method_decorator
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+
 
 @csrf_exempt
 def get_patient_details(request):
@@ -56,21 +61,24 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import os
 
-@csrf_exempt
-def update_patient_details(request):
-    if request.method == 'PUT':
-        try:
-            # Handle file upload if present
-            image = request.FILES.get('image')  # assuming the image is sent as 'image' field
-            if image:
-                # Save the image to the media folder (or handle as needed)
-                fs = FileSystemStorage(location=settings.MEDIA_ROOT)  # You can specify a custom path here
-                image_name = fs.save(image.name, image)
-                image_url = fs.url(image_name)  # URL to access the image
+@method_decorator(csrf_exempt, name='dispatch')
+class UpdatePatientDetails(APIView):
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
 
-            # Parse the JSON body of the request
-            body = json.loads(request.body)
-            # Extract fields from request body
+    def put(self, request):
+        try:
+            # Handle image upload if present
+            image = request.FILES.get('image')  
+            image_url = None
+            if image:
+                fs = FileSystemStorage(location=settings.MEDIA_ROOT)
+                image_name = fs.save(image.name, image)
+                image_url = fs.url(image_name)  
+
+            # Parse JSON body
+            body = request.data if isinstance(request.data, dict) else json.loads(request.body)
+
+            # Extract fields
             username = body.get('username')
             last_name = body.get('lastName')
             first_name = body.get('firstName')
@@ -81,75 +89,58 @@ def update_patient_details(request):
             sex = body.get('sex')
             birthday = body.get('birthday')
             maritalstatus = body.get('maritalstatus')
-            # Extract token from Authorization header
-            auth_header = request.headers.get('Authorization', '')
-            token = auth_header.split(' ')[1] if 'Bearer ' in auth_header else None
 
-            if not token:
-                return JsonResponse({'error': 'Token not provided'}, status=401)
+            # Extract token
+            auth_header = request.headers.get('Authorization', '')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
+            
+            token = auth_header.split(' ')[1]
 
             # Decode JWT token to get patient ID
             try:
-                auth_header = request.headers.get('Authorization', '')
-                if not auth_header or not auth_header.startswith('Bearer '):
-                    return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
-                    # Extract the token from the header
-                token = auth_header.split(' ')[1]
                 access_token = AccessToken(token)
-                patient_id = access_token['id']  # Retrieve the user ID from token claims
+                patient_id = access_token['id']
             except jwt.ExpiredSignatureError:
                 return JsonResponse({'error': 'Token has expired'}, status=401)
             except jwt.InvalidTokenError:
                 return JsonResponse({'error': 'Invalid token'}, status=401)
 
-            # Find the patient
+            # Find patient
             try:
                 patient = Patient.objects.get(id=patient_id)
             except Patient.DoesNotExist:
                 return JsonResponse({'error': 'Patient not found'}, status=404)
 
-            # Update only the provided fields
-            if username: patient.username = username
-            if first_name: patient.first_name = first_name
-            if last_name: patient.last_name = last_name
-            if middle_name: patient.middle_name = middle_name
-            if suffix: patient.suffix = suffix
-            if email: patient.email = email
-            if age: patient.age = age
-            if sex: patient.sex = sex
-            if birthday : patient.birthday = birthday
-            if maritalstatus : patient.maritalstatus = maritalstatus
-
-            if image: patient.image = image_url  # Add the image URL if provided
-
-            # Save changes
-            patient.save()
-
-            # Return updated patient details
-            patient_data = {
-                'id': patient.id,
-                'username': username,
-                'first_name': patient.first_name,
-                'middle_name': patient.middle_name,
-                'last_name': patient.last_name,
-                'suffix': patient.suffix,
-                'email': patient.email,
-                'age': patient.age,
-                'sex': patient.sex,
-                'birthday': patient.birthday,
-                'maritalstatus': patient.maritalstatus,
-
-                'image': image_url if image else None  # Return the image URL if updated
+            # Update fields dynamically
+            update_data = {
+                'username': username or patient.username,
+                'first_name': first_name or patient.first_name,
+                'middle_name': middle_name or patient.middle_name,
+                'last_name': last_name or patient.last_name,
+                'suffix': suffix or patient.suffix,
+                'email': email or patient.email,
+                'age': age or patient.age,
+                'sex': sex or patient.sex,
+                'birthday': birthday or patient.birthday,
+                'maritalstatus': maritalstatus or patient.maritalstatus,
+                'image': image_url if image else patient.image
             }
-            return JsonResponse(patient_data, status=200)
+
+            # Use serializer to update the patient record
+            serializer = PatientSerializer(patient, data=update_data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return JsonResponse(serializer.data, status=200)
+            else:
+                return JsonResponse(serializer.errors, status=400)
 
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
-    else:
-        return JsonResponse({'message': 'This endpoint only supports PUT requests.'}, status=405)
 
+            
 
 @csrf_exempt
 def soft_delete_patient(request):

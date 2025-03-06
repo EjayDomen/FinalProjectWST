@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { ArrowBack } from '@mui/icons-material';
+import { ArrowBack, AccountCircle } from '@mui/icons-material';
 import SuccessModal from '../../SecretaryPage/components/successModal';
 import ErrorModal from '../../SecretaryPage/components/errorModal.jsx';
 import '../styles/ProfilePatient.module.css'
@@ -89,6 +89,7 @@ const Profile = () => {
     age: "",
     sex: "",
     maritalstatus: "",
+    profile: null,
   });
 
   const [isReadOnly, setIsReadOnly] = useState(true);
@@ -120,6 +121,7 @@ const Profile = () => {
           age: patientData.age || "",
           sex: patientData.sex || "",
           maritalstatus: patientData.maritalstatus || "",
+          profilepicture: patientData.profilePicture || "",
         });
 
         // If the patient is newly registered, activate the edit button
@@ -158,25 +160,38 @@ const Profile = () => {
     return age;
   };
   
-
   const handleSave = async () => {
     if (isReadOnly) {
       setIsReadOnly(false);
     } else {
       // Manual validation check for required fields
-      if (!formData.firstName || !formData.lastName || !formData.email || !formData.campus || !formData.age || !formData.sex || !formData.emergency_contact_number || !formData.address) {
-        setErrorMessage('Please fill out all required fields.');
-        setShowErrorModal(true);
-        return; // Stop the function if validation fails
-      }
+      // if (!formData.firstName || !formData.lastName || !formData.email || !formData.age || !formData.sex || !formData.address) {
+      //   setErrorMessage('Please fill out all required fields.');
+      //   setShowErrorModal(true);
+      //   return; // Stop the function if validation fails
+      // }
   
-      // If validation passes, continue saving
       try {
-        await axios.put(`${process.env.REACT_APP_API_URL}/api/patient/updateProfile/`, formData, {
+        const formDataToSend = new FormData();
+        formDataToSend.append('firstName', formData.firstName);
+        formDataToSend.append('lastName', formData.lastName);
+        formDataToSend.append('email', formData.email);
+        formDataToSend.append('age', formData.age);
+        formDataToSend.append('sex', formData.sex);
+        formDataToSend.append('address', formData.address);
+
+        // Append profile picture if available
+        if (formData.profilePicture) {
+          formDataToSend.append('profilePicture', formData.profilePicture);
+        }
+  
+        await axios.put(`${process.env.REACT_APP_API_URL}/api/patient/updateProfile/`, formDataToSend, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'multipart/form-data', // Important for file uploads
           },
         });
+
         setSuccessMessage('Profile updated successfully!');
         setShowSuccessModal(true);
       } catch (error) {
@@ -188,6 +203,7 @@ const Profile = () => {
       setIsReadOnly(true);
     }
   };
+  
   
 
   const handleCloseSuccessModal = () => {
@@ -273,21 +289,43 @@ const Profile = () => {
       <div className="row">
         {/* Left Section */}
         <div className="col-md-4 border-end">
-          <button
-            className="btn btn-light mb-4"
-            onClick={() => navigate('../home')}
-          >
-            <ArrowBack /> Back
-          </button>
-          
-          <h3 className="text-center">{`${formData.firstName} ${formData.middleName.charAt(0)}. ${formData.lastName} ${formData.suffix}`}</h3>
-          <div style={{padding: '20px 0'}}>
-            <p><strong>Age:</strong> {formData.age}</p>
-            <p><strong>Birthday:</strong> {formData.birthday}</p>
-            <p><strong>Sex:</strong> {formData.sex}</p>
-            <p><strong>Marital Status:</strong> {formData.maritalstatus}</p>
-          </div>
-        </div>
+        <button
+        className="btn btn-light mb-4"
+        onClick={() => navigate('../home')}
+      >
+        <ArrowBack /> Back
+      </button>
+      {/* Profile Upload Container */}
+      <div className="text-center mb-4">
+        <input type="file" id="profileUpload" className="d-none" accept="image/*" onChange={(e) => setFormData({ ...formData, profilePicture: e.target.files[0] })} />
+        <label htmlFor="profileUpload" className="d-block">
+          <img
+            src={formData.profileImage || AccountCircle}
+            alt="Profile"
+            className="rounded-circle border"
+            style={{
+              width: "200px",
+              height: "250px",
+              minWidth: "200px",
+              minHeight: "250px",
+              maxWidth: "200px",
+              maxHeight: "250px",
+              objectFit: "cover",
+              cursor: "pointer",
+            }}
+          />
+        </label>
+      </div>
+
+  
+  <h3 className="text-center">{`${formData.firstName} ${formData.middleName.charAt(0)}. ${formData.lastName} ${formData.suffix}`}</h3>
+  <div style={{padding: '20px 0'}}>
+    <p><strong>Age:</strong> {formData.age}</p>
+    <p><strong>Birthday:</strong> {formData.birthday}</p>
+    <p><strong>Sex:</strong> {formData.sex}</p>
+    <p><strong>Marital Status:</strong> {formData.maritalstatus}</p>
+  </div>
+</div>
 
         {/* Right Section */}
     <div className="col-md-8">

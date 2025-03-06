@@ -18,7 +18,7 @@ class Patient(models.Model):
     sex = models.CharField(max_length=15)
     birthday = models.DateField()
     maritalstatus = models.CharField(max_length=20)
-    profilePicture = models.ImageField(default="default.png", blank=True)
+    profilePicture = models.ImageField(default="default.png", upload_to='uploads/', blank=True)
     user_level_id = models.ForeignKey(
         "clinic_python.Role", on_delete=models.CASCADE, null=True, blank=True
     )

@@ -18,10 +18,10 @@ import {  AccountCircle} from '@mui/icons-material';
 
 
 const PatientManagement = () => {
-    const [currentTime, setCurrentTime] = useState('');
-    const [currentDate, setCurrentDate] = useState('');
-    const [userName, setUserName] = useState('');
-    const [medicalRecords, setMedicalRecords] = useState([]);
+  const [currentTime, setCurrentTime] = useState('');
+  const [currentDate, setCurrentDate] = useState('');
+  const [userName, setUserName] = useState('');
+  const [medicalRecords, setMedicalRecords] = useState([]);
   const [isModalRecordOpen, setModalRecordOpen] = useState(false);
   const [patients, setPatients] = useState([]);
   const [rows, setRows] = useState([]);
