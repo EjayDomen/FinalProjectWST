@@ -198,7 +198,7 @@ const LoginPage = () => {
           </div>
 
         
-          <h2 className={styles.title}>WELCOME TO <span className={styles.gradientText}>QUEUE CARE</span></h2>
+          <h2 className={styles.title}>WELCOME TO <span className={styles.gradientText}>STERITEX MEDICAL SYSTEM</span></h2>
           <p className={styles.phrase}>"In Queue care, we queue for you"</p>
           
           <div className={styles.content}>

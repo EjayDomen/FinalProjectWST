@@ -10,6 +10,11 @@ from django.core.files.storage import FileSystemStorage
 from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+from .serializer import PatientSerializer
+import os
+
 
 
 @csrf_exempt
@@ -45,7 +50,8 @@ def get_patient_details(request):
                 'age': patient.age,
                 'sex': patient.sex,
                 'birthday': patient.birthday,
-                'maritalstatus' : patient.maritalstatus
+                'maritalstatus' : patient.maritalstatus,
+                'patientprofile' : patient.profilePicture.url if patient.profilePicture else None,
             }
             return JsonResponse(patient_data, status=200)
         except Patient.DoesNotExist:
@@ -57,9 +63,6 @@ def get_patient_details(request):
         return JsonResponse({'error': 'Invalid token'}, status=401)
 
 
-from django.core.files.storage import FileSystemStorage
-from django.conf import settings
-import os
 
 @method_decorator(csrf_exempt, name='dispatch')
 class UpdatePatientDetails(APIView):
@@ -73,7 +76,8 @@ class UpdatePatientDetails(APIView):
             if image:
                 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
                 image_name = fs.save(image.name, image)
-                image_url = fs.url(image_name)  
+                # Store only the relative path (Recommended)
+                image_url = f"media/{image_name}"
 
             # Parse JSON body
             body = request.data if isinstance(request.data, dict) else json.loads(request.body)
@@ -124,7 +128,7 @@ class UpdatePatientDetails(APIView):
                 'sex': sex or patient.sex,
                 'birthday': birthday or patient.birthday,
                 'maritalstatus': maritalstatus or patient.maritalstatus,
-                'image': image_url if image else patient.image
+                'profilePicture': image_url or patient.profilePicture,
             }
 
             # Use serializer to update the patient record

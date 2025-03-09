@@ -1,5 +1,5 @@
 installing .venv
-    python -m venv venv
+    python -m venv .venv
 
 activating .venv
     .venv\Scripts\Activate

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -89,7 +89,6 @@ const Profile = () => {
     age: "",
     sex: "",
     maritalstatus: "",
-    profile: null,
   });
 
   const [isReadOnly, setIsReadOnly] = useState(true);
@@ -98,6 +97,13 @@ const Profile = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [image, setImage] =useState('')
+  const imageInput = useRef(null);
+
+  function handleImage(e){
+    console.log(e.target.files)
+    setImage((e.target.files[0]))
+  }
 
   useEffect(() => {
     const fetchPatientData = async () => {
@@ -160,49 +166,48 @@ const Profile = () => {
     return age;
   };
   
-  const handleSave = async () => {
-    if (isReadOnly) {
-      setIsReadOnly(false);
-    } else {
-      // Manual validation check for required fields
-      // if (!formData.firstName || !formData.lastName || !formData.email || !formData.age || !formData.sex || !formData.address) {
-      //   setErrorMessage('Please fill out all required fields.');
-      //   setShowErrorModal(true);
-      //   return; // Stop the function if validation fails
-      // }
-  
-      try {
-        const formDataToSend = new FormData();
-        formDataToSend.append('firstName', formData.firstName);
-        formDataToSend.append('lastName', formData.lastName);
-        formDataToSend.append('email', formData.email);
-        formDataToSend.append('age', formData.age);
-        formDataToSend.append('sex', formData.sex);
-        formDataToSend.append('address', formData.address);
+const handleSave = async () => {
+  if (isReadOnly) {
+    setIsReadOnly(false);
+  } else {
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('firstName', formData.firstName);
+      formDataToSend.append('lastName', formData.lastName);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('age', formData.age);
+      formDataToSend.append('sex', formData.sex);
+      formDataToSend.append('address', formData.address);
 
-        // Append profile picture if available
-        if (formData.profilePicture) {
-          formDataToSend.append('profilePicture', formData.profilePicture);
-        }
-  
-        await axios.put(`${process.env.REACT_APP_API_URL}/api/patient/updateProfile/`, formDataToSend, {
+      // Check if file is selected and append
+      if (imageInput.current && imageInput.current.files && imageInput.current.files[0]) {
+        formDataToSend.append('image', imageInput.current.files[0]);
+      }
+
+      // Make the PUT request with the form data
+      const response = await axios.put(
+        `${process.env.REACT_APP_API_URL}/api/patient/update-patient/`,
+        formDataToSend,
+        {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'multipart/form-data', // Important for file uploads
+            'Content-Type': 'multipart/form-data', // Make sure backend supports this
           },
-        });
+        }
+      );
 
-        setSuccessMessage('Profile updated successfully!');
-        setShowSuccessModal(true);
-      } catch (error) {
-        console.error('Error updating profile:', error);
-        setErrorMessage(error.response?.data?.error || 'Failed to update profile. Please check your details and try again.');
-        setShowErrorModal(true);
-      }
-  
-      setIsReadOnly(true);
+      setSuccessMessage('Profile updated successfully!');
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      setErrorMessage(error.response?.data?.error || 'Failed to update profile. Please check your details and try again.');
+      setShowErrorModal(true);
     }
-  };
+
+    setIsReadOnly(true);
+  }
+};
+
   
   
 
@@ -297,10 +302,10 @@ const Profile = () => {
       </button>
       {/* Profile Upload Container */}
       <div className="text-center mb-4">
-        <input type="file" id="profileUpload" className="d-none" accept="image/*" onChange={(e) => setFormData({ ...formData, profilePicture: e.target.files[0] })} />
+        <input type="file" ref={imageInput} id="profileUpload" className="d-none" accept="image/*" onChange={handleImage} />
         <label htmlFor="profileUpload" className="d-block">
           <img
-            src={formData.profileImage || AccountCircle}
+            src={image|| AccountCircle}
             alt="Profile"
             className="rounded-circle border"
             style={{
