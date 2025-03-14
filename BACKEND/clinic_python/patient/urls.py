@@ -2,6 +2,7 @@
 from django.urls import path
 from . import views
 from . import appointment
+from . import medicalrecord
 from django.conf.urls.static import static
 from django.conf import settings
 from .views import UpdatePatientDetails
@@ -14,6 +15,7 @@ urlpatterns = [
     path('createAppointment/', appointment.create_request, name='create-request'),
     path('viewAppointment/', appointment.view_all_appointments, name= 'view_all_appointments'),
     path('details/', views.get_patient_details_by_student_or_employee_no, name='get_patient_details_by_student_or_employee_no'),
+    path('treatment-summary/<str:view_type>/', medicalrecord.get_treatment_summary, name="treatment-summary"),
     # Add other paths for superadmin-related views here
 ]   
 

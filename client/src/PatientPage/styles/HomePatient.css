@@ -1,5 +1,9 @@
-.container{
+.container {
   margin-top: 5%;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
 }
 
 .row {
@@ -184,6 +188,97 @@
 .row.g-4.mt-4 .col-lg-8 {
   display: flex;
   flex-direction: column;
+}
+
+/* Patient Details Container */
+.patient-container {
+  margin-top: 10%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.patient-content {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.patient-image-wrapper {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #007bff;
+}
+
+.patient-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.patient-details h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.patient-details p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #666;
+}
+
+.details-button {
+  display: inline-block;
+  padding: 8px 15px;
+  margin-top: 10px;
+  background: #007bff;
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.details-button:hover {
+  background: #0056b3;
+}
+
+.chart-container {
+  flex: 1;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.chart-toggle button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: none;
+  cursor: pointer;
+  background: #ddd;
+  border-radius: 5px;
+}
+
+.chart-toggle button.active {
+  background: #007bff;
+  color: white;
 }
 
 

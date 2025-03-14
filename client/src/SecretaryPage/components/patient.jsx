@@ -221,7 +221,7 @@ const Patient = () => {
 
   const handleCreateMedicalRecord = (patientId, data) => {
     // Send data to the backend using an API call
-    fetch('${process.env.REACT_APP_API_URL}/api/admin/patients/${patientId}/medical-records/', {
+    fetch(`${process.env.REACT_APP_API_URL}/api/admin/patients/${patientId}/medical-records/`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,

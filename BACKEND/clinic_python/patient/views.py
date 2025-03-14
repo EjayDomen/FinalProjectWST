@@ -51,7 +51,7 @@ def get_patient_details(request):
                 'sex': patient.sex,
                 'birthday': patient.birthday,
                 'maritalstatus' : patient.maritalstatus,
-                'patientprofile' : patient.profilePicture.url if patient.profilePicture else None,
+                'patientprofile' : patient.profilePicture.url or patient.profile_picture,
             }
             return JsonResponse(patient_data, status=200)
         except Patient.DoesNotExist:
@@ -70,38 +70,12 @@ class UpdatePatientDetails(APIView):
 
     def put(self, request):
         try:
-            # Handle image upload if present
-            image = request.FILES.get('image')  
-            image_url = None
-            if image:
-                fs = FileSystemStorage(location=settings.MEDIA_ROOT)
-                image_name = fs.save(image.name, image)
-                # Store only the relative path (Recommended)
-                image_url = f"media/{image_name}"
-
-            # Parse JSON body
-            body = request.data if isinstance(request.data, dict) else json.loads(request.body)
-
-            # Extract fields
-            username = body.get('username')
-            last_name = body.get('lastName')
-            first_name = body.get('firstName')
-            middle_name = body.get('middleName')
-            suffix = body.get('suffix', '')
-            email = body.get('email')
-            age = body.get('age')
-            sex = body.get('sex')
-            birthday = body.get('birthday')
-            maritalstatus = body.get('maritalstatus')
-
-            # Extract token
+            # Extract token for authentication
             auth_header = request.headers.get('Authorization', '')
-            if not auth_header or not auth_header.startswith('Bearer '):
+            if not auth_header.startswith('Bearer '):
                 return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
             
             token = auth_header.split(' ')[1]
-
-            # Decode JWT token to get patient ID
             try:
                 access_token = AccessToken(token)
                 patient_id = access_token['id']
@@ -110,39 +84,43 @@ class UpdatePatientDetails(APIView):
             except jwt.InvalidTokenError:
                 return JsonResponse({'error': 'Invalid token'}, status=401)
 
-            # Find patient
+            # Fetch patient record
             try:
                 patient = Patient.objects.get(id=patient_id)
             except Patient.DoesNotExist:
                 return JsonResponse({'error': 'Patient not found'}, status=404)
 
-            # Update fields dynamically
-            update_data = {
-                'username': username or patient.username,
-                'first_name': first_name or patient.first_name,
-                'middle_name': middle_name or patient.middle_name,
-                'last_name': last_name or patient.last_name,
-                'suffix': suffix or patient.suffix,
-                'email': email or patient.email,
-                'age': age or patient.age,
-                'sex': sex or patient.sex,
-                'birthday': birthday or patient.birthday,
-                'maritalstatus': maritalstatus or patient.maritalstatus,
-                'profilePicture': image_url or patient.profilePicture,
-            }
+            # Extract request data (JSON or FormData)
+            body = request.data if isinstance(request.data, dict) else json.loads(request.body or '{}')
 
-            # Use serializer to update the patient record
-            serializer = PatientSerializer(patient, data=update_data, partial=True)
+            # Handle file upload if present
+            if 'image' in request.FILES:
+                image = request.FILES['image']
+                patient.profilePicture = image  # Django will handle storage
+
+            # Update patient details
+            # Update patient details
+            serializer = PatientSerializer(patient, data=body, partial=True)
             if serializer.is_valid():
-                serializer.save()
-                return JsonResponse(serializer.data, status=200)
+                serializer.save()  # Save first before accessing serializer.data
+
+                # Ensure the correct image URL is returned
+                profile_picture_url = request.build_absolute_uri(patient.profilePicture.url) if patient.profilePicture else None
+                
+                # Modify response data after saving
+                response_data = serializer.data
+                response_data["profilePicture"] = profile_picture_url  # Fix URL format
+                
+                return JsonResponse(response_data, status=200)
+
             else:
                 return JsonResponse(serializer.errors, status=400)
 
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
         except Exception as e:
-            return JsonResponse({'error': str(e)}, status=400)
+            return JsonResponse({'error': str(e)}, status=500)
+
 
             
 

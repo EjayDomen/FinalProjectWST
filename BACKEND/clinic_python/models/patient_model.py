@@ -18,11 +18,13 @@ class Patient(models.Model):
     sex = models.CharField(max_length=15)
     birthday = models.DateField()
     maritalstatus = models.CharField(max_length=20)
-    profilePicture = models.ImageField(default="default.png", upload_to='uploads/', blank=True)
+    profilePicture = models.ImageField(default="default.png", upload_to='upload_to/', blank=True)
     user_level_id = models.ForeignKey(
         "clinic_python.Role", on_delete=models.CASCADE, null=True, blank=True
     )
     is_deleted = models.BooleanField(default=False)
     createdAt = models.DateTimeField(auto_now_add=True)
-    def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+    def get_profile_picture_url(self):
+        if self.profile_picture:
+            return f"{settings.MEDIA_URL}{self.profile_picture}"
+        return "default.png"
