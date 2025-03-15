@@ -7,6 +7,7 @@ from . import appointment
 from . import medicalrecord
 from django.conf.urls.static import static
 from django.conf import settings
+from .views import EditStaffDetails
 
 urlpatterns = [
     path('', views.dashboard, name='admin_dashboard'),
@@ -15,7 +16,7 @@ urlpatterns = [
     
     path('createStaff/', views.create_staff, name='create_staff'),
     path('deleteStaff/<int:id>/', views.delete_staff, name='delete_staff'),
-    path('editStaff/<int:id>/', views.edit_staff, name='edit_staff'),
+    path('editStaff/', EditStaffDetails.as_view(), name='EditStaffDetails'),
     path('get_archived_staff/', views.get_archived_staff, name='get_archived_staff'),
     path('restore_staff/<int:id>/', views.restore_staff, name='restore_staff'),
     

@@ -116,7 +116,7 @@ const Home = () => {
        <Grid item xs={12} md={4}>
         <Card sx={{ padding: 2, textAlign: "center" }}>
           <img 
-            src={user?.profilePicture || doctorImage} 
+            src={`${process.env.REACT_APP_API_URL}${user?.patientprofile}` || doctorImage}
             alt="Patient" 
             style={{ width: 120, height: 120, borderRadius: "50%" }} 
           />

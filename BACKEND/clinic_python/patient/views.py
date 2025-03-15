@@ -13,6 +13,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from .serializer import PatientSerializer
+from .serializer import UserProfileSerializer
 import os
 
 
@@ -95,21 +96,15 @@ class UpdatePatientDetails(APIView):
 
             # Handle file upload if present
             if 'image' in request.FILES:
-                image = request.FILES['image']
-                patient.profilePicture = image  # Django will handle storage
+                body['profilePicture'] = request.FILES['image']  # Include in serializer
 
-            # Update patient details
             # Update patient details
             serializer = PatientSerializer(patient, data=body, partial=True)
             if serializer.is_valid():
-                serializer.save()  # Save first before accessing serializer.data
+                patient = serializer.save()  # Save and update patient instance
 
-                # Ensure the correct image URL is returned
-                profile_picture_url = request.build_absolute_uri(patient.profilePicture.url) if patient.profilePicture else None
-                
-                # Modify response data after saving
-                response_data = serializer.data
-                response_data["profilePicture"] = profile_picture_url  # Fix URL format
+                # Use UserProfileSerializer to ensure full image URL
+                response_data = UserProfileSerializer(patient, context={"request": request}).data
                 
                 return JsonResponse(response_data, status=200)
 

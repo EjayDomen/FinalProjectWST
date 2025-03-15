@@ -127,7 +127,7 @@ const Profile = () => {
           age: patientData.age || "",
           sex: patientData.sex || "",
           maritalstatus: patientData.maritalstatus || "",
-          profilepicture: patientData.profilePicture || "",
+          profilepicture: patientData.patientprofile || "",
         });
 
         // If the patient is newly registered, activate the edit button
@@ -305,16 +305,16 @@ const handleSave = async () => {
         <input type="file" ref={imageInput} id="profileUpload" className="d-none" accept="image/*" onChange={handleImage} />
         <label htmlFor="profileUpload" className="d-block">
           <img
-            src={image|| AccountCircle}
+            src={`${process.env.REACT_APP_API_URL}${formData.profilepicture}`}
             alt="Profile"
             className="rounded-circle border"
             style={{
               width: "200px",
-              height: "250px",
+              height: "200px",
               minWidth: "200px",
-              minHeight: "250px",
+              minHeight: "200px",
               maxWidth: "200px",
-              maxHeight: "250px",
+              maxHeight: "200px ",
               objectFit: "cover",
               cursor: "pointer",
             }}

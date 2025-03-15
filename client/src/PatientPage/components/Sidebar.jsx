@@ -5,6 +5,7 @@ import FeedbackModal from "../components/Feedback";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/SidebarPatient.css"; // Assuming you have a custom CSS file
+import doctorImage from '../images/doctor.png';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +37,7 @@ const Sidebar = () => {
         setUser({
           first_name: response.data.first_name,
           last_name: response.data.last_name,
-          profile_picture: response.data.profile_picture, // Add profile picture
+          profile_picture: response.data.patientprofile, // Add profile picture
         });
       } catch (error) {
         console.error("Error fetching user details:", error);
@@ -122,7 +123,14 @@ const Sidebar = () => {
             <FeedbackModal open={openFeedbackModal} handleClose={() => setOpenFeedbackModal(false)} />
 
             <NavLink to="/patient/profile" className="user-info ms-3 d-flex align-items-center">
-              <AccountCircle className="me-2" /> <span className="name">{user?.first_name} {user?.last_name}</span>
+            <img 
+                src={`${process.env.REACT_APP_API_URL}${user?.profile_picture}` || doctorImage} 
+                alt="Profile Picture" 
+                className="me-2 rounded-circle" 
+                style={{ width: "40px", height: "40px", objectFit: "cover" }} 
+              />
+              <span className="name">{user?.first_name} {user?.last_name}</span>
+
             </NavLink>
           </div>
 

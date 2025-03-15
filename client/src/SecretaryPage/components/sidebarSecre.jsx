@@ -10,13 +10,7 @@ const Sidebar = () => {
   const [currentDate, setCurrentDate] = useState('');
   const navigate = useNavigate();
   const [userName, setUserName] = useState('');
-  const [notifications, setNotifications] = useState([]);
-  const [newNotification, setNewNotification] = useState(false);
-  const [unreadNotificationCount, setUnreadNotificationCount] = useState(0);
-  const [currentNotificationPage, setCurrentNotificationPage] = useState(0);
-  const notificationsPerPage = 5;
-  const [showNotifications, setShowNotifications] = useState(false);
-  const notificationRef = useRef(null); const menuRef = useRef(null);
+  const [profile, setProfile] = useState('');
 
   const getNotificationStyle = (type) => {
     switch (type) {
@@ -48,6 +42,7 @@ const Sidebar = () => {
       // Safely construct the full name
       const firstName = secretary.first_name || "";
       const lastName = secretary.last_name || "";
+      setProfile(secretary.profilePicture);
       
       setUserName(`${firstName} ${lastName}`.trim()); // Use trim() to remove any extra spaces
     } catch (error) {
@@ -161,9 +156,15 @@ const Sidebar = () => {
         <div className={styles.headerActions}>
           <div className={styles.user}>
             <NavLink to="/staff/profile" className={styles.profileIcon}>
-              <AccountCircle style={{ fontSize: '60px', padding: '10px', cursor: 'pointer', color: 'gray' }} />
+              <img 
+                src={`${process.env.REACT_APP_API_URL}${profile}` } 
+                alt="Profile Picture" 
+                className="me-2 rounded-circle" 
+                style={{ width: "40px", height: "40px", objectFit: "cover" }} 
+              />
+              <span className={styles.userName}>{userName}</span>
             </NavLink>
-            <span className={styles.userName}>{userName}</span>
+            
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required, user_passes_test
+
 from django.http import JsonResponse
 from clinic_python.models import Staff, Role
 import bcrypt
@@ -9,6 +9,12 @@ from rest_framework_simplejwt.tokens import AccessToken
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_GET
 from django.db import DatabaseError
+from .serializer import StaffProfileSerializer
+from .serializer import StaffSerializer
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from django.utils.decorators import method_decorator
+from rest_framework.views import APIView
+
 
 
 @require_GET
@@ -84,11 +90,7 @@ def restore_staff(request, id):
 def is_admin(user):
     return user.groups.filter(name='admin').exists()
 
-@login_required
-@user_passes_test(is_admin)
-def manage_schedule(request):
-    data = {"message": "Admin: Manage schedule"}
-    return JsonResponse(data)
+
 
 
 def dashboard(request):
@@ -115,56 +117,61 @@ def delete_staff(request, id):
     else:
         return JsonResponse({'error': 'Invalid request method.'}, status=405)
 
-@csrf_exempt
-def edit_staff(request, id):
-    """
-    Edit a staff member's details like name, specialization, and email.
-    Allows admins or the staff member themselves to update their details.
-    """
-    if request.method == 'PUT':
+@method_decorator(csrf_exempt, name='dispatch')
+class EditStaffDetails(APIView):
+    parser_classes = (MultiPartParser, FormParser, JSONParser)
+
+    def put(self, request):
         try:
+            # Extract token for authentication
+            auth_header = request.headers.get('Authorization', '')
+            if not auth_header.startswith('Bearer '):
+                return JsonResponse({'error': 'Authorization header missing or invalid'}, status=401)
+            
+            token = auth_header.split(' ')[1]
+            try:
+                access_token = AccessToken(token)
+                staff_id = access_token['id']
+            except jwt.ExpiredSignatureError:
+                return JsonResponse({'error': 'Token has expired'}, status=401)
+            except jwt.InvalidTokenError:
+                return JsonResponse({'error': 'Invalid token'}, status=401)
 
-            # Retrieve the staff record from the database
-            staff = Staff.objects.get(id=id, is_deleted=False)
+            # Fetch the staff record
+            try:
+                staff = Staff.objects.get(id=staff_id, is_deleted=False)
+            except Staff.DoesNotExist:
+                return JsonResponse({'error': 'Staff not found'}, status=404)
+            
+            if request.content_type.startswith('multipart/form-data'):
+                body = request.data
+            else:
+                body = json.loads(request.body or '{}')  # Only parse JSON when needed
 
-            # Parse the incoming JSON body to get the updated fields
-            body = json.loads(request.body)
-            first_name = body.get('first_name', staff.first_name)
-            middle_name = body.get('middle_name', staff.middle_name)
-            last_name = body.get('last_name', staff.last_name)
-            suffix = body.get('suffix', staff.suffix)
-            workposition = body.get('workposition', staff.workposition)
-            email = body.get('email', staff.email)
+            # Debugging log
+            print("Received Data:", body)
 
-            # Update fields only if they are provided in the request
-            staff.first_name = first_name
-            staff.middle_name = middle_name
-            staff.last_name = last_name
-            staff.suffix = suffix
-            staff.workposition = workposition
-            staff.email = email
+            # Handle file upload if present
+            if 'image' in request.FILES:
+                body['profilePicture'] = request.FILES['image']
 
-            # Save the changes to the database
-            staff.save()
-
-            # Return success response
-            return JsonResponse({
-                'message': f'Staff {first_name} {last_name} details updated successfully.',
-                'staff_id': staff.id
-            }, status=200)
-
-        except Staff.DoesNotExist:
-            return JsonResponse({'error': 'Staff not found'}, status=404)
-        except KeyError:
-            return JsonResponse({'error': 'Invalid token payload'}, status=400)
+            # Debugging: Log file details
+            if 'image' in request.FILES:
+                print("Uploaded file name:", request.FILES['image'].name)
+            
+            # Update staff details
+            serializer = StaffSerializer(staff, data=body, partial=True)
+            if serializer.is_valid():
+                staff = serializer.save()
+                response_data = StaffProfileSerializer(staff, context={"request": request}).data
+                return JsonResponse(response_data, status=200)
+            else:
+                return JsonResponse(serializer.errors, status=400)
+        
         except json.JSONDecodeError:
             return JsonResponse({'error': 'Invalid JSON format'}, status=400)
         except Exception as e:
-            return JsonResponse({'error': f'Error updating staff: {str(e)}'}, status=500)
-    else:
-        return JsonResponse({'error': 'Invalid request method. Use PUT.'}, status=405)
-
-
+            return JsonResponse({'error': str(e)}, status=500)
 
 @csrf_exempt
 def create_staff(request):
@@ -272,7 +279,7 @@ def get_staff_detail(request):
                 'workposition': staff.workposition,
                 'email': staff.email,
                 'user_level_id': staff.user_level_id.id if staff.user_level_id else None,
-                'profilePicture': staff.profilepicture.url if staff.profilepicture else None,
+                'profilePicture': staff.profilePicture.url if staff.profilePicture else None,
                 'address': staff.address,
                 'phonenumber': staff.phonenumber,
                 'sex': staff.sex,

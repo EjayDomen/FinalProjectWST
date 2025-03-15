@@ -1,8 +1,13 @@
 from django.db import models
 
+
+def upload_to(instance, filename):
+    return 'profile_pictures/{filename}'.format(filename=filename)
+
+
 class Staff(models.Model):
 
-    profilepicture = models.ImageField(default="default.png", blank=True)
+    profilePicture = models.ImageField(default="default.png", upload_to='upload_to/', blank=True)
     username = models.CharField(max_length=100)
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True)
@@ -21,5 +26,7 @@ class Staff(models.Model):
     )
     is_deleted = models.BooleanField(default=False)  # Default is False
 
-    def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+    def get_profile_picture_url(self):
+        if self.profile_picture:
+            return f"{settings.MEDIA_URL}{self.profile_picture}"
+        return "default.png"

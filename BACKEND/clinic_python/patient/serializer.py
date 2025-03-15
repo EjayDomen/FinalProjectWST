@@ -8,14 +8,14 @@ class PatientSerializer(serializers.ModelSerializer):
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
-    profile_picture = serializers.SerializerMethodField()
+    profilePicture = serializers.SerializerMethodField()
 
-    def get_profile_picture(self, obj):
-        request = self.context.get('request')
-        if obj.profile_picture:
-            return request.build_absolute_uri(obj.profile_picture.url)
-        return None  # Or a default image URL
+    def get_profilePicture(self, obj):
+        request = self.context.get('request') 
+        if obj.profilePicture:  
+            return request.build_absolute_uri(obj.profilePicture.url)  
+        return None
 
     class Meta:
         model = Patient
-        fields = ['profilePicture']
+        fields = '__all__'
