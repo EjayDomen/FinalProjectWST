@@ -10,6 +10,8 @@ from rest_framework_simplejwt.tokens import AccessToken
 from django.db.models.functions import TruncDay, TruncWeek, TruncMonth
 from datetime import date, timedelta
 from django.db.models import Count
+from rest_framework.parsers import JSONParser
+
 
 
 
@@ -289,3 +291,43 @@ def get_request_counts(request):
     }
 
     return JsonResponse(response_data)
+
+
+
+
+@csrf_exempt
+def update_staff(request, staff_id):
+    if request.method == 'PUT':
+        try:
+            staff = Staff.objects.filter(id=staff_id, is_deleted=False).first()
+            if not staff:
+                return JsonResponse({'error': 'Staff not found or has been deleted'}, status=404)
+
+            data = JSONParser().parse(request)
+            
+            # Update staff fields
+            staff.username = data.get('username', staff.username)
+            staff.first_name = data.get('first_name', staff.first_name)
+            staff.middle_name = data.get('middle_name', staff.middle_name)
+            staff.last_name = data.get('last_name', staff.last_name)
+            staff.suffix = data.get('suffix', staff.suffix)
+            staff.workposition = data.get('workposition', staff.workposition)
+            staff.address = data.get('address', staff.address)
+            staff.phonenumber = data.get('phonenumber', staff.phonenumber)
+            staff.maritalstatus = data.get('maritalstatus', staff.maritalstatus)
+            staff.sex = data.get('sex', staff.sex)
+            staff.birthday = data.get('birthday', staff.birthday)
+            staff.email = data.get('email', staff.email)
+
+            # Update password if provided (and hash it)
+            if 'password' in data and data['password']:
+                hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+                staff.password = hashed_password
+            
+            staff.save()
+
+            return JsonResponse({'message': 'Staff updated successfully'}, status=200)
+        except Exception as e:
+            return JsonResponse({'error': f'Error updating staff: {str(e)}'}, status=500)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)

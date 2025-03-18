@@ -89,11 +89,11 @@ const Sidebar = () => {
             <Groups2 />
             <span>Patients</span>
           </NavLink>
-          <NavLink to="/staff/appointments" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
+          <NavLink to="/staff/request" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
             <EventNote />
             <span>Requests</span>
           </NavLink>
-          <NavLink to="/staff/queue" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
+          <NavLink to="/staff/medicalrecords" className={({ isActive }) => `${styles.navItem1} ${isActive ? styles.aactive1 : ''}`}>
             <Queue />
             <span>Medical Records</span>
           </NavLink>

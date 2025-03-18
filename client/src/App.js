@@ -15,6 +15,7 @@ import SidebarPatient from './PatientPage/components/Sidebar';
 import HomePatient from './PatientPage/components/Home';
 import RequestPatient from './PatientPage/components/request';
 import ProfilePatient from './PatientPage/components/Profile';
+import MedicalRecord from './PatientPage/components/MedicalRecord';
 
 // Secretary components
 import SidebarSecre from './SecretaryPage/components/sidebarSecre';
@@ -98,6 +99,7 @@ function App() {
                 <Route path="home" element={<HomePatient />} />
                 <Route path="request" element={<RequestPatient />} />
                 <Route path="profile" element={<ProfilePatient />} />
+                <Route path="medicalrecords" element={<MedicalRecord />} />
               </Routes>
             </PatientLayout>
           }
@@ -112,9 +114,9 @@ function App() {
                 <Route path="dashboard" element={<DashboardSecre />} />
                 <Route path="doctors" element={<DoctorSecre />} />
                 <Route path="patients" element={<PatientSecre />} />
-                <Route path="appointments" element={<AppointmentSecre />} />
+                <Route path="request" element={<AppointmentSecre />} />
                 <Route path="appointments/patientList/:scheduleId" element={<PatientListSecre />} />
-                <Route path="queue" element={<QueueSecre />} />
+                <Route path="medicalrecords" element={<QueueSecre />} />
                 {/*<Route path="viewQueue" element={<ViewQueueSecre />} /> */}
                 <Route path="queueList/:qid" element={<QueueListSecre />} />
                 {/* <Route path="viewQueueList/:qid" element={<ViewQueueListSecre />} /> */}

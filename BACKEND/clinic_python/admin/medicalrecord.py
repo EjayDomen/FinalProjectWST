@@ -24,10 +24,8 @@ def create_medical_record(request, patient_id):
             
             medical_record = MedicalRecord.objects.create(
                 patientid=patient,
-                transactiontype=data.get('transactionType', ''),
                 date=data.get('date'),
                 timetreatment=data.get('timetreatment', ''),
-                transactiondetails=data.get('transactionDetails', ''),
                 medicineused=data.get('medicineused', 'N/A'),
                 bpbefore=data.get('bpbefore', ''),
                 bpafter=data.get('bpafter', ''),
@@ -57,10 +55,8 @@ def get_medical_records_by_patient(request, patient_id):
             records_list = [
                 {
                     'id': record.id,
-                    'transactiontype': record.transactiontype,
                     'date': record.date,
                     'timetreatment': record.timetreatment,
-                    'transactiondetails': record.transactiondetails,
                     'medicineused': record.medicineused,
                     'bpbefore': record.bpbefore,
                     'bpafter': record.bpafter,
@@ -111,12 +107,10 @@ def get_recent_medical_records(request):
 
                 records_list.append({
                     'id': record.id,
-                    'transactiontype': record.transactiontype,
                     'patientid': record.patientid.id if record.patientid else None,
                     'patientname': patient_name,
                     'date': record.date,
                     'timetreatment': record.timetreatment,
-                    'transactiondetails': record.transactiondetails,
                     'medicineused': record.medicineused,
                     'bpbefore': record.bpbefore,
                     'bpafter': record.bpafter,
@@ -141,7 +135,7 @@ def get_medical_records_summary(request):
     if request.method == 'GET':
         try:
             medical_records = MedicalRecord.objects.select_related('patientid').values(
-                'id', 'transactiontype', 'date', 'patientid__first_name', 'patientid__last_name'
+                'id', 'date', 'patientid__first_name', 'patientid__last_name'
             )
             
             records_list = [
@@ -168,10 +162,8 @@ def get_medical_record_details(request, record_id):
 
             record_details = {
                 'id': record.id,
-                'transactiontype': record.transactiontype,
                 'date': record.date,
                 'timetreatment': record.timetreatment,
-                'transactiondetails': record.transactiondetails,
                 'medicineused': record.medicineused,
                 'bpbefore': record.bpbefore,
                 'bpafter': record.bpafter,

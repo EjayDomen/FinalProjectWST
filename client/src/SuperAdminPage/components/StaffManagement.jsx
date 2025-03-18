@@ -253,7 +253,7 @@ const handleRestore = async (staffId) => {
     e.stopPropagation();
     try {
       const response = await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/admin/editStaff/${selectedStaff}/`,
+        `${process.env.REACT_APP_API_URL}/api/superadmin/update_staff/${selectedStaff}/`,
         {
           username: formData.username,
           first_name: formData.firstName,
@@ -386,7 +386,6 @@ const handleRestore = async (staffId) => {
 
   return (
     <div className="patient">
-      <main className="patient-content">
         {/* Header Section */}
         <div className="patient-header">
           <div className="header-left">
@@ -439,7 +438,6 @@ const handleRestore = async (staffId) => {
             </div>
           </div>
         </div>
-      </main>
 
       {/* Archive Modal */}
       {isArchiveModal && (

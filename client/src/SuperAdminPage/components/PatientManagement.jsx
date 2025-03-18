@@ -251,7 +251,7 @@ const PatientManagement = () => {
   return (
     <div className="patient">
       {/* Main Content */}
-      <main className="patient-content">
+
         {/* Header Section */}
         <div className="patient-header">
           <div className="header-left">
@@ -324,7 +324,6 @@ const PatientManagement = () => {
             </div>
           </div>
         </div>
-      </main>
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}

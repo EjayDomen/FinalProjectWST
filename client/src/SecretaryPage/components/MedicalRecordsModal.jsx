@@ -50,10 +50,8 @@ const MedicalRecordsModal = ({ isOpen, onClose, patientId, patientName }) => {
           medicalRecords.map((record, index) => (
             <div key={index} className={styles.recordCard}>
               <h3>Record {index + 1}</h3>
-              <p><strong>Transaction Type:</strong> {record.transactiontype}</p>
               <p><strong>Date:</strong> {record.date}</p>
               <p><strong>Time Treatment:</strong> {record.timetreatment}</p>
-              <p><strong>Transaction Details:</strong> {record.transactiondetails}</p>
               <p><strong>Medicine given during Treatment:</strong> {record.medicineused}</p>
               <p><strong>Blood Pressure Before:</strong> {record.bpbefore}</p>
               <p><strong>Blood Pressure After:</strong> {record.bpafter}</p>

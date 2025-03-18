@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { Home, Person, EventNote, Logout, Menu, Notifications, AccountCircle, Feedback } from "@mui/icons-material";
+import { Home, Person, EventNote, Assignment, Logout, Menu, Notifications, AccountCircle, Feedback } from "@mui/icons-material";
 import FeedbackModal from "../components/Feedback";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -99,6 +99,14 @@ const Sidebar = () => {
                 }
               >
                 <EventNote /> <span>Requests</span>
+              </NavLink>
+              <NavLink
+                to="/patient/medicalrecords"
+                className={({ isActive }) =>
+                  `dropdown-item-custom menuItem ${isActive ? "active" : ""}`
+                }
+              >
+                <Assignment /> <span>Medical Records</span>
               </NavLink>
               <button
                 className="dropdown-item-custom text-danger"

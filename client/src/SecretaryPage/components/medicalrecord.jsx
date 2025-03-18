@@ -119,10 +119,8 @@ const Queue = () => {
 
       {selectedMedicalRecord ? (
         <div className={styles.modalDetails}>
-          <p><strong>Transaction Type:</strong> {selectedMedicalRecord.transactiontype}</p>
           <p><strong>Date:</strong> {selectedMedicalRecord.date}</p>
           <p><strong>Time of Treatment:</strong> {selectedMedicalRecord.timetreatment}</p>
-          <p><strong>Transaction Details:</strong> {selectedMedicalRecord.transactiondetails}</p>
           <p><strong>Medicine Used:</strong> {selectedMedicalRecord.medicineused}</p>
           <p><strong>BP Before:</strong> {selectedMedicalRecord.bpbefore}</p>
           <p><strong>BP After:</strong> {selectedMedicalRecord.bpafter}</p>

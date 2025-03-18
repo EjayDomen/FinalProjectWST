@@ -11,5 +11,7 @@ urlpatterns = [
     path('countPatient/', views.count_patient_types, name='count_patient_types'),
     path('activePatient/', views.count_patient_status, name='count_patient_status'),
     path('requestCount/', views.get_request_counts, name='get_request_counts'),
+    path('update_staff/<int:staff_id>/', views.update_staff, name='update_staff'),
+
     # Add other paths for superadmin-related views here
 ]

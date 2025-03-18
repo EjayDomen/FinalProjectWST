@@ -1,0 +1,212 @@
+.apptcont{
+    margin-top: 5%;
+    background-color: #fff;
+    padding: 30px 20px;
+    border-Radius: 8px;
+  }
+  
+  .custom-modal-width {
+    max-width: 900px; /* Adjust the width as needed */
+    margin-left: 500px;
+  }
+  
+  .uniform-input {
+    height: 40px; /* Adjust height as needed */
+    width: 100%; /* Ensure full width inside columns */
+    padding: 8px 12px;
+    box-sizing: border-box; /* Prevent padding from affecting width */
+    margin-top: 4px;
+  }
+  
+  
+  .searchbar{
+    width: 90%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the content horizontally */
+    margin: 0; /* Remove default margin */
+  }
+  
+  .search-icon {
+    position: absolute;
+    left: 10px;
+    color: #aaa;
+  }
+  
+  .searchbar input {
+    padding-left: 30px; /* Add padding to the left of the input to make room for the icon */
+    width: 100%; /* Ensure the input takes full width of the container */
+  }
+  
+  
+  .custom-dropdown .dropdown-menu {
+    position: absolute !important;
+    z-index: 1050 !important; /* Ensure it's above the table */
+    transform: translateY(-10px) !important; /* Adjust dropdown placement */
+  }
+  
+  .MuiMenu-paper {
+    border: 1px solid black !important; /* Black border */
+    border-radius: 4px !important; /* Rounded corners */
+    box-shadow: none !important; /* Remove shadow if desired */
+    background-color: white !important; /* Ensure consistent background */
+  }
+  
+  .MuiMenu-list {
+    padding: 0 !important; /* Adjust padding if necessary */
+  }
+  
+  .MuiMenuItem-root {
+    color: black !important; /* Ensure text is black */
+    padding: 10px 15px !important; /* Adjust padding for better spacing */
+    background-color: white !important; /* Ensure white background */
+  }
+  
+  .MuiMenuItem-root:hover {
+    background-color: #e9ecef !important; /* Highlight effect on hover */
+  }
+  
+  
+  .data-grid-container {
+    overflow: visible !important; /* Ensure the dropdown isn't hidden */
+  }
+  
+  .modal-body {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  
+  .modal-body h5 {
+    font-weight: bold;
+    margin-bottom: 15px;
+  }
+  
+  .modal-body p {
+    margin-bottom: 10px;
+  }
+  
+  .modal-footer button {
+    min-width: 100px;
+  }
+  
+  
+  .bg-success {
+    background-color: #aaf7be !important;
+    color: #006400 !important;
+  }
+  
+  .bg-info {
+    background-color: #b0d4ff !important;
+    color: #0044cc !important;
+  }
+  
+  .bg-light {
+    background-color: #f8f9fa !important;
+    color: #000 !important;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  /* Scrollable area for the queue list */
+  .queue-list {
+    max-height: 300px;
+    overflow-y: auto;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .queue-list div {
+    cursor: pointer;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+  }
+  
+  .queue-list div:hover {
+    background-color: #e9ecef;
+  }
+  
+  .queue-modal-body h5 {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .queue-modal-body p {
+    margin-bottom: 8px;
+  }
+  
+  .queue-number-box {
+    background-color: #aaf7be;
+    color: #006400;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+  
+  .current-queue-box {
+    background-color: #b0d4ff;
+    color: #0044cc;
+    text-align: center;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+  
+  
+  
+  .text-success {
+    color: #006400; /* Dark green for success messages */
+  }
+  
+  .text-primary {
+    color: #0044cc; /* Dark blue for doctor queue */
+  }
+  
+  
+  @media (max-width: 576px) {
+    .container{
+      margin-top: 20%;
+    }
+    .searchbar{
+      width: 65%;
+    }
+  }
+  
+  @media (max-width: 1400px){
+    .searchbar{
+      max-width: 100%;
+    }
+  }
+  
+  
+  #appointmentModal .modal-dialog {
+    max-width: 500px; /* Adjust the width as needed */
+    margin: auto; /* Center the modal horizontally */
+  }
+  
+  #appointmentModal .modal-content {
+    padding: 20px; /* Add consistent padding */
+    border-radius: 10px; /* Rounded corners for better aesthetics */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  #appointmentModal .modal-header {
+    display: flex;
+    justify-content: center; /* Center-align the modal title */
+    border-bottom: 1px solid #ddd; /* Add a subtle divider */
+  }
+  
+  #appointmentModal .modal-title {
+    font-weight: bold;
+  }
+  
+  #appointmentModal .modal-footer {
+    display: flex;
+    justify-content: space-between; /* Spread buttons evenly */
+  }
+  
