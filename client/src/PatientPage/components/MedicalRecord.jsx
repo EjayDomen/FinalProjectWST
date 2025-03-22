@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Box, Button, Modal, Typography } from "@mui/material";
+import { Box, Button, Modal, Typography, TextField } from "@mui/material";
 import axios from "axios";
-import "../styles/medicalrecords.css"; // Assuming you have a custom CSS file
+import "../styles/medicalrecords.css";
 
 const MedicalRecords = () => {
   const [records, setRecords] = useState([]);
+  const [filteredRecords, setFilteredRecords] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedRecord, setSelectedRecord] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -15,16 +17,28 @@ const MedicalRecords = () => {
 
   const fetchRecords = async () => {
     try {
-      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patient/medical_records`, 
-        {  
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/patient/medical_records`, {
         headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
-          },
-    });
-    setRecords(response.data.medical_records || []);
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+      setRecords(response.data.medical_records || []);
+      setFilteredRecords(response.data.medical_records || []);
     } catch (error) {
       console.error("Error fetching records:", error);
     }
+  };
+
+  const handleSearch = (event) => {
+    const query = event.target.value.toLowerCase();
+    setSearchQuery(query);
+    const filtered = records.filter(record =>
+      record.generalremarks.toLowerCase().includes(query) ||
+      record.medicineused.toLowerCase().includes(query) ||
+      record.attendingstaff.toLowerCase().includes(query) ||
+      record.date.includes(query)
+    );
+    setFilteredRecords(filtered);
   };
 
   const handleRowClick = (params) => {
@@ -47,23 +61,25 @@ const MedicalRecords = () => {
   ];
 
   return (
-    <Box sx={{     height: 700, 
-      width: "70%", 
-      display: "flex", 
-      flexDirection: "column", 
-      alignItems: "center", // Center horizontally
-      justifyContent: "center", // Center vertically
-      mx: "auto", // Centers in the parent container
-      mt: 5 // Adjust margin from the top
-     }}>
+    <Box sx={{ height: 700, width: "70%", display: "flex", flexDirection: "column", alignItems: "center", mx: "auto", mt: 5 }}>
       <Typography variant="h4" gutterBottom>Medical Records</Typography>
-      <DataGrid
-        rows={records}
-        columns={columns}
-        getRowId={(row) => row.id}
-        onRowClick={handleRowClick}
-        pageSize={5}
-      />
+      <Box sx={{ width: "100%" }}>
+        <TextField
+          label="Search"
+          variant="outlined"
+          fullWidth
+          value={searchQuery}
+          onChange={handleSearch}
+          sx={{ mb: 2 }}
+        />
+        <DataGrid
+          rows={filteredRecords}
+          columns={columns}
+          getRowId={(row) => row.id}
+          onRowClick={handleRowClick}
+          pageSize={5}
+        />
+      </Box>
       <Modal open={open} onClose={handleClose}>
         <Box sx={{ p: 4, bgcolor: "background.paper", borderRadius: 2, mx: "auto", mt: 5, width: 400 }}>
           <Typography variant="h6">Medical Record Details</Typography>

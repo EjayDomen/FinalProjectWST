@@ -4,4 +4,5 @@ from .admin_model import Staff
 from .superadmin_model import SuperAdmin
 from .appointment_model import Appointment
 from .medicalrecord_model import MedicalRecord
+from .feedback_model import Feedback
 

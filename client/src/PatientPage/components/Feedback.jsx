@@ -19,7 +19,7 @@ const FeedbackModal = ({ open, handleClose }) => {
 
   const handleSubmitFeedback = async () => {
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/patient/appointment/feedback`, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/patient/submitfeedback/`, {
         rating,
         comments,
       }, {

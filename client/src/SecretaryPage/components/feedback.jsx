@@ -22,13 +22,23 @@ const Feedback = () => {
   useEffect(() => {
     const fetchFeedback = async () => {
       try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/secretary/reports/feedback`);
-        const formattedData = response.data.map(item => ({
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/admin/showallfeedbacks/`);
+        console.log('Response Data:', response.data); // Debugging Line
+    
+        // Ensure response.data is an array
+        if (!Array.isArray(response.data.feedback)) {
+          throw new Error('Unexpected response format: feedback should be an array');
+        }
+    
+        const formattedData = response.data.feedback.map(item => ({
           ...item,
-          createdAt: item.createdAt.split('T')[0],
-          updatedAt: item.updatedAt.split('T')[0],
-          patientFullName: `${item.patient?.FIRST_NAME || 'N/A'} ${item.patient?.LAST_NAME || ''}`.trim()
+          createdAt: item.created_at.split('T')[0], // Fix key name to match backend
+          patient_name: `${item.patient_name || 'N/A'}`.trim(),
+          comments: item.comments,
+          rating: item.rating,
+          patient_id: item.patient_id,
         }));
+    
         setFeedback(formattedData);
       } catch (error) {
         console.error('Error fetching feedback:', error);
@@ -36,6 +46,7 @@ const Feedback = () => {
         setLoading(false);
       }
     };
+    
 
     fetchFeedback();
   }, []);
@@ -56,8 +67,8 @@ const Feedback = () => {
     return (
       (!start || itemDate >= start) &&
       (!end || itemDate <= end) &&
-      ((item.COMMENTS && item.COMMENTS.toLowerCase().includes(searchTerm.toLowerCase())) ||
-        (item.PATIENT_ID && item.PATIENT_ID.toString().includes(searchTerm)))
+      ((item.comments && item.comments.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (item.patient_name && item.patient_name.toString().includes(searchTerm)))
     );
   });
   const downloadCSV = () => {
@@ -77,10 +88,10 @@ const Feedback = () => {
     const headers = ["ID", "Patient ID", "Full Name", "Rating", "Comments", "Created At"];
     const rows = filteredFeedback.map(item => [
       item.id,
-      item.PATIENT_ID,
-      item.patientFullName,
-      item.RATING,
-      item.COMMENTS,
+      item.patient_id      ,
+      item.patient_name,
+      item.rating,
+      item.comments,
       item.createdAt
     ]);
 
@@ -128,10 +139,10 @@ const Feedback = () => {
     const tableColumn = ["ID", "Patient ID", "Full Name", "Rating", "Comments", "Created At"];
     const tableRows = filteredFeedback.map(item => [
       item.id,
-      item.PATIENT_ID,
-      item.patientFullName,
-      item.RATING,
-      item.COMMENTS,
+      item.patient_id      ,
+      item.patient_name,
+      item.rating,
+      item.comments,
       item.createdAt
     ]);
 
@@ -215,10 +226,10 @@ const Feedback = () => {
   // Table Columns
   const columns = [
     { field: 'id', headerName: 'ID', width: 140 },
-    { field: 'PATIENT_ID', headerName: 'Patient ID', width: 200 },
-    { field: 'patientFullName', headerName: 'Full Name', width: 200 },
-    { field: 'RATING', headerName: 'Rating', width: 150 },
-    { field: 'COMMENTS', headerName: 'Comments', width: 350 },
+    { field: 'patient_id', headerName: 'Patient ID', width: 200 },
+    { field: 'patient_name', headerName: 'Full Name', width: 200 },
+    { field: 'rating', headerName: 'Rating', width: 150 },
+    { field: 'comments', headerName: 'Comments', width: 350 },
     { field: 'createdAt', headerName: 'Created At', width: 200 },
   ];
 

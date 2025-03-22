@@ -5,6 +5,7 @@ from . import views
 from . import patients
 from . import appointment
 from . import medicalrecord
+from . import feedback
 from django.conf.urls.static import static
 from django.conf import settings
 from .views import EditStaffDetails
@@ -50,6 +51,7 @@ urlpatterns = [
     path('appoinmentCounts/', appointment.count_completed_appointments , name='count_completed_appointments'),
     path('updaterequeststatus/<int:id>/', appointment.update_status, name='update_status'),
     
+    path('showallfeedbacks/', feedback.get_feedbacks, name='get_feedbacks'),
 
     # Add other paths for superadmin-related views here
 ]

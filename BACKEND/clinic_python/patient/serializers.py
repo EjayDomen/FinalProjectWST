@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Patient
+from clinic_python.models import Patient
 
 class PatientSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(required=False)  # Allows optional image upload

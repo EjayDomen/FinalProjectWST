@@ -26,3 +26,6 @@ Check for errors
 Apply migrations for database models
     python manage.py makemigrations
     python manage.py migrate
+
+installing packages in packages.txt
+pip install -r requirements.txt

@@ -23,8 +23,6 @@ db.sqlite3
 *.pyc
 *.pyo
 
-# Media and uploads (optional)
-media/
 
 # Node modules (if frontend dependencies exist)
 node_modules/

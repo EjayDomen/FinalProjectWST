@@ -138,35 +138,6 @@ const Dashboard = () => {
     fetchProfile();
   }, []);
 
-  const lineData1 = {
-    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-    datasets: [
-      {
-        label: 'Day',
-        data: [20, 40, 35, 50, 45, 60, 70, 65, 80],
-        borderColor: '#2563EB',
-        backgroundColor: 'rgba(37, 99, 235, 0.2)',
-        tension: 0.3,
-        fill: true,
-      },
-      {
-        label: 'Week',
-        data: [15, 30, 25, 40, 35, 50, 55, 60, 70],
-        borderColor: '#10B981',
-        backgroundColor: 'rgba(16, 185, 129, 0.2)',
-        tension: 0.3,
-        fill: true,
-      },
-      {
-        label: 'Month',
-        data: [10, 20, 15, 30, 25, 35, 40, 45, 50],
-        borderColor: '#F59E0B',
-        backgroundColor: 'rgba(245, 158, 11, 0.2)',
-        tension: 0.3,
-        fill: true,
-      },
-    ],
-  };
   
 
   // Data for Doughnut Chart
@@ -211,6 +182,21 @@ const Dashboard = () => {
           weight: 'bold',
         },
         formatter: (value) => value.toFixed(0), // Display whole number instead of percentage
+      },
+    },
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        min: 0, // Ensures Y-axis starts from 0
+        ticks: {
+          callback: function (value) {
+            return value >= 0 ? value : ''; // Hides negative tick labels
+          },
+        },
       },
     },
   };
@@ -263,7 +249,35 @@ const Dashboard = () => {
         {/* Charts */}
         <div className="charts-container">
           <div className="chart-card">
-            <Line data={lineData} />
+          <Line 
+            data={lineData}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                title: {
+                  display: true,
+                  text: 'Request Count',
+                  font: {
+                    size: 20,
+                    weight: 'bold',
+                  },
+                },
+              },
+              scales: {
+                y: {
+                  suggestedMin: 0, // Sets a default minimum value
+                  suggestedMax: 10, // Sets a default maximum value (adjust as needed)
+                  ticks: {
+                    callback: function (value) {
+                      return value >= 0 ? value : ''; // Hides negative tick labels
+                    },
+                  },
+                },
+              },
+            }}
+          />
+
           </div>
           <div className="chart-card">
             <Doughnut data={doughnutData} options={options}/>

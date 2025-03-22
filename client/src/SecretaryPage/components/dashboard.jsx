@@ -125,32 +125,6 @@ const Dashboard = () => {
 
 
 
-  const fetchPatientsAttended = async (period) => {
-    try {
-      const url = `${process.env.REACT_APP_API_URL}/api/admin/appoinmentCounts/?period=${period}`;
-  
-      const response = await axios.get(url, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
-  
-      const completedCount = response.data.completed_count;
-      if (Array.isArray(completedCount)) {
-        setAttendedData(completedCount);
-      } else {
-        console.error('Invalid data format:', completedCount);
-        setAttendedData([]); // Reset to an empty array in case of invalid data
-      }
-    } catch (error) {
-      console.error('Error fetching patients attended data:', error);
-    }
-  };
-
-  // Call fetchPatientsAttended when the component mounts
-useEffect(() => {
-  fetchPatientsAttended(period);
-}, [period]);
 
 
 
