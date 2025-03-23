@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, Menu, MenuItem } from '@mui/material';
+import { Box, Button, Typography, TextField, Paper, Grid } from "@mui/material";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-modal';
@@ -119,27 +119,56 @@ const Queue = () => {
 
       {selectedMedicalRecord ? (
         <div className={styles.modalDetails}>
-          <p><strong>Date:</strong> {selectedMedicalRecord.date}</p>
-          <p><strong>Time of Treatment:</strong> {selectedMedicalRecord.timetreatment}</p>
-          <p><strong>Medicine Used:</strong> {selectedMedicalRecord.medicineused}</p>
-          <p><strong>BP Before:</strong> {selectedMedicalRecord.bpbefore}</p>
-          <p><strong>BP After:</strong> {selectedMedicalRecord.bpafter}</p>
-          <p><strong>Weight Before:</strong> {selectedMedicalRecord.weightbefore}</p>
-          <p><strong>Weight After:</strong> {selectedMedicalRecord.weightafter}</p>
-          <p><strong>Temperature:</strong> {selectedMedicalRecord.temperature}</p>
-          <p><strong>Pulse Before:</strong> {selectedMedicalRecord.pulsebefore}</p>
-          <p><strong>Pulse After:</strong> {selectedMedicalRecord.pulseafter}</p>
-          <p><strong>General Remarks:</strong> {selectedMedicalRecord.generalremarks}</p>
-          <p><strong>Attending Staff:</strong> {selectedMedicalRecord.attendingstaff?.name}</p>
-          <p><strong>Patient:</strong> {selectedMedicalRecord.patient?.name}</p>
+          <Typography variant="h5" sx={{ mb: 2 }}>🩺 Medical Record Details</Typography>
+          {selectedMedicalRecord && (
+            <Grid container spacing={2}>
+              <Grid item xs={12}>
+                <TextField label="📝 Diagnosis" fullWidth variant="filled" value={selectedMedicalRecord.generalremarks} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField label="👨‍⚕️ Physician" fullWidth variant="filled" value={selectedMedicalRecord.attendingstaff.name} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="📅 Record Date" fullWidth variant="filled" value={selectedMedicalRecord.date} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="📌 Time Treatment" fullWidth variant="filled" value={selectedMedicalRecord.timetreatment} InputProps={{ readOnly: true }} />
+              </Grid>
+
+              <Grid item xs={6}>
+                <TextField label="📊 BP Before" fullWidth variant="filled" value={selectedMedicalRecord.bpbefore || "N/A"} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="📊 BP After" fullWidth variant="filled" value={selectedMedicalRecord.bpafter || "N/A"} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="⚖️ Weight Before" fullWidth variant="filled" value={selectedMedicalRecord.weightbefore || "N/A"} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="⚖️ Weight After" fullWidth variant="filled" value={selectedMedicalRecord.weightafter || "N/A"} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="🌡️ Temperature" fullWidth variant="filled" value={selectedMedicalRecord.temperature || "N/A"} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="❤️ Pulse Before" fullWidth variant="filled" value={selectedMedicalRecord.pulsebefore || "N/A"} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField label="❤️ Pulse After" fullWidth variant="filled" value={selectedMedicalRecord.pulseafter || "N/A"} InputProps={{ readOnly: true }} />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField label="📝 Doctor's Notes" fullWidth multiline variant="filled" value={selectedMedicalRecord.notes || "N/A"} InputProps={{ readOnly: true }} />
+              </Grid>
+            </Grid>
+          )}
+          <Button className={styles.closeModalButton} onClick={() => setModalIsOpen(false)}>
+        Close
+      </Button>
         </div>
       ) : (
         <p>Loading...</p>
       )}
 
-      <Button className={styles.closeModalButton} onClick={() => setModalIsOpen(false)}>
-        Close
-      </Button>
     </Modal>
     </div>
   );

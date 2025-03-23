@@ -219,22 +219,6 @@ const Patient = () => {
     setSelectedPatientId(null);
   };
 
-  const handleCreateMedicalRecord = (patientId, data) => {
-    // Send data to the backend using an API call
-    fetch(`${process.env.REACT_APP_API_URL}/api/admin/patients/${patientId}/medical-records/`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify({ patientId, ...data }),
-    })
-      .then((response) => response.json())
-      .then((result) => {
-        console.log('Medical record created:', result);
-        // Refresh data or give user feedback
-      })
-      .catch((error) => console.error('Error creating medical record:', error));
-  };
 
   return (
     <div className={styles.doctorsSection}>
@@ -466,7 +450,6 @@ const Patient = () => {
       <CreateMedicalRecordModal
         isOpen={isModalRecordOpen}
         onClose={closeCreateMedicalRecordModal}
-        onSubmit={handleCreateMedicalRecord}
         patientId={selectedPatientId}
       />
       </div>

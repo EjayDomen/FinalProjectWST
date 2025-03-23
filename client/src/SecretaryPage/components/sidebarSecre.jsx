@@ -154,7 +154,7 @@ const Sidebar = () => {
           <b><p>{currentDate}</p></b>
         </div>
         <div className={styles.headerActions}>
-          <div className={styles.user}>
+          <div className={styles.user} >
             <NavLink to="/staff/profile" className={styles.profileIcon}>
               <img 
                 src={`${process.env.REACT_APP_API_URL}${profile}` } 
@@ -162,7 +162,11 @@ const Sidebar = () => {
                 className="me-2 rounded-circle" 
                 style={{ width: "40px", height: "40px", objectFit: "cover" }} 
               />
-              <span className={styles.userName}>{userName}</span>
+              <span 
+              className={styles.userName} 
+              style={{ textDecoration: "none", borderBottom: "none", display: "inline-block" }}
+            >{userName}</span>
+
             </NavLink>
             
           </div>

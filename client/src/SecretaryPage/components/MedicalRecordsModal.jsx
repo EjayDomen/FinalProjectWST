@@ -60,7 +60,8 @@ const MedicalRecordsModal = ({ isOpen, onClose, patientId, patientName }) => {
               <p><strong>Temperature:</strong> {record.temperature}</p>
               <p><strong>Pulse Before:</strong> {record.pulsebefore}</p>
               <p><strong>Pulse After:</strong> {record.pulseafter}</p>
-              <p><strong>General Remarks:</strong> {record.notes}</p>
+              <p><strong>General Remarks:</strong> {record.generalremarks}</p>
+              <p><strong>Doctor's Notes:</strong> {record.notes}</p>
               <p><strong>Attending Staff:</strong> {record.attendingstaff}</p>
             </div>
           ))

@@ -35,7 +35,8 @@ def create_medical_record(request, patient_id):
                 pulsebefore=data.get('pulsebefore', ''),
                 pulseafter=data.get('pulseafter', ''),
                 generalremarks=data.get('generalRemarks', 'N/A'),
-                attendingstaff=attending_staff
+                attendingstaff=attending_staff,
+                notes=data.get('notes',''),
             )
 
             return JsonResponse({'message': 'Medical record created successfully!', 'id': medical_record.id}, status=201)
@@ -67,6 +68,7 @@ def get_medical_records_by_patient(request, patient_id):
                     'pulseafter': record.pulseafter,
                     'generalremarks': record.generalremarks,
                     'attendingstaff': record.attendingstaff.id if record.attendingstaff else None,
+                    'notes': record.notes,
                 }
                 for record in medical_records
             ]
@@ -121,6 +123,7 @@ def get_recent_medical_records(request):
                     'pulseafter': record.pulseafter,
                     'generalremarks': record.generalremarks,
                     'attendingstaff': record.attendingstaff.id if record.attendingstaff else None,
+                    'notes': record.notes,
                 })
 
             return JsonResponse({'recent_medical_records': records_list}, status=200)
@@ -181,6 +184,7 @@ def get_medical_record_details(request, record_id):
                     'id': record.patientid.id,
                     'name': f"{record.patientid.first_name} {record.patientid.last_name}"
                 } if record.patientid else None,
+                'notes': record.notes,
             }
 
             return JsonResponse(record_details, status=200)

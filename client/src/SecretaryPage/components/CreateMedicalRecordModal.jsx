@@ -1,12 +1,11 @@
+import { Notes } from '@mui/icons-material';
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 
-const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
+const CreateMedicalRecordModal = ({ isOpen, onClose, patientId }) => {
   const [formData, setFormData] = useState({
-    transactionType: '',
     date: '',
     timetreatment: '',
-    transactionDetails: '',
     medicineused: '',
     bpbefore: '',
     bpafter: '',
@@ -17,6 +16,7 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
     pulseafter: '',
     generalremarks: '',
     attendingStaff: '',
+    notes:'',
   });
 
   const handleInputChange = (e) => {
@@ -36,7 +36,6 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
     });
 
     if (response.ok) {
-      onSubmit(patientId, formData);
       onClose();
     } else {
       const errorData = await response.json();
@@ -68,16 +67,6 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
       <h2 style={{ textAlign: 'center', marginBottom: '20px', fontWeight:'bold' }}>Create Medical Record</h2>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
         <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Transaction Type:
-          <input
-            type="text"
-            name="transactionType"
-            value={formData.transactionType}
-            onChange={handleInputChange}
-            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-          />
-        </label>
-        <label style={{ display: 'flex', flexDirection: 'column' }}>
           Date:
           <input
             type="date"
@@ -94,17 +83,6 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
             type="text"
             name="timetreatment"
             value={formData.timetreatment}
-            onChange={handleInputChange}
-            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
-          />
-        </label>
-
-        <label style={{ display: 'flex', flexDirection: 'column' }}>
-          Transaction Details:
-          <input
-            type="text"
-            name="transactionDetails"
-            value={formData.transactionDetails}
             onChange={handleInputChange}
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc' }}
           />
@@ -198,6 +176,15 @@ const CreateMedicalRecordModal = ({ isOpen, onClose, onSubmit, patientId }) => {
           <textarea
             name="generalRemarks"
             value={formData.generalRemarks}
+            onChange={handleInputChange}
+            style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
+          ></textarea>
+        </label>
+        <label style={{ display: 'flex', flexDirection: 'column' }}>
+          Notes:
+          <textarea
+            name="notes"
+            value={formData.notes}
             onChange={handleInputChange}
             style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', resize: 'vertical' }}
           ></textarea>

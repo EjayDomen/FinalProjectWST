@@ -14,6 +14,7 @@ class MedicalRecord(models.Model):
     pulseafter = models.CharField(max_length=50)
     generalremarks = models.TextField(default="N/A", blank=True)
     attendingstaff = models.ForeignKey('clinic_python.Staff', on_delete=models.CASCADE)  # Use string notation
+    notes = models.TextField(default="N/A", blank=True)
     createdAt = models.DateTimeField(auto_now_add=True)
 
 
