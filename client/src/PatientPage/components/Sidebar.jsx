@@ -41,6 +41,7 @@ const Sidebar = () => {
         });
       } catch (error) {
         console.error("Error fetching user details:", error);
+        navigate("/login");
         if (error.response && error.response.status === 401) {
           navigate("/login");
         }

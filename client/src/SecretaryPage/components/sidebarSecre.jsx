@@ -47,7 +47,7 @@ const Sidebar = () => {
       setUserName(`${firstName} ${lastName}`.trim()); // Use trim() to remove any extra spaces
     } catch (error) {
       console.error('Error fetching profile:', error);
-      // navigate('/');
+      navigate('/');
     }
   };
 
